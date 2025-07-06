@@ -12,6 +12,7 @@ import controller.ControllerCadQuarto;
 import controller.ControllerCadProdutoCopa;
 import controller.ControllerCadServico;
 import controller.ControllerCadVaga;
+import controller.ControllerCadVeiculo;
 
 /**
  *
@@ -100,6 +101,11 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         jMenu2.add(jMenuItemQuarto);
 
         jMenuItemVeiculo.setText("Veículo");
+        jMenuItemVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemVeiculoActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItemVeiculo);
 
         jMenuItemServico.setText("Serviço");
@@ -236,6 +242,12 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
          ControllerCadServico controller = new ControllerCadServico(tela);
          tela.setVisible(true);
     }//GEN-LAST:event_jMenuItemServicoActionPerformed
+
+    private void jMenuItemVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemVeiculoActionPerformed
+        TelaCadastroVeiculo tela = new TelaCadastroVeiculo(null, true);
+    ControllerCadVeiculo controller = new ControllerCadVeiculo(tela);
+    tela.setVisible(true);
+    }//GEN-LAST:event_jMenuItemVeiculoActionPerformed
 
     /**
      * @param args the command line arguments

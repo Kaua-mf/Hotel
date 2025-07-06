@@ -5,22 +5,25 @@ public class Veiculo {
     private int id;
     private String placa;
     private String cor;
-    private String obs;
     private char status;
+    
+    // Relacionamentos com outras classes
     private Modelo modelo;
+    private Marca marca;
 
     public Veiculo() {
     }
 
-    public Veiculo(int id, String placa, String cor, String obs, char status, Modelo modelo) {
+    public Veiculo(int id, String placa, String cor, char status, Modelo modelo, Marca marca) {
         this.id = id;
         this.placa = placa;
         this.cor = cor;
-        this.obs = obs;
         this.status = status;
         this.modelo = modelo;
+        this.marca = marca;
     }
 
+    // Getters e Setters para todos os campos
     public int getId() {
         return id;
     }
@@ -45,14 +48,6 @@ public class Veiculo {
         this.cor = cor;
     }
 
-    public String getObs() {
-        return obs;
-    }
-
-    public void setObs(String obs) {
-        this.obs = obs;
-    }
-
     public char getStatus() {
         return status;
     }
@@ -67,5 +62,13 @@ public class Veiculo {
 
     public void setModelo(Modelo modelo) {
         this.modelo = modelo;
+    }
+
+    public Marca getMarca() {
+        return marca;
+    }
+
+    public void setMarca(Marca marca) {
+        this.marca = marca;
     }
 }
