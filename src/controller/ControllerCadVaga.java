@@ -15,7 +15,6 @@ public class ControllerCadVaga implements ActionListener {
 
     public ControllerCadVaga(TelaCadastroVaga telaCadastro) {
         this.telaCadastro = telaCadastro;
-        // Adicione os listeners
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
         this.telaCadastro.getjButtonGravar().addActionListener(this);

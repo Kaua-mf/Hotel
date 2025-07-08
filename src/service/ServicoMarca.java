@@ -10,7 +10,6 @@ public class ServicoMarca {
     private static int proximoId = 1;
 
     static {
-        // Adicionando algumas marcas de exemplo
         listaMarcas.add(new Marca(proximoId++, "Fiat", 'A'));
         listaMarcas.add(new Marca(proximoId++, "Chevrolet", 'A'));
         listaMarcas.add(new Marca(proximoId++, "Ford", 'A'));

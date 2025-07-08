@@ -29,11 +29,9 @@ public class ControllerCadServico implements ActionListener {
         if (evento.getSource() == this.telaCadastro.getjButtonNovo()) {
             utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
             utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
-            
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
             utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
             utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
-            
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             if (this.telaCadastro.getjTextFieldDescricao().getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "O campo 'Descrição' é obrigatório.");
@@ -41,8 +39,11 @@ public class ControllerCadServico implements ActionListener {
             }
             
             Servico servico = new Servico();
+            
             servico.setDescricao(this.telaCadastro.getjTextFieldDescricao().getText());
+            
             servico.setObs(this.telaCadastro.getjTextFieldObs().getText());
+            
             servico.setStatus('A');
             
             servicoServico.salvar(servico);
@@ -54,7 +55,6 @@ public class ControllerCadServico implements ActionListener {
             TelaBuscaServico telaBusca = new TelaBuscaServico(null, true);
             ControllerBuscaServico controllerBusca = new ControllerBuscaServico(telaBusca);
             telaBusca.setVisible(true);
-            
         } else if (evento.getSource() == this.telaCadastro.getjButtonSair()) {
             this.telaCadastro.dispose();
         }

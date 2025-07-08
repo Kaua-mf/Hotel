@@ -17,7 +17,6 @@ public class ProdutoCopa {
         this.status = status;
     }
     
-    // Getters e Setters
     public int getId() {
         return id;
     }

@@ -37,10 +37,4 @@ public class Funcionario extends Pessoa{
                 "\nUsuário = " + this.getUsuario()+
                 "\nSenha   = " + this.getSenha();
     }
-    
-    
-    
-    
-    
-    
 }

@@ -11,16 +11,13 @@ public class ServicoModelo {
     private static int proximoId = 1;
 
     static {
-        // Para criar modelos, primeiro precisamos de algumas marcas
         ServicoMarca servicoMarca = new ServicoMarca();
         List<Marca> marcas = servicoMarca.buscarTodos();
 
-        // Verificamos se a lista de marcas não está vazia
         if (!marcas.isEmpty()) {
-            // Adicionando modelos de exemplo associados às marcas existentes
-            listaModelos.add(new Modelo(proximoId++, "Uno", 'A', marcas.get(0))); // Fiat Uno
-            listaModelos.add(new Modelo(proximoId++, "Onix", 'A', marcas.get(1))); // Chevrolet Onix
-            listaModelos.add(new Modelo(proximoId++, "Ka", 'A', marcas.get(2))); // Ford Ka
+            listaModelos.add(new Modelo(proximoId++, "Uno", 'A', marcas.get(0)));
+            listaModelos.add(new Modelo(proximoId++, "Onix", 'A', marcas.get(1))); 
+            listaModelos.add(new Modelo(proximoId++, "Ka", 'A', marcas.get(2))); 
         }
     }
 

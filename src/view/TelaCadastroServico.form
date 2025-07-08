@@ -162,7 +162,7 @@
                                       <Component id="jLabelEmail" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabelBairro" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="407" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="438" max="32767" attributes="0"/>
                               </Group>
                               <Component id="jTextFieldComplemento" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
@@ -303,11 +303,7 @@
                   </Group>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jLabelCep" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jFormattedTextFieldCep" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jLabelCep" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabelBairro" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -317,7 +313,10 @@
                       <Group type="102" attributes="0">
                           <Component id="jLabelCidade" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldCidade" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jTextFieldCidade" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jFormattedTextFieldCep" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -360,9 +359,6 @@
         <Component class="javax.swing.JTextField" name="jTextFieldIds">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelNomeFantasia">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Nome Fantasia"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldNomeFantasia">
           <Properties>
@@ -370,9 +366,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelRazaoSocial">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Raz&#xe3;o Social"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldRazaoSocial">
           <Properties>
@@ -380,9 +373,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelrg">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Rg"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldRg">
           <Properties>
@@ -390,9 +380,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelCpf">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="CPF"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldCpf">
           <Properties>
@@ -403,9 +390,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelInscricaoEstadual">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Inscri&#xe7;&#xe3;o Estadual"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldInscricaoEstadual">
           <Properties>
@@ -413,9 +397,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelCnpj">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="CNPJ"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldCnpj">
           <Properties>
@@ -426,14 +407,8 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelFone1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Fone1"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelFone2">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Fone 2"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldFone2">
           <Properties>
@@ -441,9 +416,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelEmail">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Email"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldEmail">
           <Properties>
@@ -474,14 +446,8 @@
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelCadastro">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Valor"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelCep">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="CEP"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldCep">
           <Properties>
@@ -490,11 +456,11 @@
               <Format format="##.###-###" subtype="-1" type="5"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jFormattedTextFieldCepActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelBairro">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Bairro"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldBairro">
           <Properties>
@@ -502,9 +468,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelCidade">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Cidade"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldCidade">
           <Properties>
@@ -512,9 +475,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelLogradouro">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Logradouro(Rua, Avenida, Beco, Viea,...)"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldLogradouro">
           <Properties>
@@ -529,31 +489,18 @@
         <Component class="javax.swing.JTextField" name="jTextFieldComplemento">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelSexo">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Sexo"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="jComboBoxSexo">
           <Properties>
-            <Property name="editable" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
-            <Property name="selectedIndex" type="int" value="-1"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelContato">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Contato"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldContato">
           <Properties>

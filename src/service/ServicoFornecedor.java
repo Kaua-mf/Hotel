@@ -30,16 +30,16 @@ public class ServicoFornecedor {
         if (filtro.trim().isEmpty()) return listaFornecedores;
 
         switch (tipoBusca) {
-            case 0: // ID
+            case 0: 
                 try {
                     int id = Integer.parseInt(filtro);
                     for (Fornecedor f : listaFornecedores) if (f.getId() == id) resultados.add(f);
                 } catch (NumberFormatException e) {}
                 break;
-            case 1: // Nome
+            case 1: 
                 for (Fornecedor f : listaFornecedores) if (f.getNome().toLowerCase().contains(filtro.toLowerCase())) resultados.add(f);
                 break;
-            case 2: // CPF / CNPJ
+            case 2:
                 for (Fornecedor f : listaFornecedores) if (f.getCnpj().contains(filtro) || f.getCpf().contains(filtro)) resultados.add(f);
                 break;
         }

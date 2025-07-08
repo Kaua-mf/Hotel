@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.Funcionario;
 import service.ServicoFuncionario;
-import view.TelaBuscaFuncionario;
+import view.TelaBuscaFuncionario; 
 
 public class ControllerBuscaFuncionario implements ActionListener {
 
@@ -31,7 +31,7 @@ public class ControllerBuscaFuncionario implements ActionListener {
             modelo.addRow(new Object[]{
                 funcionario.getId(),
                 funcionario.getNome(),
-                funcionario.getCpf(),
+                funcionario.getUsuario(), 
                 funcionario.getStatus()
             });
         }

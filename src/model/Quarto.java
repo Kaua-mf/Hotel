@@ -21,7 +21,6 @@ public class Quarto {
         this.tipoQuarto = tipoQuarto;
     }
     
-    // Getters e Setters
     public int getId() {
         return id;
     }

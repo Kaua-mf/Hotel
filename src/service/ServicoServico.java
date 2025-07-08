@@ -10,7 +10,6 @@ public class ServicoServico {
     private static int proximoId = 1;
 
     static {
-        // Adicionando alguns serviços de exemplo
         listaServicos.add(new Servico(proximoId++, "Lavanderia - Peça de Roupa", "Lavagem e secagem por peça", 'A'));
         listaServicos.add(new Servico(proximoId++, "Serviço de Quarto - Frigobar", "Reposição de itens do frigobar", 'A'));
         listaServicos.add(new Servico(proximoId++, "Massagem Relaxante", "Sessão de 1 hora com massoterapeuta", 'I'));
@@ -32,7 +31,7 @@ public class ServicoServico {
         }
 
         switch (tipoBusca) {
-            case 0: // ID
+            case 0: 
                 try {
                     int id = Integer.parseInt(filtro);
                     for (Servico s : listaServicos) {
@@ -43,7 +42,7 @@ public class ServicoServico {
                 } catch (NumberFormatException e) {
                 }
                 break;
-            case 1: // Descrição
+            case 1: 
                 for (Servico s : listaServicos) {
                     if (s.getDescricao().toLowerCase().contains(filtro.toLowerCase())) {
                         resultados.add(s);

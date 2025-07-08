@@ -29,13 +29,13 @@ public class ServicoProdutoCopa {
         if (filtro.trim().isEmpty()) return listaProdutos;
 
         switch (tipoBusca) {
-            case 0: // ID
+            case 0: 
                 try {
                     int id = Integer.parseInt(filtro);
                     for (ProdutoCopa p : listaProdutos) if (p.getId() == id) resultados.add(p);
                 } catch (NumberFormatException e) {}
                 break;
-            case 1: // Descrição
+            case 1: 
                 for (ProdutoCopa p : listaProdutos) if (p.getDescricao().toLowerCase().contains(filtro.toLowerCase())) resultados.add(p);
                 break;
         }

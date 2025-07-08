@@ -12,7 +12,6 @@ public class ServicoQuarto {
     private static int proximoId = 1;
 
     static {
-        // Criando Tipos de Quarto de exemplo
         TipoQuarto tipo1 = new TipoQuarto(1, "Solteiro Simples", 150.0f);
         TipoQuarto tipo2 = new TipoQuarto(2, "Casal Simples", 250.0f);
         TipoQuarto tipo3 = new TipoQuarto(3, "Suíte Master", 450.0f);
@@ -20,7 +19,6 @@ public class ServicoQuarto {
         listaTiposQuarto.add(tipo2);
         listaTiposQuarto.add(tipo3);
 
-        // Criando Quartos de exemplo
         Quarto q1 = new Quarto(proximoId++, "101", 150.0f, "Primeiro andar, vista para a rua", 'A', tipo1);
         Quarto q2 = new Quarto(proximoId++, "202", 250.0f, "Segundo andar, vista para a piscina", 'A', tipo2);
         Quarto q3 = new Quarto(proximoId++, "305", 450.0f, "Cobertura, com banheira", 'I', tipo3);
@@ -47,13 +45,13 @@ public class ServicoQuarto {
         if (filtro.trim().isEmpty()) return listaQuartos;
 
         switch (tipoBusca) {
-            case 0: // ID
+            case 0:
                 try {
                     int id = Integer.parseInt(filtro);
                     for (Quarto q : listaQuartos) if (q.getId() == id) resultados.add(q);
                 } catch (NumberFormatException e) {}
                 break;
-            case 1: // Descrição
+            case 1: 
                 for (Quarto q : listaQuartos) if (q.getDescricao().toLowerCase().contains(filtro.toLowerCase())) resultados.add(q);
                 break;
         }

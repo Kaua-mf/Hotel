@@ -120,7 +120,7 @@
                   <Table columnCount="4" rowCount="0">
                     <Column editable="true" title="Id" type="java.lang.Object"/>
                     <Column editable="true" title="Nome" type="java.lang.Object"/>
-                    <Column editable="true" title="CPf" type="java.lang.Object"/>
+                    <Column editable="true" title="Usuario" type="java.lang.Object"/>
                     <Column editable="true" title="Status" type="java.lang.Object"/>
                   </Table>
                 </Property>
@@ -233,7 +233,7 @@
               <StringArray count="3">
                 <StringItem index="0" value="Id"/>
                 <StringItem index="1" value="Nome"/>
-                <StringItem index="2" value="CPF"/>
+                <StringItem index="2" value="Usuario"/>
               </StringArray>
             </Property>
           </Properties>

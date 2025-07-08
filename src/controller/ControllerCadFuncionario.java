@@ -15,13 +15,11 @@ public class ControllerCadFuncionario implements ActionListener {
 
     public ControllerCadFuncionario(TelaCadastroFuncionario telaCadastro) {
         this.telaCadastro = telaCadastro;
-
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
         this.telaCadastro.getjButtonGravar().addActionListener(this);
         this.telaCadastro.getjButtonBuscar().addActionListener(this);
         this.telaCadastro.getjButtonSair().addActionListener(this);
-
         utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
         utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
     }
@@ -37,19 +35,21 @@ public class ControllerCadFuncionario implements ActionListener {
             utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
         
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
-            Funcionario funcionario = new Funcionario();
+            if (this.telaCadastro.getjTextFieldNomeFantasia().getText().trim().isEmpty() || 
+                this.telaCadastro.getjTextFieldUsuario().getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Os campos 'Nome' e 'Usuário' são obrigatórios.");
+                return;
+            }
             
+            Funcionario funcionario = new Funcionario();
             funcionario.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
+            funcionario.setUsuario(this.telaCadastro.getjTextFieldUsuario().getText());
+            funcionario.setSenha(new String(this.telaCadastro.getjPasswordFieldSenha().getPassword()));
             funcionario.setCpf(this.telaCadastro.getjFormattedTextFieldCpf().getText());
-            funcionario.setRg(this.telaCadastro.getjTextFieldRg().getText());
-            funcionario.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
-            funcionario.setFone1(this.telaCadastro.getjFormattedTextFieldFone1().getText());
-            funcionario.setStatus('A'); 
+            funcionario.setStatus('A');
             
             servicoFuncionario.salvar(funcionario);
-            
             JOptionPane.showMessageDialog(telaCadastro, "Funcionário salvo com sucesso!");
-            
             utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
             utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
 

@@ -7,7 +7,6 @@ public class Veiculo {
     private String cor;
     private char status;
     
-    // Relacionamentos com outras classes
     private Modelo modelo;
     private Marca marca;
 
@@ -23,7 +22,6 @@ public class Veiculo {
         this.marca = marca;
     }
 
-    // Getters e Setters para todos os campos
     public int getId() {
         return id;
     }

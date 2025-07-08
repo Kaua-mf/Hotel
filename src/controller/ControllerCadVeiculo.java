@@ -23,14 +23,12 @@ public class ControllerCadVeiculo implements ActionListener {
     public ControllerCadVeiculo(TelaCadastroVeiculo telaCadastro) {
         this.telaCadastro = telaCadastro;
         
-        // Adiciona os listeners
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
         this.telaCadastro.getjButtonGravar().addActionListener(this);
         this.telaCadastro.getjButtonBuscar().addActionListener(this);
         this.telaCadastro.getjButtonSair().addActionListener(this);
         
-        // Carrega os dados nos ComboBoxes
         carregarMarcas();
         carregarModelos();
 
