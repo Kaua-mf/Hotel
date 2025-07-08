@@ -1,89 +1,106 @@
-Sistema de Gestão Hoteleira (ProjetoHotel)
-Este é um projeto de um sistema de gestão para hotéis, desenvolvido como parte de um trabalho acadêmico. A aplicação é construída em Java com a interface gráfica utilizando a biblioteca Swing.
+# Sistema de Gestão Hoteleira (ProjetoHotel)
 
-Status do Projeto
-O projeto está em desenvolvimento. A fase atual foca na construção da estrutura da aplicação, nas interfaces de usuário e na lógica de negócio com dados salvos em memória.
+*Este projeto foi desenvolvido como parte de um trabalho acadêmico, com o objetivo de criar um sistema desktop para a gestão de cadastros em um hotel.*
 
-Tecnologias Utilizadas
-Linguagem: Java
+## 1\. Apresentação do Projeto
 
-Interface Gráfica (GUI): Java Swing
+Este projeto consiste em um sistema de gestão em Java, com interface gráfica construída utilizando a biblioteca **Swing**. O software simula um ambiente real de hotelaria, permitindo o gerenciamento de diversas entidades essenciais para o funcionamento do negócio, como hóspedes, funcionários, quartos e serviços.
 
-IDE: Apache NetBeans (inferido pelo fluxo de trabalho e estrutura dos ficheiros)
+O programa permite que um usuário realize o cadastro completo de novas entidades, com validação de dados, e também busque por registos existentes através de diferentes critérios de filtro. Atualmente, os dados são salvos e manipulados em memória.
 
-Build Tool: Apache Ant (inferido pelos logs de compilação)
+### Principais Funcionalidades
 
-Arquitetura
-O projeto segue uma arquitetura baseada no padrão MVC (Model-View-Controller), com uma camada adicional de Serviço para desacoplar a lógica de negócio do acesso a dados.
+  - **Interface Gráfica Intuitiva:** Telas de cadastro e busca padronizadas para uma experiência de usuário consistente.
+  - **Módulos de Cadastro Completos:** O sistema inclui cadastros para todas as entidades essenciais do hotel.
+  - **Lógica de Interface Reativa:** Botões de ação (`Novo`, `Gravar`, `Cancelar`) são habilitados e desabilitados dinamicamente para guiar o fluxo do usuário.
+  - **Busca com Filtros:** Todas as telas de busca permitem filtrar os resultados por diferentes atributos, como ID e Descrição.
 
-Model: Representa a estrutura dos dados (ex: Hospede.java, Quarto.java). Fica no pacote model.
+## 2\. Design e Arquitetura
 
-View: Representa a camada de apresentação (as telas), como TelaCadastroHospede.java. Fica no pacote view.
+O sistema foi projetado com foco na **separação de responsabilidades**, utilizando uma arquitetura baseada no padrão **MVC (Model-View-Controller)**, com uma camada de serviço adicional.
 
-Controller: Faz a ponte entre a View e o Model/Service, contendo a lógica de controlo dos eventos da tela (ex: cliques de botão). Fica no pacote controller.
+### Diagrama UML de Classes
 
-Service: Simula a camada de acesso a dados (DAO - Data Access Object). É responsável por gerir listas de objetos em memória. Fica no pacote service.
+O diagrama a seguir ilustra as principais classes do sistema e como elas se relacionam.
 
-Funcionalidades Implementadas
-Atualmente, o sistema possui módulos de cadastro completos com as seguintes funcionalidades:
+**Descrição das Camadas:**
 
-Criação e Salvamento: Permite inserir novos dados através de um formulário e salvá-los em uma lista em memória.
+  - **Model:** Representa a estrutura dos dados (ex: `Hospede.java`, `Quarto.java`). Fica no pacote `model`.
+  - **View:** Representa a camada de apresentação (as telas), como `TelaCadastroHospede.java` e `TelaBuscaFuncionario.java`. Fica no pacote `view`.
+  - **Controller:** Faz a ponte entre a View e o Service, contendo a lógica de controlo dos eventos da tela (ex: cliques de botão). Fica no pacote `controller`.
+  - **Service:** Simula a camada de acesso a dados (DAO - Data Access Object). É responsável por gerir listas de objetos em memória (`ArrayList`) e contém a lógica de negócio, como buscas e filtros. Fica no pacote `service`.
 
-Busca e Filtragem: Apresenta uma tela de busca que exibe todos os registos e permite filtrar por diferentes critérios.
+### Padrões e Princípios Utilizados
 
-Interface Reativa: Os botões de ação são habilitados e desabilitados conforme o estado da operação (novo, gravar, cancelar), utilizando uma classe Utilities.
+1.  **Model-View-Controller (MVC)**
 
-Módulos de Cadastro
-Os seguintes cadastros, marcados no diagrama de classes, foram implementados:
+      - **Justificativa**: Este padrão foi a base do projeto para separar os dados (Model), da interface com o utilizador (View) e da lógica de controlo (Controller). Isso torna o sistema mais organizado, fácil de manter e de expandir.
 
-Cadastros Principais:
+2.  **Camada de Serviço (Service Layer)**
 
-Hóspede
+      - **Justificativa**: Adicionar uma camada de serviço entre o Controller e o Model abstrai a origem dos dados. Atualmente, os serviços utilizam listas em memória, mas no futuro, podem ser facilmente modificados para se comunicarem com um banco de dados, sem a necessidade de alterar os Controllers.
 
-Funcionário
+3.  **Herança**
 
-Fornecedor
+      - **Onde foi usada**: A classe `Pessoa` serve como superclasse para `Hospede`, `Funcionario` e `Fornecedor`.
+      - **Justificativa**: Reutiliza código e estabelece uma relação "é-um-tipo-de", onde Hóspedes, Funcionários e Fornecedores compartilham atributos e comportamentos comuns de uma Pessoa.
 
-Quarto
+4.  **Classe Utilitária**
 
-Cadastros de Apoio:
+      - **Onde foi usada**: `Utilities.java`.
+      - **Justificativa**: Centraliza funções repetitivas de manipulação da interface gráfica (como ativar/desativar botões e limpar campos), promovendo o reuso de código e evitando duplicação.
 
-Produto/Copa
+## 3\. Estrutura do Projeto
 
-Serviço
+O projeto foi organizado em pacotes para separar as responsabilidades de cada camada.
 
-Vaga de Estacionamento
+```
+src
+├── controller/
+│   ├── ControllerCadFuncionario.java
+│   ├── ControllerCadHospede.java
+│   └── ... (outros controllers)
+├── model/
+│   ├── Funcionario.java
+│   ├── Hospede.java
+│   ├── Pessoa.java
+│   └── ... (outros modelos)
+├── service/
+│   ├── ServicoFuncionario.java
+│   ├── ServicoHospede.java
+│   └── ... (outros serviços)
+├── utilities/
+│   └── Utilities.java
+└── view/
+    ├── TelaCadastroFuncionario.java
+    ├── TelaBuscaFuncionario.java
+    └── ... (outras telas)
+```
 
-Veículo
+## 4\. Instruções de Execução
 
-Marca e Modelo (como dependências de Veículo)
+Siga os passos abaixo para compilar e executar o projeto.
 
-Como Executar o Projeto
-Para compilar e executar o projeto, siga os passos abaixo.
+### Pré-requisitos
 
-Pré-requisitos
-Java Development Kit (JDK) 17 ou superior.
+  - **Java Development Kit (JDK)** - Versão 17 ou superior.
+  - **Apache NetBeans IDE** (recomendado, pois o projeto utiliza o seu construtor de GUI).
 
-Apache NetBeans IDE.
+### Como Compilar e Executar
 
-Executando pelo NetBeans
-Abra o NetBeans.
+1.  **Abrir no NetBeans**:
+      - Vá em `Arquivo > Abrir Projeto...`.
+      - Navegue até a pasta raiz do `ProjetoHotel` e clique em "Abrir Projeto".
+2.  **Limpar e Construir**:
+      - Com o projeto aberto, clique com o botão direito sobre ele na árvore de projetos e selecione **"Limpar e Construir"**. Isso irá compilar todo o código e gerar o ficheiro `.jar`.
+3.  **Executar**:
+      - Após a construção bem-sucedida, clique com o botão direito novamente e selecione **"Executar"**. A `TelaMenuPrincipal` será exibida.
 
-Vá em Arquivo > Abrir Projeto....
+### Executando pelo Ficheiro JAR
 
-Navegue até a pasta raiz do ProjetoHotel e clique em "Abrir Projeto".
-
-Com o projeto aberto, clique com o botão direito sobre ele na árvore de projetos e selecione "Limpar e Construir".
-
-Após a construção, clique com o botão direito novamente e selecione "Executar". A TelaMenuPrincipal será exibida.
-
-Executando pelo Arquivo JAR
-Após "Limpar e Construir" o projeto no NetBeans, uma pasta dist será criada na raiz do projeto.
-
-Dentro da pasta dist, você encontrará o ficheiro ProjetoHotel.jar.
-
-Você pode executar este ficheiro dando um duplo clique sobre ele ou através do terminal com o seguinte comando:
-
-Bash
-
-java -jar "C:\Caminho\Para\O\Projeto\dist\ProjetoHotel.jar"
+1.  Após "Limpar e Construir", uma pasta `dist` será criada na raiz do projeto.
+2.  Dentro da pasta `dist`, você encontrará o ficheiro `ProjetoHotel.jar`.
+3.  Você pode executar este ficheiro dando um duplo clique sobre ele ou através do terminal:
+    ```bash
+    java -jar "C:\Caminho\Completo\Para\O\ProjetoHotel\dist\ProjetoHotel.jar"
+    ```
