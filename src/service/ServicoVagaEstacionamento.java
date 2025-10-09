@@ -9,10 +9,7 @@ public class ServicoVagaEstacionamento {
 
     private VagaEstacionamentoDAO vagaDAO = new VagaEstacionamentoDAO();
 
-    // REMOVIDA A LÓGICA ESTÁTICA (listaVagas, proximoId, static { ... })
-
     public void salvar(VagaEstacionamento vaga) {
-        // Lógica: se ID for 0, cria. Senão, atualiza.
         if (vaga.getId() == 0) {
             vagaDAO.Create(vaga);
         } else {
@@ -32,7 +29,7 @@ public class ServicoVagaEstacionamento {
         String nomeColuna;
 
         switch (tipoBusca) {
-            case 0: // ID
+            case 0: 
                 try {
                     int id = Integer.parseInt(filtro);
                     VagaEstacionamento vaga = vagaDAO.Retrieve(id);
@@ -42,10 +39,10 @@ public class ServicoVagaEstacionamento {
                 } catch (NumberFormatException e) {
                     return new ArrayList<>();
                 }
-            case 1: // Descrição
+            case 1:
                 nomeColuna = "descricao";
                 break;
-            case 2: // Metragem
+            case 2:
                 nomeColuna = "metragem_vaga";
                 break;
             default:

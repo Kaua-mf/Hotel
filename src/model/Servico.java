@@ -49,12 +49,8 @@ public class Servico {
         this.status = status;
     }
     
-    // Conteúdo esperado em model.Servico.java
+private String nome; 
 
-// Adicione à lista de atributos:
-private String nome; // ou o nome correto se não for 'nome'
-
-// Adicione os métodos getter e setter:
 public String getNome() {
     return nome;
 }

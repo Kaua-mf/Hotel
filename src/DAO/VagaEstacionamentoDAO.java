@@ -11,7 +11,6 @@ import model.VagaEstacionamento;
 
 public class VagaEstacionamentoDAO implements InterfaceDAO<VagaEstacionamento> {
 
-    // --- CREATE (Insere uma nova Vaga) ---
     @Override
     public void Create(VagaEstacionamento objeto) {
         String sqlInstrucao = "INSERT INTO vaga_estacionamento(descricao, obs, metragem_vaga, status) VALUES (?, ?, ?, ?)";
@@ -19,14 +18,12 @@ public class VagaEstacionamentoDAO implements InterfaceDAO<VagaEstacionamento> {
         PreparedStatement pstm = null;
 
         try {
-            // Habilita transação
             conexao = ConnectionFactory.getConnection();
             conexao.setAutoCommit(false); 
             pstm = conexao.prepareStatement(sqlInstrucao);
 
             pstm.setString(1, objeto.getDescricao());
             
-            // Mapeamento de Obs (trata como NULL se for vazio/nulo)
             if (objeto.getObs() != null && !objeto.getObs().trim().isEmpty()) {
                 pstm.setString(2, objeto.getObs());
             } else {
@@ -44,9 +41,7 @@ public class VagaEstacionamentoDAO implements InterfaceDAO<VagaEstacionamento> {
             try {
                 if (conexao != null) conexao.rollback();
             } catch (SQLException e) {
-                // Log de erro de rollback
             }
-            // Lança RuntimeException para a camada Service
             throw new RuntimeException("Falha na criação da Vaga.", ex);
 
         } finally {
@@ -54,7 +49,6 @@ public class VagaEstacionamentoDAO implements InterfaceDAO<VagaEstacionamento> {
         }
     }
 
-    // --- RETRIEVE POR ID ---
     @Override
     public VagaEstacionamento Retrieve(int id) {
         String sqlInstrucao = "SELECT id, descricao, obs, metragem_vaga, status FROM vaga_estacionamento WHERE id = ?";
@@ -86,15 +80,12 @@ public class VagaEstacionamentoDAO implements InterfaceDAO<VagaEstacionamento> {
         }
     }
 
-    // --- RETRIEVE POR FILTRO / ALL ---
     @Override
     public List<VagaEstacionamento> Retrieve(String atributo, String valor) {
-        // Query base para buscar todos
         String sqlInstrucao = "SELECT id, descricao, obs, metragem_vaga, status FROM vaga_estacionamento";
         boolean isGeral = (atributo == null || atributo.trim().isEmpty());
 
         if (!isGeral) {
-             // Usa LIKE para filtro de texto
              sqlInstrucao += " WHERE " + atributo + " LIKE ?";
         }
         
@@ -131,7 +122,6 @@ public class VagaEstacionamentoDAO implements InterfaceDAO<VagaEstacionamento> {
         }
     }
 
-    // --- UPDATE ---
     @Override
     public void Update(VagaEstacionamento objeto) {
         String sqlInstrucao = "UPDATE vaga_estacionamento SET descricao = ?, obs = ?, metragem_vaga = ?, status = ? WHERE id = ?";
@@ -160,7 +150,6 @@ public class VagaEstacionamentoDAO implements InterfaceDAO<VagaEstacionamento> {
         }
     }
 
-    // --- DELETE ---
     @Override
     public void Delete(VagaEstacionamento objeto) {
         String sqlInstrucao = "DELETE FROM vaga_estacionamento WHERE id = ?";

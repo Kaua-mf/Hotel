@@ -10,20 +10,15 @@ public class ServicoProdutoCopa {
 
     private ProdutoCopaDAO produtoCopaDAO = new ProdutoCopaDAO();
 
-    // REMOVIDA toda a lógica estática (listaProdutos, proximoId, static { ... })
-    
     public void salvar(ProdutoCopa produto) {
-        // Lógica: se ID não existe, cria. Senão, atualiza.
         if (produto.getId() == 0) {
             produtoCopaDAO.Create(produto);
         } else {
-            // produtoCopaDAO.Update(produto); // Chamar o Update quando implementado
             throw new UnsupportedOperationException("Atualização não implementada.");
         }
     }
 
     public List<ProdutoCopa> buscarTodos() {
-        // Busca geral (ALL)
         return produtoCopaDAO.Retrieve(null, null);
     }
     
@@ -36,7 +31,6 @@ public class ServicoProdutoCopa {
 
         switch (tipoBusca) {
             case 0:
-                // Busca por ID
                 try {
                     int id = Integer.parseInt(filtro);
                     ProdutoCopa p = produtoCopaDAO.Retrieve(id);
@@ -47,7 +41,6 @@ public class ServicoProdutoCopa {
                     return new ArrayList<>();
                 }
             case 1:
-                // Busca por Descrição (ou Nome)
                 nomeColuna = "descricao"; 
                 return produtoCopaDAO.Retrieve(nomeColuna, filtro);
 

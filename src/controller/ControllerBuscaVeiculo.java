@@ -19,7 +19,6 @@ public class ControllerBuscaVeiculo implements ActionListener {
         this.telaBusca.getjButtonFiltar().addActionListener(this);
         this.telaBusca.getjButtonSair().addActionListener(this);
         
-        // Chamada inicial com tratamento de erro
         preencheTabelaComDados();
     }
 
@@ -32,7 +31,6 @@ public class ControllerBuscaVeiculo implements ActionListener {
                 "Falha ao carregar dados. Verifique a conexão com o banco de dados.", 
                 "Erro de Conexão", 
                 JOptionPane.ERROR_MESSAGE);
-             // Não propaga o erro, apenas mostra a mensagem
         }
     }
     

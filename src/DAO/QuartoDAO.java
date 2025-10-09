@@ -7,10 +7,8 @@ import model.Quarto;
 
 public class QuartoDAO implements InterfaceDAO<Quarto> {
 
-    // --- CREATE (Insere um novo Quarto) ---
     @Override
     public void Create(Quarto objeto) {
-        // SQL: Usando valor_diaria
         String sqlInstrucao = "INSERT INTO quarto (descricao, capacidade_hospedes, valor_diaria, obs, status, metragem, identificacao, andar, flag_animais) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conexao = null;
         PreparedStatement pstm = null;
@@ -19,8 +17,6 @@ public class QuartoDAO implements InterfaceDAO<Quarto> {
             conexao = ConnectionFactory.getConnection();
             conexao.setAutoCommit(false); 
             pstm = conexao.prepareStatement(sqlInstrucao);
-
-            // Mapeamento dos parâmetros
             pstm.setString(1, objeto.getDescricao());
             pstm.setInt(2, objeto.getCapacidadeHospedes());
             pstm.setFloat(3, objeto.getValorDiaria()); // Mapeamento correto
@@ -39,7 +35,6 @@ public class QuartoDAO implements InterfaceDAO<Quarto> {
             try {
                 if (conexao != null) conexao.rollback();
             } catch (SQLException e) {
-                // ...
             }
             throw new RuntimeException("Falha na criação do Quarto: " + ex.getMessage(), ex);
         } finally {
@@ -47,10 +42,8 @@ public class QuartoDAO implements InterfaceDAO<Quarto> {
         }
     }
     
-    // --- RETRIEVE ALL/FILTRO ---
     @Override
     public List<Quarto> Retrieve(String atributo, String valor) {
-        // SQL: Select da coluna valor_diaria
         String sqlInstrucao = "SELECT id, descricao, capacidade_hospedes, valor_diaria, obs, status, metragem, identificacao, andar, flag_animais FROM quarto";
         if (atributo != null && !atributo.trim().isEmpty()) {
             sqlInstrucao += " WHERE " + atributo + " LIKE ?";
@@ -95,8 +88,7 @@ public class QuartoDAO implements InterfaceDAO<Quarto> {
         return listaQuartos;
     }
     
-    // --- Métodos faltantes da interface (Retrieve por ID, Update, Delete) ---
-    @Override public Quarto Retrieve(int id) { /* Implementar busca por ID */ return null; }
-    @Override public void Update(Quarto objeto) { /* Implementar Update */ }
-    @Override public void Delete(Quarto objeto) { /* Implementar Delete */ }
+    @Override public Quarto Retrieve(int id) { return null; }
+    @Override public void Update(Quarto objeto) {  }
+    @Override public void Delete(Quarto objeto) {  }
 }

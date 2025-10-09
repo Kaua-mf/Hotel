@@ -48,7 +48,6 @@ public class ControllerCadHospede implements ActionListener {
             }
             
             try {
-                // --- MAPEAMENTO DOS CAMPOS CORRIGIDOS (21 CAMPOS) ---
                 this.hospedeAtual.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
                 this.hospedeAtual.setFone(this.telaCadastro.getjFormattedTextFieldFone1().getText());
                 this.hospedeAtual.setFone2(this.telaCadastro.getjFormattedTextFieldFone2().getText());
@@ -58,13 +57,11 @@ public class ControllerCadHospede implements ActionListener {
                 this.hospedeAtual.setBairro(this.telaCadastro.getjTextFieldBairro().getText());
                 this.hospedeAtual.setCidade(this.telaCadastro.getjTextFieldCidade().getText());
                 this.hospedeAtual.setComplemento(this.telaCadastro.getjTextFieldComplemento().getText());
-                
-                this.hospedeAtual.setDataCadastro(this.telaCadastro.getjTextFieldDataCadastro().getText()); // CORRIGIDO
+                this.hospedeAtual.setDataCadastro(this.telaCadastro.getjTextFieldDataCadastro().getText()); 
                 this.hospedeAtual.setCpf(this.telaCadastro.getjFormattedTextFieldCpf().getText());
                 this.hospedeAtual.setRg(this.telaCadastro.getjTextFieldRg().getText());
-                this.hospedeAtual.setObs(this.telaCadastro.getjTextFieldObs().getText()); // CORRIGIDO
-                this.hospedeAtual.setContato(this.telaCadastro.getjTextFieldContato().getText()); // CORRIGIDO
-                
+                this.hospedeAtual.setObs(this.telaCadastro.getjTextFieldObs().getText()); 
+                this.hospedeAtual.setContato(this.telaCadastro.getjTextFieldContato().getText()); 
                 this.hospedeAtual.setRazaoSocial(this.telaCadastro.getjTextFieldRazaoSocial().getText()); 
                 this.hospedeAtual.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
                 this.hospedeAtual.setInscricaoEstadual(this.telaCadastro.getjTextFieldInscricaoEstadual().getText());

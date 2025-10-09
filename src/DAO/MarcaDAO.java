@@ -10,16 +10,13 @@ import model.Marca;
 
 public class MarcaDAO implements InterfaceDAO<Marca> {
 
-    // --- CREATE (Insere uma nova Marca) ---
     @Override
     public void Create(Marca objeto) {
-        // SQL CORRIGIDO: Usa as colunas 'descricao' e 'STATUS' (em maiúsculas)
         String sqlInstrucao = "INSERT INTO marca(descricao, STATUS) VALUES(?, ?)";
         Connection conexao = null;
         PreparedStatement pstm = null;
 
         try {
-            // Início da transação
             conexao = ConnectionFactory.getConnection();
             conexao.setAutoCommit(false); 
             pstm = conexao.prepareStatement(sqlInstrucao);
@@ -43,14 +40,13 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
         }
     }
 
-    // --- RETRIEVE POR ID (Busca uma única Marca) ---
     @Override
     public Marca Retrieve(int id) {
         String sqlInstrucao = "SELECT id, descricao, STATUS FROM marca WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
         ResultSet rst = null;
-        Marca marca = null; // Inicializa como null, retorna null se não encontrar
+        Marca marca = null; 
 
         try {
             conexao = ConnectionFactory.getConnection();
@@ -73,15 +69,12 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
         return marca;
     }
 
-    // --- RETRIEVE POR FILTRO / ALL ---
     @Override
     public List<Marca> Retrieve(String atributo, String valor) {
-        // Assume-se que a busca geral ou filtrada será sempre nas colunas 'id', 'descricao', ou 'STATUS'
         String sqlInstrucao = "SELECT id, descricao, STATUS FROM marca";
         boolean isGeral = (atributo == null || atributo.trim().isEmpty());
         
         if (!isGeral) {
-            // Cuidado com a segurança: O Controller/Service deve garantir que 'atributo' seja seguro.
             sqlInstrucao += " WHERE " + atributo + " LIKE ?";
         }
         
@@ -117,7 +110,6 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
         return listaMarcas;
     }
 
-    // --- UPDATE ---
     @Override
     public void Update(Marca objeto) {
         String sqlInstrucao = "UPDATE marca SET descricao = ?, STATUS = ? WHERE id = ?";
@@ -144,7 +136,6 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
         }
     }
 
-    // --- DELETE ---
     @Override
     public void Delete(Marca objeto) {
         String sqlInstrucao = "DELETE FROM marca WHERE id = ?";

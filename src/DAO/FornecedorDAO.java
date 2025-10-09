@@ -10,7 +10,6 @@ import model.Fornecedor;
 
 public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
 
-    // --- CREATE ---
     @Override
     public void Create(Fornecedor objeto) {
         String sqlInstrucao = "INSERT INTO fornecedor(nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, razao_social, cnpj, inscricao_estadual, contato) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -23,7 +22,6 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
 
             pstm = conexao.prepareStatement(sqlInstrucao);
             
-            // Definição dos Parâmetros (1 a 18)
             pstm.setString(1, objeto.getNome());
             pstm.setString(2, objeto.getFone());
             pstm.setString(3, objeto.getFone2());
@@ -33,7 +31,7 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             pstm.setString(7, objeto.getBairro());
             pstm.setString(8, objeto.getCidade());
             pstm.setString(9, objeto.getComplemento());
-            pstm.setString(10, objeto.getDataCadastro()); // Atenção ao tipo de dado Date
+            pstm.setString(10, objeto.getDataCadastro()); 
             pstm.setString(11, objeto.getCpf());
             pstm.setString(12, objeto.getRg());
             pstm.setString(13, objeto.getObs());
@@ -56,14 +54,12 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             } catch (SQLException e) {
                 System.err.println("Erro ao fazer rollback: " + e.getMessage());
             }
-            // CORREÇÃO: Lançar exceção para a camada Service
             throw new RuntimeException("Falha na criação do Fornecedor.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }
 
-    // --- RETRIEVE POR ID ---
     @Override
     public Fornecedor Retrieve(int id) {
         String sqlInstrucao = "SELECT id, nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, razao_social, cnpj, inscricao_estadual, contato FROM fornecedor WHERE id = ?";
@@ -80,7 +76,6 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             
             if (rst.next()) {
                 fornecedor = new Fornecedor();
-                // Popula o objeto (mantido como está, parece OK)
                 fornecedor.setId(rst.getInt("id"));
                 fornecedor.setNome(rst.getString("nome"));
                 fornecedor.setFone(rst.getString("fone"));
@@ -103,7 +98,6 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             }
         } catch (SQLException ex) {
             System.err.println("Erro ao buscar fornecedor por ID: " + ex.getMessage());
-            // CORREÇÃO: Lançar exceção
             throw new RuntimeException("Falha na busca de Fornecedor por ID.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
@@ -111,13 +105,8 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
         return fornecedor; 
     }
     
-    // --- RETRIEVE COM FILTRO (Ajustado contra Injeção SQL) ---
     @Override
     public List<Fornecedor> Retrieve(String atributo, String valor) {
-        // CORREÇÃO: Removida a concatenação direta do 'atributo' para segurança!
-        // OBS: Se você precisar de filtro dinâmico por coluna, use um switch/case 
-        // para construir a instrução SQL de forma segura, ou apenas filtre pelo nome.
-        // Vamos manter o filtro no WHERE, mas o Controller deve garantir que o atributo é seguro.
         String sqlInstrucao = "SELECT id, nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, razao_social, cnpj, inscricao_estadual, contato FROM fornecedor WHERE " + atributo + " LIKE ?";
         
         Connection conexao = null;
@@ -133,7 +122,6 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             
             while (rst.next()) {
                 Fornecedor fornecedor = new Fornecedor();
-                // Popula o objeto (mantido como está, parece OK)
                 fornecedor.setId(rst.getInt("id"));
                 fornecedor.setNome(rst.getString("nome"));
                 fornecedor.setFone(rst.getString("fone"));
@@ -157,7 +145,6 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             }
         } catch (SQLException ex) {
             System.err.println("Erro ao buscar fornecedores com filtro: " + ex.getMessage());
-            // CORREÇÃO: Lançar exceção
             throw new RuntimeException("Falha na busca de Fornecedores com filtro.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
@@ -165,14 +152,10 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
         return listaFornecedor;
     }
 
-    // --- RETRIEVE ALL (Necessário para a busca inicial) ---
-    // Este método geralmente é necessário para o ControllerBusca...
     public List<Fornecedor> Retrieve() {
-        // Simplesmente chama o Retrieve com valores vazios se necessário, ou uma query SELECT *
-        return Retrieve(null, null); // Se sua interface não exigir uma string/valor
+        return Retrieve(null, null); 
     }
     
-    // --- UPDATE ---
     @Override
     public void Update(Fornecedor objeto) {
         String sqlInstrucao = "UPDATE fornecedor SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, logradouro = ?, bairro = ?, cidade = ?, complemento = ?, data_cadastro = ?, cpf = ?, rg = ?, obs = ?, status = ?, razao_social = ?, cnpj = ?, inscricao_estadual = ?, contato = ? WHERE id = ?";
@@ -217,21 +200,14 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             } catch (SQLException e) {
                 System.err.println("Erro ao fazer rollback: " + e.getMessage());
             }
-            // CORREÇÃO: Lançar exceção
             throw new RuntimeException("Falha na atualização do Fornecedor.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }
 
-    // --- DELETE ---
     @Override
     public void Delete(Fornecedor objeto) {
         throw new UnsupportedOperationException("Not supported yet.");
-        // Se você precisar implementar o DELETE:
-        /*
-        String sqlInstrucao = "DELETE FROM fornecedor WHERE id = ?";
-        // ... (código similar ao CREATE/UPDATE)
-        */
     }
 }

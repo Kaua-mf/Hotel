@@ -1,15 +1,13 @@
 package model;
 
-
 public class Hospede extends Pessoa {
     
-    // CAMPOS ADICIONADOS ALÉM DA CLASSE PESSOA
     private String razaoSocial;
     private String cnpj;
     private String inscricaoEstadual;   
     private String contato;
-    private String usuario; // Campo que estava faltando Get/Set
-    private String senha;   // Campo que estava faltando Get/Set
+    private String usuario; 
+    private String senha;   
 
     public Hospede() {
     }

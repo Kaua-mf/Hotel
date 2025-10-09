@@ -7,10 +7,8 @@ import model.ProdutoCopa;
 
 public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
 
-    // --- CREATE (Insere um novo Produto) ---
     @Override
     public void Create(ProdutoCopa objeto) {
-        // SQL: Adicionado obs e as colunas do DB
         String sqlInstrucao = "INSERT INTO produto_copa (descricao, valor, obs, status) VALUES (?, ?, ?, ?)";
         Connection conexao = null;
         PreparedStatement pstm = null;
@@ -19,8 +17,6 @@ public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
             conexao = ConnectionFactory.getConnection();
             conexao.setAutoCommit(false); 
             pstm = conexao.prepareStatement(sqlInstrucao);
-
-            // Mapeamento: Ordem correta para o INSERT
             pstm.setString(1, objeto.getDescricao());
             pstm.setFloat(2, objeto.getValor());
             pstm.setString(3, objeto.getObs()); 
@@ -42,7 +38,6 @@ public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
         }
     }
 
-    // --- RETRIEVE POR ID ---
     @Override
     public ProdutoCopa Retrieve(int id) {
         String sqlInstrucao = "SELECT id, descricao, valor, obs, status FROM produto_copa WHERE id = ?";
@@ -74,7 +69,6 @@ public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
         return produto;
     }
 
-    // --- RETRIEVE POR FILTRO / ALL ---
     @Override
     public List<ProdutoCopa> Retrieve(String atributo, String valor) {
         String sqlInstrucao = "SELECT id, descricao, valor, obs, status FROM produto_copa";
@@ -115,19 +109,15 @@ public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
         return listaProdutos;
     }
 
-    // --- UPDATE ---
     @Override
     public void Update(ProdutoCopa objeto) {
         String sqlInstrucao = "UPDATE produto_copa SET descricao = ?, valor = ?, obs = ?, status = ? WHERE id = ?";
-        // ... Lógica JDBC similar ao Create/Delete
         throw new UnsupportedOperationException("Update ainda não implementado.");
     }
 
-    // --- DELETE ---
     @Override
     public void Delete(ProdutoCopa objeto) {
         String sqlInstrucao = "DELETE FROM produto_copa WHERE id = ?";
-        // ... Lógica JDBC similar ao Create/Update
         throw new UnsupportedOperationException("Delete ainda não implementado.");
     }
 }

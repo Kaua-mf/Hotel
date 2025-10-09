@@ -19,7 +19,6 @@ public class ControllerBuscaFornecedor implements ActionListener {
         this.telaBusca.getjButtonFiltar().addActionListener(this);
         this.telaBusca.getjButtonSair().addActionListener(this);
         
-        // Chamada inicial (deve incluir tratamento de erro)
         preencheTabelaComDados();
     }
     
@@ -28,7 +27,6 @@ public class ControllerBuscaFornecedor implements ActionListener {
             List<Fornecedor> listaFornecedores = servicoFornecedor.buscarTodos();
             this.telaBusca.preencheTabela(listaFornecedores);
         } catch (RuntimeException e) {
-            // Se falhar ao carregar no início
             JOptionPane.showMessageDialog(null, 
                 "Falha ao carregar dados iniciais! Verifique a conexão com o banco de dados.", 
                 "Erro de Conexão", 
@@ -45,11 +43,9 @@ public class ControllerBuscaFornecedor implements ActionListener {
             int tipoBusca = this.telaBusca.getjCBFiltro().getSelectedIndex();
             
             try {
-                // A lógica de busca no banco é encapsulada pelo ServicoFornecedor
                 List<Fornecedor> resultados = servicoFornecedor.buscarPorFiltro(filtro, tipoBusca);
                 this.telaBusca.preencheTabela(resultados);
             } catch (RuntimeException e) {
-                // Se a consulta de filtro falhar (ex: erro SQL ou conexão)
                  JOptionPane.showMessageDialog(null, 
                     "Falha ao realizar a busca no banco de dados. Tente novamente.", 
                     "Erro de Busca", 

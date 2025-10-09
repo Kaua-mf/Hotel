@@ -173,8 +173,6 @@ public class TelaCadastroFornecedor extends javax.swing.JDialog {
 
         jLabelSexo.setText("Sexo");
 
-        jComboBoxSexo.setSelectedIndex(-1);
-
         jLabelContato.setText("Contato");
 
         jLabelObs.setText("OBS.:");
