@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+X-COMMENT: Main-Class will be added automatically by build
+Class-Path: lib/mysql-connector-j-9.4.0.jar lib/protobuf-java-4.31.1.jar

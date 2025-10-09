@@ -1,0 +1,58 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.JOptionPane; // Adicionado
+import model.Veiculo; // Adicionado
+import service.ServicoVeiculo;
+import view.TelaBuscaVeiculo;
+
+public class ControllerBuscaVeiculo implements ActionListener {
+
+    TelaBuscaVeiculo telaBusca;
+    ServicoVeiculo servicoVeiculo = new ServicoVeiculo();
+
+    public ControllerBuscaVeiculo(TelaBuscaVeiculo telaBusca) {
+        this.telaBusca = telaBusca;
+        this.telaBusca.getjButtonCarregar().addActionListener(this);
+        this.telaBusca.getjButtonFiltar().addActionListener(this);
+        this.telaBusca.getjButtonSair().addActionListener(this);
+        
+        // Chamada inicial com tratamento de erro
+        preencheTabelaComDados();
+    }
+
+    private void preencheTabelaComDados() {
+        try {
+            List<Veiculo> listaVeiculos = servicoVeiculo.buscarTodos();
+            this.telaBusca.preencheTabela(listaVeiculos);
+        } catch (RuntimeException e) {
+             JOptionPane.showMessageDialog(null, 
+                "Falha ao carregar dados. Verifique a conexão com o banco de dados.", 
+                "Erro de Conexão", 
+                JOptionPane.ERROR_MESSAGE);
+             // Não propaga o erro, apenas mostra a mensagem
+        }
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent evento) {
+        if (evento.getSource() == this.telaBusca.getjButtonFiltar()) {
+            String filtro = this.telaBusca.getjTFFiltro().getText();
+            int tipoBusca = this.telaBusca.getjCBFiltro().getSelectedIndex();
+            
+            try {
+                List<Veiculo> resultados = servicoVeiculo.buscarPorFiltro(filtro, tipoBusca);
+                this.telaBusca.preencheTabela(resultados);
+            } catch (RuntimeException e) {
+                 JOptionPane.showMessageDialog(null, 
+                    "Falha ao buscar dados. Erro: " + e.getMessage(), 
+                    "Erro de Busca", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (evento.getSource() == this.telaBusca.getjButtonSair()) {
+            this.telaBusca.dispose();
+        }
+    }
+}
