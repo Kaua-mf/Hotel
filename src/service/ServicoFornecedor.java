@@ -11,7 +11,7 @@ public class ServicoFornecedor {
     public void salvar(Fornecedor fornecedor) {
         fornecedorDAO.Create(fornecedor);
     }
-    
+ 
     public List<Fornecedor> buscarTodos() {
         return fornecedorDAO.Retrieve(); 
     }
@@ -21,16 +21,16 @@ public class ServicoFornecedor {
 
         switch (tipoBusca) {
             case 0:
-                nomeColuna = "nome";
+                nomeColuna = "id";
                 break;
             case 1:
-                nomeColuna = "razao_social";
+                nomeColuna = "nome";
                 break;
             case 2:
                 nomeColuna = "cnpj";
                 break;
             default:
-                throw new IllegalArgumentException("Tipo de busca (índice) inválido: " + tipoBusca);
+                nomeColuna = "id";
         }
         
         return fornecedorDAO.Retrieve(nomeColuna, filtro);

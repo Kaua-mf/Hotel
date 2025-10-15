@@ -1,11 +1,12 @@
 package model;
+
+
 public class Fornecedor extends Pessoa{
     
     private String razaoSocial;
     private String cnpj;
     private String inscricaoEstadual;
     private String contato;
-    private String dataCadastro;
 
     public Fornecedor() {
     }
@@ -16,7 +17,6 @@ public class Fornecedor extends Pessoa{
         this.cnpj = cnpj;
         this.inscricaoEstadual = inscricaoEstadual;
         this.contato = contato;
-        this.dataCadastro = datacadastro;
     }
 
     public String getRazaoSocial() {
@@ -58,6 +58,36 @@ public class Fornecedor extends Pessoa{
     public void setFone(String fone1) {
         this.fone1 = fone1;
     }
+ public String getFone2() {
+        return fone1;
+    }
+
+    public void setFone2(String fone1) {
+        this.fone1 = fone1;
+    }
+    public String getFone1() {
+        return fone1;
+    }
+
+    public void setFone1(String fone1) {
+        this.fone1 = fone1;
+    }
+
+    public String getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(String dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public String getObs() {
+        return obs;
+    }
+
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
 
     @Override
     public String toString() {
@@ -71,8 +101,5 @@ public class Fornecedor extends Pessoa{
                 "\nContato    = " + this.getContato()+
                 "\nStatus = " + this.getStatus();
     }
-
-    
-
 
 }

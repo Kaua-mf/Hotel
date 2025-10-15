@@ -24,7 +24,6 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItemProduto = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItemFornecedor = new javax.swing.JMenuItem();
         jMenuItemQuarto = new javax.swing.JMenuItem();
@@ -48,10 +47,6 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         setResizable(false);
 
         jMenu2.setText("Cadastros");
-
-        jMenuItemProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Bomb.png"))); // NOI18N
-        jMenuItemProduto.setText("Produto");
-        jMenu2.add(jMenuItemProduto);
         jMenu2.add(jSeparator1);
 
         jMenuItemFornecedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Boss.png"))); // NOI18N
@@ -63,6 +58,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemFornecedor);
 
+        jMenuItemQuarto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Home.png"))); // NOI18N
         jMenuItemQuarto.setText("Quarto");
         jMenuItemQuarto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,6 +67,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemQuarto);
 
+        jMenuItemVeiculo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delivery.png"))); // NOI18N
         jMenuItemVeiculo.setText("Veículo");
         jMenuItemVeiculo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -79,6 +76,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemVeiculo);
 
+        jMenuItemServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Dial.png"))); // NOI18N
         jMenuItemServico.setText("Serviço");
         jMenuItemServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,6 +85,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemServico);
 
+        jMenuItemProdutoCopa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Dollar.png"))); // NOI18N
         jMenuItemProdutoCopa.setText("Produto/Copa");
         jMenuItemProdutoCopa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,6 +94,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemProdutoCopa);
 
+        jMenuItemVagaDeEstacionamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Left-right.png"))); // NOI18N
         jMenuItemVagaDeEstacionamento.setText("Vaga de Estacionamento");
         jMenuItemVagaDeEstacionamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,6 +103,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemVagaDeEstacionamento);
 
+        jMenuItemHospede.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Female.png"))); // NOI18N
         jMenuItemHospede.setText("Hóspede");
         jMenuItemHospede.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,6 +112,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemHospede);
 
+        jMenuItemFuncionario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/People.png"))); // NOI18N
         jMenuItemFuncionario.setText("Funcionário");
         jMenuItemFuncionario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -260,7 +262,6 @@ ControllerCadVeiculo controller = new ControllerCadVeiculo(tela, veiculoVazio);
     private javax.swing.JMenuItem jMenuItemFornecedor;
     private javax.swing.JMenuItem jMenuItemFuncionario;
     private javax.swing.JMenuItem jMenuItemHospede;
-    private javax.swing.JMenuItem jMenuItemProduto;
     private javax.swing.JMenuItem jMenuItemProdutoCopa;
     private javax.swing.JMenuItem jMenuItemQuarto;
     private javax.swing.JMenuItem jMenuItemSair;

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Fornecedor;
 import service.ServicoFornecedor;
 import view.TelaBuscaFornecedor;
@@ -55,6 +56,10 @@ public class ControllerBuscaFornecedor implements ActionListener {
             
         } else if (evento.getSource() == this.telaBusca.getjButtonSair()) {
             this.telaBusca.dispose();
+
+        } else if (evento.getSource() == this.telaBusca.getjButtonCarregar()) {
+            this.telaBusca.getjTFFiltro().setText("");
+            preencheTabelaComDados();
         }
     }
 }

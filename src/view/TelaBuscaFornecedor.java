@@ -1,9 +1,12 @@
 package view;
 
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import model.Fornecedor;
 
 
 public class TelaBuscaFornecedor extends javax.swing.JDialog {
@@ -41,22 +44,6 @@ public class TelaBuscaFornecedor extends javax.swing.JDialog {
         return jCBFiltro;
     }
 
-   public void preencheTabela(java.util.List<model.Fornecedor> listaFornecedores) {
-    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
-    
-    modelo.setRowCount(0);
-
-    for (model.Fornecedor fornecedor : listaFornecedores) {
-        modelo.addRow(new Object[]{
-            fornecedor.getId(),
-            fornecedor.getNome(),
-            fornecedor.getRazaoSocial(),
-            fornecedor.getCnpj(),
-            fornecedor.getStatus()
-        });
-    }
-}
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -270,6 +257,7 @@ public class TelaBuscaFornecedor extends javax.swing.JDialog {
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCarregar;
@@ -286,4 +274,24 @@ public class TelaBuscaFornecedor extends javax.swing.JDialog {
     private javax.swing.JTextField jTFFiltro;
     private javax.swing.JTable jTableDados;
     // End of variables declaration//GEN-END:variables
-}
+public void preencheTabela(List<Fornecedor> listaFornecedores) {
+        // Pega o "modelo" da sua JTable. 
+        // Verifique no modo Design se o nome da sua tabela é 'jTableDados' ou outro.
+        DefaultTableModel tabela = (DefaultTableModel) jTableDados.getModel();
+
+        // [PASSO CRÍTICO] Limpa a tabela, removendo todas as linhas antigas.
+        tabela.setRowCount(0);
+
+        // Adiciona os novos dados, linha por linha.
+        for (Fornecedor fornecedor : listaFornecedores) {
+            Object[] obj = new Object[]{
+                fornecedor.getId(),
+                fornecedor.getNome(),
+                fornecedor.getRazaoSocial(),
+                fornecedor.getCnpj(),
+                fornecedor.getStatus()
+                // As colunas aqui DEVEM estar na mesma ordem da sua tabela visual
+            };
+            tabela.addRow(obj);
+        }
+}}

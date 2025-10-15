@@ -9,54 +9,95 @@ import model.Fornecedor;
 import service.ServicoFornecedor;
 import view.TelaBuscaFornecedor;
 import view.TelaCadastroFornecedor;
+import utilities.Utilities;
 
 public class ControllerCadFornecedor implements ActionListener {
 
     TelaCadastroFornecedor telaCadastro;
     ServicoFornecedor servicoFornecedor = new ServicoFornecedor();
+    // A variável fornecedorAtual ainda é útil para guardar os dados antes de salvar
+    Fornecedor fornecedorAtual; 
 
     public ControllerCadFornecedor(TelaCadastroFornecedor telaCadastro) {
         this.telaCadastro = telaCadastro;
+        
+        // Adiciona os listeners
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
         this.telaCadastro.getjButtonGravar().addActionListener(this);
         this.telaCadastro.getjButtonBuscar().addActionListener(this);
         this.telaCadastro.getjButtonSair().addActionListener(this);
-        utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
-        utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+        
+        // Configuração inicial da tela
+        Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
+        Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
     }
 
     @Override
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource() == this.telaCadastro.getjButtonNovo()) {
-            utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
-            utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
+            // Habilita a edição e limpa os campos
+            Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
+            Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
+            
+            // Cria um novo objeto para o cadastro
+            this.fornecedorAtual = new Fornecedor();
+            
+            // LÓGICA DA DATA AUTOMÁTICA
+            LocalDateTime agora = LocalDateTime.now();
+            DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String dataFormatada = agora.format(formatoBrasileiro);
+            
+            this.telaCadastro.getjTextFieldDataCadastro().setText(dataFormatada);
+
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
-            utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
-            utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+            Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
+            Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
-            Fornecedor fornecedor = new Fornecedor();
             
-            fornecedor.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
-            fornecedor.setRazaoSocial(this.telaCadastro.getjTextFieldRazaoSocial().getText());
-            fornecedor.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
-            fornecedor.setInscricaoEstadual(this.telaCadastro.getjTextFieldInscricaoEstadual().getText());
-            fornecedor.setContato(this.telaCadastro.getjTextFieldContato().getText());
-            fornecedor.setFone1(this.telaCadastro.getjFormattedTextFieldFone1().getText());
-            fornecedor.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
-            fornecedor.setStatus('A');
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            fornecedor.setDataCadastro(dtf.format(LocalDateTime.now()));
+            // VALIDAÇÃO BÁSICA
+            if (this.telaCadastro.getjTextFieldNomeFantasia().getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(telaCadastro, "O campo 'Nome Fantasia' é obrigatório.", "Atenção", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Mapeia os dados da tela para o objeto
+            this.fornecedorAtual.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
+            this.fornecedorAtual.setRazaoSocial(this.telaCadastro.getjTextFieldRazaoSocial().getText());
+            this.fornecedorAtual.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
+            this.fornecedorAtual.setInscricaoEstadual(this.telaCadastro.getjTextFieldInscricaoEstadual().getText());
+            this.fornecedorAtual.setContato(this.telaCadastro.getjTextFieldContato().getText());
+            this.fornecedorAtual.setFone1(this.telaCadastro.getjFormattedTextFieldFone1().getText());
+            this.fornecedorAtual.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
+            this.fornecedorAtual.setStatus('A');
             
-            servicoFornecedor.salvar(fornecedor);
-            JOptionPane.showMessageDialog(telaCadastro, "Fornecedor salvo com sucesso!");
-            utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
-            utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+            // Formata a data para o padrão do banco
+            DateTimeFormatter dtfDb = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            this.fornecedorAtual.setDataCadastro(dtfDb.format(LocalDateTime.now()));
+            
+            // LÓGICA DE ATUALIZAÇÃO REMOVIDA
+            try {
+                // Chama diretamente o método para salvar um novo registro
+                servicoFornecedor.salvar(this.fornecedorAtual);
+                
+                // Mensagem de sucesso genérica
+                JOptionPane.showMessageDialog(telaCadastro, "Dados gravados com sucesso!");
+                
+                // Reseta a tela para o estado inicial
+                Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
+                Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(telaCadastro, "Erro ao gravar os dados:\n" + e.getMessage(), "Erro de Banco de Dados", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonBuscar()) {
             TelaBuscaFornecedor telaBusca = new TelaBuscaFornecedor(null, true);
             ControllerBuscaFornecedor controllerBusca = new ControllerBuscaFornecedor(telaBusca);
             telaBusca.setVisible(true);
+
         } else if (evento.getSource() == this.telaCadastro.getjButtonSair()) {
             this.telaCadastro.dispose();
         }

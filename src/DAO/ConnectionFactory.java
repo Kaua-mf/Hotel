@@ -11,7 +11,7 @@ public class ConnectionFactory {
     private static final String driver = "com.mysql.cj.jdbc.Driver"; 
     private static final String url = "jdbc:mysql://localhost:3306/hotel?serverTimezone=UTC&useSSL=false"; 
     private static final String usuario = "root";
-    private static final String senha = "ifsc";
+    private static final String senha = "";
 
     public static Connection getConnection() {
         try {
