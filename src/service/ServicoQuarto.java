@@ -50,7 +50,7 @@ public class ServicoQuarto {
                 nomeColuna = "descricao"; 
                 break;
             default:
-                return quartoDAO.Retrieve(null, null);
+                nomeColuna = "id";
         }
         
         return quartoDAO.Retrieve(nomeColuna, filtro);

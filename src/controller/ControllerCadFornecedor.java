@@ -15,20 +15,17 @@ public class ControllerCadFornecedor implements ActionListener {
 
     TelaCadastroFornecedor telaCadastro;
     ServicoFornecedor servicoFornecedor = new ServicoFornecedor();
-    // A variável fornecedorAtual ainda é útil para guardar os dados antes de salvar
     Fornecedor fornecedorAtual; 
 
     public ControllerCadFornecedor(TelaCadastroFornecedor telaCadastro) {
         this.telaCadastro = telaCadastro;
         
-        // Adiciona os listeners
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
         this.telaCadastro.getjButtonGravar().addActionListener(this);
         this.telaCadastro.getjButtonBuscar().addActionListener(this);
         this.telaCadastro.getjButtonSair().addActionListener(this);
         
-        // Configuração inicial da tela
         Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
         Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
     }
@@ -36,14 +33,11 @@ public class ControllerCadFornecedor implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource() == this.telaCadastro.getjButtonNovo()) {
-            // Habilita a edição e limpa os campos
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
             
-            // Cria um novo objeto para o cadastro
             this.fornecedorAtual = new Fornecedor();
             
-            // LÓGICA DA DATA AUTOMÁTICA
             LocalDateTime agora = LocalDateTime.now();
             DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             String dataFormatada = agora.format(formatoBrasileiro);
@@ -56,13 +50,11 @@ public class ControllerCadFornecedor implements ActionListener {
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
-            // VALIDAÇÃO BÁSICA
             if (this.telaCadastro.getjTextFieldNomeFantasia().getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(telaCadastro, "O campo 'Nome Fantasia' é obrigatório.", "Atenção", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Mapeia os dados da tela para o objeto
             this.fornecedorAtual.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
             this.fornecedorAtual.setRazaoSocial(this.telaCadastro.getjTextFieldRazaoSocial().getText());
             this.fornecedorAtual.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
@@ -72,19 +64,14 @@ public class ControllerCadFornecedor implements ActionListener {
             this.fornecedorAtual.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
             this.fornecedorAtual.setStatus('A');
             
-            // Formata a data para o padrão do banco
             DateTimeFormatter dtfDb = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.fornecedorAtual.setDataCadastro(dtfDb.format(LocalDateTime.now()));
             
-            // LÓGICA DE ATUALIZAÇÃO REMOVIDA
             try {
-                // Chama diretamente o método para salvar um novo registro
                 servicoFornecedor.salvar(this.fornecedorAtual);
                 
-                // Mensagem de sucesso genérica
                 JOptionPane.showMessageDialog(telaCadastro, "Dados gravados com sucesso!");
                 
-                // Reseta a tela para o estado inicial
                 Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
 

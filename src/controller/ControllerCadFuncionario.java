@@ -2,6 +2,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import model.Funcionario;
 import service.ServicoFuncionario;
@@ -34,8 +36,13 @@ public class ControllerCadFuncionario implements ActionListener {
         if (evento.getSource() == this.telaCadastro.getjButtonNovo()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
-            this.funcionarioAtual = new Funcionario(); // Cria um novo objeto funcionário
-
+            this.funcionarioAtual = new Funcionario(); 
+            
+            LocalDateTime agora = LocalDateTime.now();
+            DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String dataFormatada = agora.format(formatoBrasileiro);
+            
+            this.telaCadastro.getjTextFieldDataCadastro().setText(dataFormatada);
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);

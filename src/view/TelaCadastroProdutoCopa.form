@@ -171,7 +171,7 @@
                                               <Component id="jTextFieldIds" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
                                               <Component id="jLabelId" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jFormattedTextField5" min="-2" pref="227" max="-2" attributes="0"/>
                                               <Component id="jLabelCadastro" min="-2" max="-2" attributes="0"/>
@@ -204,13 +204,15 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="jTextFieldIds" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jTextFieldIds" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jFormattedTextField5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                                   <Component id="jLabelObs" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Component id="jFormattedTextField5" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabelRazaoSocial" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabelSexo" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -309,7 +311,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelCadastro">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Valor"/>
+            <Property name="text" type="java.lang.String" value="Valor :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelCep">
@@ -330,7 +332,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelObs">
           <Properties>
-            <Property name="text" type="java.lang.String" value="OBS:"/>
+            <Property name="text" type="java.lang.String" value="OBS :"/>
           </Properties>
         </Component>
       </SubComponents>

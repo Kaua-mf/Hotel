@@ -128,7 +128,7 @@ public class TelaBuscaFuncionario extends javax.swing.JDialog {
 
         jPanelFiltros.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jCBFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Id", "Nome", "Usuario" }));
+        jCBFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nome", "CPF", "Usuario" }));
         jCBFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCBFiltroActionPerformed(evt);

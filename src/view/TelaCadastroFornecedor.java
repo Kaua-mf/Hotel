@@ -1,6 +1,5 @@
 package view;
 
-import controller.ControllerCadFornecedor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 

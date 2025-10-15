@@ -132,7 +132,7 @@ public class TelaBuscaVeiculo extends javax.swing.JDialog {
 
         jPanelFiltros.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jCBFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Id", "Nome", "CPF" }));
+        jCBFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Placa", "Cor" }));
         jCBFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCBFiltroActionPerformed(evt);

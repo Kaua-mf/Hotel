@@ -101,7 +101,7 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
 
         jLabelTitulo.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTitulo.setText("Fornecedor");
+        jLabelTitulo.setText("Funcionário");
 
         javax.swing.GroupLayout jPanelTituloLayout = new javax.swing.GroupLayout(jPanelTitulo);
         jPanelTitulo.setLayout(jPanelTituloLayout);
@@ -153,6 +153,7 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
             }
         });
 
+        jTextFieldDataCadastro.setEditable(false);
         jTextFieldDataCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldDataCadastroActionPerformed(evt);
@@ -178,6 +179,12 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
         jLabelComplemento.setText("Complemento");
 
         jLabelSexo.setText("Sexo");
+
+        jComboBoxSexo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxSexoActionPerformed(evt);
+            }
+        });
 
         jLabelObs.setText("OBS.:");
 
@@ -465,6 +472,10 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldDataCadastroActionPerformed
 
+    private void jComboBoxSexoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxSexoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxSexoActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -569,9 +580,6 @@ public javax.swing.JTextField getjTextFieldId() { return jTextFieldId; }
     public void setjComboBoxSexo(JComboBox<String> jComboBoxSexo) {
         this.jComboBoxSexo = jComboBoxSexo;
     }
-
-  
-
     
     public JFormattedTextField getjTextFieldUsuario() {
         return jTextFieldUsuario;

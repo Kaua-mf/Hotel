@@ -208,6 +208,19 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
 
     @Override
     public void Delete(Fornecedor objeto) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String sql = "DELETE FROM fornecedor WHERE id = ?";
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement pstm = conexao.prepareStatement(sql)) {
+            
+            conexao.setAutoCommit(false);
+            pstm.setInt(1, objeto.getId());
+            pstm.executeUpdate();
+            conexao.commit();
+
+        } catch (SQLException ex) {
+            System.err.println("Erro ao deletar Fornecedor: " + ex.getMessage());
+            throw new RuntimeException("Falha ao deletar o Fornecedor. A transação foi revertida.", ex);
+        }
     }
-}
+    }

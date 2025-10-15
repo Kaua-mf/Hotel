@@ -82,7 +82,7 @@
               <Font name="Times New Roman" size="24" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Fornecedor"/>
+            <Property name="text" type="java.lang.String" value="Funcion&#xe1;rio"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -394,6 +394,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="jTextFieldDataCadastro">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
               <ComponentRef name="jTextFieldDataCadastro"/>
@@ -459,6 +462,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBoxSexoActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>

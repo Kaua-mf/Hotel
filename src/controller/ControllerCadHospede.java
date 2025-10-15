@@ -2,6 +2,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import model.Hospede;
 import service.ServicoHospede;
@@ -35,6 +37,12 @@ public class ControllerCadHospede implements ActionListener {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
             this.hospedeAtual = new Hospede();
+            
+            LocalDateTime agora = LocalDateTime.now();
+            DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String dataFormatada = agora.format(formatoBrasileiro);
+            
+            this.telaCadastro.getjTextFieldDataCadastro().setText(dataFormatada);
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
