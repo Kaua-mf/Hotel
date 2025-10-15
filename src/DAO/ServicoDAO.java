@@ -25,9 +25,9 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
 
             // Mapeamento dos parâmetros:
             // 1. O nome principal do serviço (objeto.getNome()) vai para 'descricao'
-            pstm.setString(1, objeto.getNome()); 
+            pstm.setString(1, objeto.getDescricao()); 
             // 2. A descrição detalhada (objeto.getDescricao()) vai para 'obs'
-            pstm.setString(2, objeto.getDescricao());
+            pstm.setString(2, objeto.getObs());
             // 3. O status (objeto.getStatus()) vai para 'STATUS'
             pstm.setString(3, String.valueOf(objeto.getStatus()));
 
@@ -50,7 +50,6 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
     // --- RETRIEVE POR ID ---
     @Override
     public Servico Retrieve(int id) {
-        // SQL CORRIGIDO: Seleciona 'descricao', 'obs' e 'STATUS'
         String sqlInstrucao = "SELECT id, descricao, obs, STATUS FROM servico WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
@@ -67,9 +66,9 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
                 servico = new Servico();
                 servico.setId(rst.getInt("id"));
                 // Mapeamento: 'descricao' do DB vai para nome no Model
-                servico.setNome(rst.getString("descricao")); 
+                servico.setDescricao(rst.getString("descricao")); 
                 // Mapeamento: 'obs' do DB vai para descrição no Model
-                servico.setDescricao(rst.getString("obs")); 
+                servico.setObs(rst.getString("obs")); 
                 // Mapeamento: 'STATUS' do DB vai para status no Model
                 servico.setStatus(rst.getString("STATUS").charAt(0)); 
             }
@@ -82,15 +81,12 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
         return servico;
     }
 
-    // --- RETRIEVE POR FILTRO (Geral ou Filtrada) ---
     @Override
     public List<Servico> Retrieve(String atributo, String valor) {
-        // SQL CORRIGIDO: Seleciona as colunas reais do banco
         String sqlInstrucao = "SELECT id, descricao, obs, STATUS FROM servico";
         boolean isGeral = (atributo == null || atributo.trim().isEmpty());
         
         if (!isGeral) {
-            // Permite buscar por 'id', 'descricao', 'obs' ou 'STATUS'
             sqlInstrucao += " WHERE " + atributo + " LIKE ?";
         }
         
@@ -113,8 +109,8 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
                 Servico servico = new Servico();
                 servico.setId(rst.getInt("id"));
                 // Mapeamento de retorno:
-                servico.setNome(rst.getString("descricao"));
-                servico.setDescricao(rst.getString("obs"));
+                servico.setDescricao(rst.getString("descricao"));
+                servico.setObs(rst.getString("obs"));
                 servico.setStatus(rst.getString("STATUS").charAt(0));
                 listaServicos.add(servico);
             }
@@ -130,7 +126,6 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
     // --- UPDATE ---
     @Override
     public void Update(Servico objeto) {
-        // SQL CORRIGIDO: Usa 'descricao', 'obs' e 'STATUS'
         String sqlInstrucao = "UPDATE servico SET descricao = ?, obs = ?, STATUS = ? WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
@@ -140,8 +135,8 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
             conexao.setAutoCommit(false);
             pstm = conexao.prepareStatement(sqlInstrucao);
             
-            pstm.setString(1, objeto.getNome());
-            pstm.setString(2, objeto.getDescricao());
+            pstm.setString(1, objeto.getDescricao());
+            pstm.setString(2, objeto.getObs());
             pstm.setString(3, String.valueOf(objeto.getStatus()));
             pstm.setInt(4, objeto.getId());
 
