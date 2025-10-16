@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 public class TelaCadastroHospede extends javax.swing.JDialog {
@@ -48,7 +49,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
         jLabelId = new javax.swing.JLabel();
         jTextFieldId = new javax.swing.JTextField();
         jLabelNomeFantasia = new javax.swing.JLabel();
-        jTextFieldNomeFantasia = new javax.swing.JTextField();
+        jTextFieldNome = new javax.swing.JTextField();
         jLabelRazaoSocial = new javax.swing.JLabel();
         jTextFieldRazaoSocial = new javax.swing.JTextField();
         jLabelrg = new javax.swing.JLabel();
@@ -184,7 +185,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
 
         jLabelSexo.setText("Sexo");
 
-        jComboBoxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Homem", "Mulher", "Não definido", " " }));
+        jComboBoxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculino", "Feminino", "Outro" }));
 
         jLabelContato.setText("Contato");
 
@@ -249,7 +250,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
                                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabelEmail)
                                     .addComponent(jLabelBairro))
-                                .addGap(0, 403, Short.MAX_VALUE))
+                                .addGap(0, 399, Short.MAX_VALUE))
                             .addComponent(jTextFieldComplemento)
                             .addGroup(jPanelDadosLayout.createSequentialGroup()
                                 .addComponent(jLabelComplemento)
@@ -272,7 +273,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
                                     .addComponent(jTextFieldInscricaoEstadual)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDadosLayout.createSequentialGroup()
                                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldNomeFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabelNomeFantasia))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,7 +318,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
                         .addGap(82, 82, 82)
                         .addComponent(jLabelNomeFantasia)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldNomeFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelDadosLayout.createSequentialGroup()
@@ -532,7 +533,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextFieldInscricaoEstadual;
     private javax.swing.JTextField jTextFieldLogradouro;
-    private javax.swing.JTextField jTextFieldNomeFantasia;
+    private javax.swing.JTextField jTextFieldNome;
     private javax.swing.JTextField jTextFieldObs;
     private javax.swing.JTextField jTextFieldRazaoSocial;
     private javax.swing.JTextField jTextFieldRg;
@@ -542,8 +543,8 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
         return jTextFieldId;
     }
 
-    public javax.swing.JTextField getjTextFieldNomeFantasia() {
-        return jTextFieldNomeFantasia;
+    public javax.swing.JTextField getjTextFieldNome() {
+        return jTextFieldNome;
     }
 
     public javax.swing.JTextField getjTextFieldRazaoSocial() {
@@ -605,6 +606,14 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
     }
     public javax.swing.JTextField getjTextFieldContato() {
         return jTextFieldContato;
+    }
+
+    public JComboBox<String> getjComboBoxSexo() {
+        return jComboBoxSexo;
+    }
+
+    public void setjComboBoxSexo(JComboBox<String> jComboBoxSexo) {
+        this.jComboBoxSexo = jComboBoxSexo;
     }
     
 }

@@ -10,16 +10,16 @@ import model.Funcionario;
 
 public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
 
-    private final String COLUNAS_INSERT = "nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, rg, obs, status, usuario, senha";
+    private final String COLUNAS_INSERT = "nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, rg, obs, status, usuario, senha, sexo";
 
     @Override
     public void Create(Funcionario objeto) {
-        String sql = "INSERT INTO funcionario (" + COLUNAS_INSERT + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO funcionario (" + COLUNAS_INSERT + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement pstm = conexao.prepareStatement(sql)) {
 
-            conexao.setAutoCommit(false); // Inicia a transação
+            conexao.setAutoCommit(false);
 
             pstm.setString(1, objeto.getNome());
             pstm.setString(2, objeto.getFone());
@@ -35,6 +35,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(12, String.valueOf(objeto.getStatus()));
             pstm.setString(13, objeto.getUsuario());
             pstm.setString(14, objeto.getSenha());
+            pstm.setString(15, objeto.getSexo());
 
             pstm.executeUpdate();
             conexao.commit(); 
@@ -81,7 +82,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
              PreparedStatement pstm = conexao.prepareStatement(sql)) {
 
             if (atributo != null && valor != null && !valor.trim().isEmpty()) {
-                pstm.setString(1, "%" + valor + "%"); // Usa LIKE para buscas parciais
+                pstm.setString(1, "%" + valor + "%"); 
             }
 
             try (ResultSet rst = pstm.executeQuery()) {
@@ -102,7 +103,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
     public void Update(Funcionario objeto) {
         String sql = "UPDATE funcionario SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, " + 
                      "logradouro = ?, bairro = ?, cidade = ?, complemento = ?, rg = ?, obs = ?, " + 
-                     "status = ?, usuario = ?, senha = ? WHERE id = ?";
+                     "status = ?, usuario = ?, senha = ?, sexo = ? WHERE id = ?";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement pstm = conexao.prepareStatement(sql)) {
@@ -124,6 +125,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(13, objeto.getUsuario());
             pstm.setString(14, objeto.getSenha());
             pstm.setInt(15, objeto.getId()); 
+            pstm.setString(15, objeto.getSexo());
 
             pstm.executeUpdate();
             conexao.commit();
@@ -170,5 +172,6 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
         funcionario.setStatus(rst.getString("status").charAt(0));
         funcionario.setUsuario(rst.getString("usuario"));
         funcionario.setSenha(rst.getString("senha"));
+        funcionario.setSenha(rst.getString("sexo"));
     }
 }

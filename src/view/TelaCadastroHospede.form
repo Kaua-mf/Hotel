@@ -162,7 +162,7 @@
                                       <Component id="jLabelEmail" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabelBairro" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="403" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="399" max="32767" attributes="0"/>
                               </Group>
                               <Component id="jTextFieldComplemento" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
@@ -194,7 +194,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jTextFieldNomeFantasia" alignment="0" min="-2" pref="349" max="-2" attributes="0"/>
+                                      <Component id="jTextFieldNome" alignment="0" min="-2" pref="349" max="-2" attributes="0"/>
                                       <Component id="jLabelNomeFantasia" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -257,7 +257,7 @@
                           <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
                           <Component id="jLabelNomeFantasia" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldNomeFantasia" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextFieldNome" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -364,7 +364,7 @@
             <Property name="text" type="java.lang.String" value="Nome "/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldNomeFantasia">
+        <Component class="javax.swing.JTextField" name="jTextFieldNome">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelRazaoSocial">
           <Properties>
@@ -499,11 +499,10 @@
         <Component class="javax.swing.JComboBox" name="jComboBoxSexo">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Homem"/>
-                <StringItem index="1" value="Mulher"/>
-                <StringItem index="2" value="N&#xe3;o definido"/>
-                <StringItem index="3" value=" "/>
+              <StringArray count="3">
+                <StringItem index="0" value="Masculino"/>
+                <StringItem index="1" value="Feminino"/>
+                <StringItem index="2" value="Outro"/>
               </StringArray>
             </Property>
           </Properties>

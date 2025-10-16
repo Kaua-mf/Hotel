@@ -7,13 +7,14 @@ public class Hospede extends Pessoa {
     private String inscricaoEstadual;   
     private String contato;
     private String usuario; 
-    private String senha;   
+    private String senha;  
+    private String sexo;
 
     public Hospede() {
     }
     
-    public Hospede( String usuario,String senha,int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String razaoSocial, String cnpj, String inscricaoEstadual, String contato, String obs, char status) {
-        super(id, nome, fone1, fone2, email, cep, logradouro, bairro, cidade, complemento, dataCadastro, cpf, rg, obs, status);
+    public Hospede( String usuario,String senha,int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String razaoSocial, String cnpj, String inscricaoEstadual, String contato, String obs, char status, String sexo) {
+        super(id, nome, fone1, fone2, email, cep, logradouro, bairro, cidade, complemento, dataCadastro, cpf, rg, obs, status, sexo);
         
         this.razaoSocial = razaoSocial;
         this.cnpj = cnpj;
@@ -86,6 +87,15 @@ public class Hospede extends Pessoa {
     public void setFone1(String fone1) {
         super.setFone1(fone1);
     }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+    
 public String getObs() { return obs; }
 public void setObs(String obs) { this.obs = obs; } 
 

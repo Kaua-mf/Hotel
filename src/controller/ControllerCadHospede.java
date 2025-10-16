@@ -15,11 +15,10 @@ public class ControllerCadHospede implements ActionListener {
 
     TelaCadastroHospede telaCadastro;
     ServicoHospede servicoHospede = new ServicoHospede();
-    Hospede hospedeAtual; 
+    Hospede hospedeAtual;
 
     public ControllerCadHospede(TelaCadastroHospede telaCadastro) {
         this.telaCadastro = telaCadastro;
-        this.hospedeAtual = new Hospede(); 
         
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
@@ -36,27 +35,28 @@ public class ControllerCadHospede implements ActionListener {
         if (evento.getSource() == this.telaCadastro.getjButtonNovo()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
+            
             this.hospedeAtual = new Hospede();
             
+            this.telaCadastro.getjComboBoxSexo().setSelectedIndex(0);
+
             LocalDateTime agora = LocalDateTime.now();
             DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            String dataFormatada = agora.format(formatoBrasileiro);
-            
-            this.telaCadastro.getjTextFieldDataCadastro().setText(dataFormatada);
-            
+            this.telaCadastro.getjTextFieldDataCadastro().setText(agora.format(formatoBrasileiro));
+            this.telaCadastro.getjTextFieldDataCadastro().setEnabled(false); // Impede edição
+
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
-            
+
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
-            
-            if (this.telaCadastro.getjTextFieldNomeFantasia().getText().trim().isEmpty()) {
+            if (this.telaCadastro.getjTextFieldNome().getText().trim().isEmpty()) { 
                 JOptionPane.showMessageDialog(null, "O campo 'Nome' é obrigatório.");
-                return;
+                return; 
             }
             
             try {
-                this.hospedeAtual.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
+                this.hospedeAtual.setNome(this.telaCadastro.getjTextFieldNome().getText());
                 this.hospedeAtual.setFone(this.telaCadastro.getjFormattedTextFieldFone1().getText());
                 this.hospedeAtual.setFone2(this.telaCadastro.getjFormattedTextFieldFone2().getText());
                 this.hospedeAtual.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
@@ -65,16 +65,17 @@ public class ControllerCadHospede implements ActionListener {
                 this.hospedeAtual.setBairro(this.telaCadastro.getjTextFieldBairro().getText());
                 this.hospedeAtual.setCidade(this.telaCadastro.getjTextFieldCidade().getText());
                 this.hospedeAtual.setComplemento(this.telaCadastro.getjTextFieldComplemento().getText());
-                this.hospedeAtual.setDataCadastro(this.telaCadastro.getjTextFieldDataCadastro().getText()); 
                 this.hospedeAtual.setCpf(this.telaCadastro.getjFormattedTextFieldCpf().getText());
                 this.hospedeAtual.setRg(this.telaCadastro.getjTextFieldRg().getText());
-                this.hospedeAtual.setObs(this.telaCadastro.getjTextFieldObs().getText()); 
-                this.hospedeAtual.setContato(this.telaCadastro.getjTextFieldContato().getText()); 
-                this.hospedeAtual.setRazaoSocial(this.telaCadastro.getjTextFieldRazaoSocial().getText()); 
-                this.hospedeAtual.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
-                this.hospedeAtual.setInscricaoEstadual(this.telaCadastro.getjTextFieldInscricaoEstadual().getText());
-                
-                this.hospedeAtual.setStatus('A'); 
+                this.hospedeAtual.setObs(this.telaCadastro.getjTextFieldObs().getText());
+                this.hospedeAtual.setStatus('A');
+
+                String sexoSelecionado = (String) this.telaCadastro.getjComboBoxSexo().getSelectedItem();
+                this.hospedeAtual.setSexo(sexoSelecionado);
+
+                LocalDateTime agora = LocalDateTime.now();
+                DateTimeFormatter formatoBanco = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                this.hospedeAtual.setDataCadastro(agora.format(formatoBanco));
 
                 servicoHospede.salvar(this.hospedeAtual);
                 
@@ -83,10 +84,9 @@ public class ControllerCadHospede implements ActionListener {
                 Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
                 
-            } catch (RuntimeException e) {
-                JOptionPane.showMessageDialog(null, "Erro ao salvar Hóspede: " + e.getMessage(), "ERRO DE BANCO DE DADOS", JOptionPane.ERROR_MESSAGE);
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erro de formato de dados: " + e.getMessage(), "ERRO DE FORMATO", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Erro ao salvar Hóspede: " + e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
             }
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonBuscar()) {

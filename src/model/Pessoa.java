@@ -17,11 +17,11 @@ public class Pessoa {
     private String rg;
     String obs;
     private char status;
-
+    private String sexo;
     public Pessoa() {
     }
 
-    public Pessoa(int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String obs, char status) {
+    public Pessoa(int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String obs, char status,String sexo) {
         this.id = id;
         this.nome = nome;
         this.fone1 = fone1;
@@ -37,6 +37,7 @@ public class Pessoa {
         this.rg = rg;
         this.obs = obs;
         this.status = status;
+        this.sexo = sexo;
     }
     public int getId() {
         return id;
@@ -152,6 +153,14 @@ public class Pessoa {
 
     public char getStatus() {
         return status;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
     public void setStatus(char status) {

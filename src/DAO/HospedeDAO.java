@@ -10,12 +10,12 @@ import model.Hospede;
 
 public class HospedeDAO implements InterfaceDAO<Hospede> {
 
-    private final String COLUNAS_INSERT = "nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, usuario, senha, razao_social, cnpj, inscricao_estadual, contato";
+    private final String COLUNAS_INSERT = "nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, usuario, senha, razao_social, cnpj, inscricao_estadual, contato, sexo";
     private final String COLUNAS_READ = "id, " + COLUNAS_INSERT;
 
     @Override
     public void Create(Hospede objeto) {
-        String sqlInstrucao = "INSERT INTO hospede(" + COLUNAS_INSERT + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlInstrucao = "INSERT INTO hospede(" + COLUNAS_INSERT + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conexao = null;
         PreparedStatement pstm = null;
 
@@ -44,6 +44,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setString(18, objeto.getCnpj());
             pstm.setString(19, objeto.getInscricaoEstadual());
             pstm.setString(20, objeto.getContato());
+            pstm.setString(21, objeto.getSexo());
 
             pstm.executeUpdate(); 
             conexao.commit();
@@ -127,7 +128,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
 
     @Override
     public void Update(Hospede objeto) {
-        String sqlInstrucao = "UPDATE hospede SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, logradouro = ?, bairro = ?, cidade = ?, complemento = ?, data_cadastro = ?, cpf = ?, rg = ?, obs = ?, status = ?, usuario = ?, senha = ?, razao_social = ?, cnpj = ?, inscricao_estadual = ?, contato = ? WHERE id = ?";
+        String sqlInstrucao = "UPDATE hospede SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, logradouro = ?, bairro = ?, cidade = ?, complemento = ?, data_cadastro = ?, cpf = ?, rg = ?, obs = ?, status = ?, usuario = ?, senha = ?, razao_social = ?, cnpj = ?, inscricao_estadual = ?, contato = ?, sexo = ? WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
 
@@ -157,6 +158,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setString(19, objeto.getInscricaoEstadual());
             pstm.setString(20, objeto.getContato());
             pstm.setInt(21, objeto.getId()); 
+            pstm.setString(22, objeto.getSexo());
 
             pstm.executeUpdate();
             conexao.commit();
@@ -211,5 +213,6 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
         hospede.setCnpj(rst.getString("cnpj"));
         hospede.setInscricaoEstadual(rst.getString("inscricao_estadual"));
         hospede.setContato(rst.getString("contato"));
+        hospede.setSexo(rst.getString("sexo"));
     }
 }
