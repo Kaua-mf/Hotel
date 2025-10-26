@@ -12,148 +12,111 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
 
     @Override
     public void Create(Marca objeto) {
-        String sqlInstrucao = "INSERT INTO marca(descricao, STATUS) VALUES(?, ?)";
-        Connection conexao = null;
-        PreparedStatement pstm = null;
-
-        try {
-            conexao = ConnectionFactory.getConnection();
-            conexao.setAutoCommit(false); 
-            pstm = conexao.prepareStatement(sqlInstrucao);
-
-            pstm.setString(1, objeto.getDescricao());
-            pstm.setString(2, String.valueOf(objeto.getStatus()));
+        String sql = "INSERT INTO marca (descricao, status) VALUES (?, ?)";
+        
+        try (Connection con = ConnectionFactory.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             
-            pstm.executeUpdate(); 
-            conexao.commit(); 
-
-        } catch (SQLException ex) {
-            System.err.println("Erro ao criar Marca: " + ex.getMessage());
-            try {
-                if (conexao != null) conexao.rollback();
-            } catch (SQLException e) {
-                System.err.println("Erro ao fazer rollback: " + e.getMessage());
-            }
-            throw new RuntimeException("Falha na criação da Marca.", ex);
-        } finally {
-            ConnectionFactory.closeConnection(conexao, pstm);
+            ps.setString(1, objeto.getDescricao());
+            ps.setString(2, String.valueOf(objeto.getStatus()));
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao salvar marca", e);
         }
     }
 
     @Override
     public Marca Retrieve(int id) {
-        String sqlInstrucao = "SELECT id, descricao, STATUS FROM marca WHERE id = ?";
-        Connection conexao = null;
-        PreparedStatement pstm = null;
-        ResultSet rst = null;
-        Marca marca = null; 
-
-        try {
-            conexao = ConnectionFactory.getConnection();
-            pstm = conexao.prepareStatement(sqlInstrucao);
-            pstm.setInt(1, id);
-            rst = pstm.executeQuery();
+        String sql = "SELECT id, descricao, status FROM marca WHERE id = ?";
+        
+        try (Connection con = ConnectionFactory.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             
-            if (rst.next()) {
-                marca = new Marca();
-                marca.setId(rst.getInt("id"));
-                marca.setDescricao(rst.getString("descricao"));
-                marca.setStatus(rst.getString("STATUS").charAt(0));
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Marca marca = new Marca();
+                    marca.setId(rs.getInt("id"));
+                    marca.setDescricao(rs.getString("descricao"));
+                    marca.setStatus(rs.getString("status").charAt(0));
+                    return marca;
+                }
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Falha na busca de Marca por ID.", ex);
-        } finally {
-            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar marca por ID", e);
         }
-        return marca;
+        return null; // Retorna nulo se não encontrar
     }
 
     @Override
     public List<Marca> Retrieve(String atributo, String valor) {
-        String sqlInstrucao = "SELECT id, descricao, STATUS FROM marca";
-        boolean isGeral = (atributo == null || atributo.trim().isEmpty());
+        String sql = "SELECT id, descricao, status FROM marca";
         
-        if (!isGeral) {
-            sqlInstrucao += " WHERE " + atributo + " LIKE ?";
+        if (atributo != null && valor != null) {
+            sql += " WHERE " + atributo + " LIKE ?";
         }
         
-        Connection conexao = null;
-        PreparedStatement pstm = null;
-        ResultSet rst = null;
-        List<Marca> listaMarcas = new ArrayList<>();
-
-        try {
-            conexao = ConnectionFactory.getConnection();
-            pstm = conexao.prepareStatement(sqlInstrucao);
+        List<Marca> marcas = new ArrayList<>();
+        
+        try (Connection con = ConnectionFactory.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             
-            if (!isGeral) {
-                pstm.setString(1, "%" + valor + "%");
+            if (atributo != null && valor != null) {
+                ps.setString(1, "%" + valor + "%");
             }
-
-            rst = pstm.executeQuery();
             
-            while (rst.next()) { 
-                Marca marca = new Marca();
-                marca.setId(rst.getInt("id"));
-                marca.setDescricao(rst.getString("descricao"));
-                marca.setStatus(rst.getString("STATUS").charAt(0));
-                listaMarcas.add(marca); 
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Marca marca = new Marca();
+                    marca.setId(rs.getInt("id"));
+                    marca.setDescricao(rs.getString("descricao"));
+                    marca.setStatus(rs.getString("status").charAt(0));
+                    marcas.add(marca);
+                }
             }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Falha na busca de Marcas.", ex);
-        } finally {
-            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar marcas", e);
         }
-        return listaMarcas;
+        return marcas;
     }
 
     @Override
     public void Update(Marca objeto) {
-        String sqlInstrucao = "UPDATE marca SET descricao = ?, STATUS = ? WHERE id = ?";
-        Connection conexao = null;
-        PreparedStatement pstm = null;
-
-        try {
-            conexao = ConnectionFactory.getConnection();
-            conexao.setAutoCommit(false);
-            pstm = conexao.prepareStatement(sqlInstrucao);
+        String sql = "UPDATE marca SET descricao = ?, status = ? WHERE id = ?";
+        
+        try (Connection con = ConnectionFactory.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             
-            pstm.setString(1, objeto.getDescricao());
-            pstm.setString(2, String.valueOf(objeto.getStatus()));
-            pstm.setInt(3, objeto.getId());
-
-            pstm.executeUpdate();
-            conexao.commit();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Falha na atualização da Marca.", ex);
-        } finally {
-            ConnectionFactory.closeConnection(conexao, pstm);
+            ps.setString(1, objeto.getDescricao());
+            ps.setString(2, String.valueOf(objeto.getStatus()));
+            ps.setInt(3, objeto.getId());
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar marca", e);
         }
     }
 
     @Override
     public void Delete(Marca objeto) {
-        String sqlInstrucao = "DELETE FROM marca WHERE id = ?";
-        Connection conexao = null;
-        PreparedStatement pstm = null;
-
-        try {
-            conexao = ConnectionFactory.getConnection();
-            pstm = conexao.prepareStatement(sqlInstrucao);
-            pstm.setInt(1, objeto.getId());
-
-            pstm.executeUpdate();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Falha na exclusão da Marca.", ex);
-        } finally {
-            ConnectionFactory.closeConnection(conexao, pstm);
+        // Recomendado: Usar "UPDATE SET status = 'I'" (deleção lógica)
+        // Mas seguindo o padrão, aqui está o DELETE físico:
+        String sql = "DELETE FROM marca WHERE id = ?";
+        
+        try (Connection con = ConnectionFactory.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setInt(1, objeto.getId());
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao deletar marca", e);
         }
     }
 }

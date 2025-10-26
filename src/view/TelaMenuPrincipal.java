@@ -3,11 +3,14 @@ package view;
 import controller.ControllerCadFuncionario;
 import controller.ControllerCadHospede;
 import controller.ControllerCadFornecedor;
+import controller.ControllerCadMarca;
+import controller.ControllerCadModelo;
 import controller.ControllerCadQuarto;
 import controller.ControllerCadProdutoCopa;
 import controller.ControllerCadServico;
 import controller.ControllerCadVaga;
 import controller.ControllerCadVeiculo;
+import model.Veiculo;
 
 
 public class TelaMenuPrincipal extends javax.swing.JFrame {
@@ -206,6 +209,17 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         tela.setVisible(true);
     }//GEN-LAST:event_jMenuItemQuartoActionPerformed
 
+private void jMenuItemCadMarcaActionPerformed(java.awt.event.ActionEvent evt) { 
+    TelaCadastroMarca telaMarca = new TelaCadastroMarca(null, true);
+    ControllerCadMarca controllerMarca = new ControllerCadMarca(telaMarca);
+    telaMarca.setVisible(true);
+}
+
+private void jMenuItemCadModeloActionPerformed(java.awt.event.ActionEvent evt) { 
+    TelaCadastroModelo telaModelo = new TelaCadastroModelo(null, true);
+    ControllerCadModelo controllerModelo = new ControllerCadModelo(telaModelo);
+    telaModelo.setVisible(true);
+}
     private void jMenuItemServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemServicoActionPerformed
          TelaCadastroServico tela = new TelaCadastroServico(null, true);
          ControllerCadServico controller = new ControllerCadServico(tela);
@@ -213,10 +227,10 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemServicoActionPerformed
 
     private void jMenuItemVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemVeiculoActionPerformed
-        TelaCadastroVeiculo tela = new TelaCadastroVeiculo(null, true);
-         model.Veiculo veiculoVazio = new model.Veiculo();
-ControllerCadVeiculo controller = new ControllerCadVeiculo(tela, veiculoVazio);
-    tela.setVisible(true);
+        TelaCadastroVeiculo telaVeiculo = new TelaCadastroVeiculo(null, true); // Crie a tela de VEÍCULO
+Veiculo veiculoVazio = new Veiculo();
+ControllerCadVeiculo controller = new ControllerCadVeiculo(telaVeiculo, veiculoVazio); // Passe a 'telaVeiculo'
+telaVeiculo.setVisible(true);
     }//GEN-LAST:event_jMenuItemVeiculoActionPerformed
 
     public static void main(String args[]) {

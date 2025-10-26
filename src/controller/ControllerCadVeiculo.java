@@ -4,15 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import model.Marca;
 import model.Modelo;
 import model.Veiculo;
-import service.ServicoMarca;
 import service.ServicoModelo;
 import service.ServicoVeiculo;
 import view.TelaBuscaVeiculo;
-import view.TelaCadastroVeiculo;
 import utilities.Utilities; 
+import view.TelaCadastroVeiculo; 
 
 public class ControllerCadVeiculo implements ActionListener {
 
@@ -20,10 +18,9 @@ public class ControllerCadVeiculo implements ActionListener {
     Veiculo veiculoAtual; 
     
     ServicoVeiculo servicoVeiculo = new ServicoVeiculo();
-    ServicoMarca servicoMarca = new ServicoMarca();
     ServicoModelo servicoModelo = new ServicoModelo();
 
-    public ControllerCadVeiculo(view.TelaCadastroVeiculo telaCadastro, Veiculo veiculo) {
+   public ControllerCadVeiculo(TelaCadastroVeiculo telaCadastro, Veiculo veiculo) { 
         this.telaCadastro = telaCadastro;
         this.veiculoAtual = veiculo; 
         
@@ -33,26 +30,18 @@ public class ControllerCadVeiculo implements ActionListener {
         this.telaCadastro.getjButtonBuscar().addActionListener(this);
         this.telaCadastro.getjButtonSair().addActionListener(this);
         
-        carregarMarcas();
-        carregarModelos();
+        carregarModelos(); // Apenas modelos são necessários
 
         Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true); 
         Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false); 
     }
 
-    private void carregarMarcas() {
-        try {
-            DefaultComboBoxModel<Marca> model = new DefaultComboBoxModel<>(servicoMarca.buscarTodos().toArray(new Marca[0]));
-            this.telaCadastro.getjComboBoxMarca().setModel(model);
-        } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao carregar Marcas: " + e.getMessage(), "Erro de Carga", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
+    // 4. REMOVIDO: O método inteiro carregarMarcas() foi excluído.
+    
     private void carregarModelos() {
         try {
             DefaultComboBoxModel<Modelo> model = new DefaultComboBoxModel<>(servicoModelo.buscarTodos().toArray(new Modelo[0]));
-            this.telaCadastro.getjComboBoxModelo().setModel(model);
+            this.telaCadastro.getjComboBoxModelo().setModel(model); 
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(null, "Erro ao carregar Modelos: " + e.getMessage(), "Erro de Carga", JOptionPane.ERROR_MESSAGE);
         }
@@ -72,26 +61,20 @@ public class ControllerCadVeiculo implements ActionListener {
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
-            Marca marcaSelecionada = (Marca) this.telaCadastro.getjComboBoxMarca().getSelectedItem();
             Modelo modeloSelecionado = (Modelo) this.telaCadastro.getjComboBoxModelo().getSelectedItem();
             
-            if (this.telaCadastro.getjTextFieldPlaca().getText().trim().isEmpty()) {
+            if (this.telaCadastro.getjFormattedTextFieldPlaca().getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "O campo 'Placa' é obrigatório.");
                 return;
             }
             
-            if (marcaSelecionada == null || marcaSelecionada.getId() == 0) {
-                JOptionPane.showMessageDialog(null, "Selecione uma Marca válida.");
-                return;
-            }
             if (modeloSelecionado == null || modeloSelecionado.getId() == 0) {
                 JOptionPane.showMessageDialog(null, "Selecione um Modelo válido.");
                 return;
             }
             
-            this.veiculoAtual.setPlaca(this.telaCadastro.getjTextFieldPlaca().getText());
+            this.veiculoAtual.setPlaca(this.telaCadastro.getjFormattedTextFieldPlaca().getText());
             this.veiculoAtual.setCor(this.telaCadastro.getjTextFieldCor().getText());
-            this.veiculoAtual.setMarca(marcaSelecionada);
             this.veiculoAtual.setModelo(modeloSelecionado);
             this.veiculoAtual.setStatus('A');
             this.veiculoAtual.setFuncionario(null);
@@ -108,9 +91,9 @@ public class ControllerCadVeiculo implements ActionListener {
                 
             } catch (RuntimeException e) {
                  JOptionPane.showMessageDialog(null, 
-                    "Erro ao salvar no banco: " + e.getMessage(), 
-                    "ERRO DE PERSISTÊNCIA", 
-                    JOptionPane.ERROR_MESSAGE);
+                         "Erro ao salvar no banco: " + e.getMessage(), 
+                         "ERRO DE PERSISTÊNCIA", 
+                         JOptionPane.ERROR_MESSAGE);
             }
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonBuscar()) {

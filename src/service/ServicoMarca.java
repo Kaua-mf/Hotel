@@ -1,27 +1,52 @@
 package service;
 
-import java.util.ArrayList;
+import DAO.MarcaDAO;
 import java.util.List;
 import model.Marca;
 
 public class ServicoMarca {
 
-    private static List<Marca> listaMarcas = new ArrayList<>();
-    private static int proximoId = 1;
-
-    static {
-        listaMarcas.add(new Marca(proximoId++, "Fiat", 'A'));
-        listaMarcas.add(new Marca(proximoId++, "Chevrolet", 'A'));
-        listaMarcas.add(new Marca(proximoId++, "Ford", 'A'));
-        listaMarcas.add(new Marca(proximoId++, "Volkswagen", 'I'));
-    }
+    private MarcaDAO marcaDAO = new MarcaDAO();
 
     public void salvar(Marca marca) {
-        marca.setId(proximoId++);
-        listaMarcas.add(marca);
+        marcaDAO.Create(marca);
     }
 
     public List<Marca> buscarTodos() {
-        return listaMarcas;
+        return marcaDAO.Retrieve(null, null);
+    }
+    
+    public Marca buscarPorId(int id) {
+        return marcaDAO.Retrieve(id);
+    }
+
+    public List<Marca> buscarPorFiltro(String filtro, int tipoBusca) {
+        
+        if (filtro.trim().isEmpty()) {
+            return marcaDAO.Retrieve(null, null);
+        }
+
+        String nomeColuna;
+
+        switch (tipoBusca) {
+            case 0:
+                nomeColuna = "descricao";
+                break;
+           case 1:
+               nomeColuna = "id";
+                break;
+            default:
+                return marcaDAO.Retrieve(null, null);
+        }
+        
+        return marcaDAO.Retrieve(nomeColuna, filtro);
+    }
+    
+    public void atualizar(Marca marca) {
+        marcaDAO.Update(marca);
+    }
+    
+    public void deletar(Marca marca) {
+        marcaDAO.Delete(marca);
     }
 }
