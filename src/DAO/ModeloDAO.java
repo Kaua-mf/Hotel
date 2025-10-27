@@ -8,39 +8,38 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Marca;
 import model.Modelo;
-// Importação da sua classe de conexão
-import DAO.ConnectionFactory; 
+import DAO.ConnectionFactory; // Importação corrigida
 
 public class ModeloDAO implements InterfaceDAO<Modelo> {
 
     @Override
     public void Create(Modelo objeto) {
-        String sql = "INSERT INTO modelo (descricao, status, marca_id) VALUES (?, ?, ?)";
+        // SQL INSERE na coluna OBRIGATÓRIA 'nome'
+        String sql = "INSERT INTO modelo (nome, status, marca_id) VALUES (?, ?, ?)";
         
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             
-            ps.setString(1, objeto.getDescricao());
+            // Pega o texto do objeto Java (que vem do campo da tela) e salva na coluna 'nome'
+            ps.setString(1, objeto.getNome()); // Usa getNome() -> coluna 'nome'
             ps.setString(2, String.valueOf(objeto.getStatus()));
             ps.setInt(3, objeto.getMarca().getId());
             ps.executeUpdate();
             
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Erro ao salvar modelo", e);
+            throw new RuntimeException("Erro ao salvar modelo na coluna 'nome'", e);
         }
     }
 
     @Override
     public Modelo Retrieve(int id) {
-        // Removido marca_descricao do SELECT
-        String sql = "SELECT mod.id AS modelo_id, " +
-                     "       mod.descricao AS modelo_descricao, " +
-                     "       mod.status AS modelo_status, " +
-                     "       mar.id AS marca_id " +
-                     "FROM modelo AS mod " +
-                     "LEFT JOIN marca AS mar ON mod.marca_id = mar.id " +
-                     "WHERE mod.id = ?";
+        // SQL SELECIONA da coluna 'nome' (e outras) sem usar aliases
+        String sql = "SELECT modelo.id, modelo.nome, modelo.status, modelo.marca_id, " +
+                     "       marca.descricao AS marca_descricao " + // Alias mantido para clareza da marca
+                     "FROM modelo " +
+                     "LEFT JOIN marca ON modelo.marca_id = marca.id " +
+                     "WHERE modelo.id = ?";
         
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -49,7 +48,8 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return construirModelo(rs);
+                    // Monta o objeto usando os nomes diretos das colunas
+                    return construirModelo(rs); 
                 }
             }
         } catch (SQLException e) {
@@ -61,20 +61,19 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
 
     @Override
     public List<Modelo> Retrieve(String atributo, String valor) {
-        // ESTA CONSULTA ESTÁ CORRETA.
-        // Removido marca_descricao do SELECT
-        String sql = "SELECT mod.id AS modelo_id, " +
-                     "       mod.descricao AS modelo_descricao, " +
-                     "       mod.status AS modelo_status, " +
-                     "       mar.id AS marca_id " +
-                     
-                     // A LINHA 'FROM' ESTÁ PRESENTE AQUI:
-                     "FROM modelo AS mod " +
-                     
-                     "LEFT JOIN marca AS mar ON mod.marca_id = mar.id";
+        // SQL SELECIONA da coluna 'nome' (e outras) sem usar aliases
+        String sql = "SELECT modelo.id, modelo.nome, modelo.status, modelo.marca_id, " +
+                     "       marca.descricao AS marca_descricao " + // Alias mantido para clareza da marca
+                     "FROM modelo " +
+                     "LEFT JOIN marca ON modelo.marca_id = marca.id";
 
         if (atributo != null && valor != null) {
-            sql += " WHERE " + atributo + " LIKE ?";
+            // Ajuste para garantir que a busca seja na coluna 'nome' se o atributo for genérico
+             String colunaBusca = atributo;
+             if (atributo.equalsIgnoreCase("descricao") || atributo.equalsIgnoreCase("modelo.descricao")) {
+                 colunaBusca = "modelo.nome"; // Garante busca na coluna 'nome'
+             }
+            sql += " WHERE " + colunaBusca + " LIKE ?";
         }
 
         List<Modelo> modelos = new ArrayList<>();
@@ -86,9 +85,9 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
                 ps.setString(1, "%" + valor + "%");
             }
             
-            // Esta é a linha 90 (ou próxima) que está falhando
             try (ResultSet rs = ps.executeQuery()) { 
                 while (rs.next()) {
+                    // Monta o objeto usando os nomes diretos das colunas
                     modelos.add(construirModelo(rs));
                 }
             }
@@ -101,12 +100,14 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
 
     @Override
     public void Update(Modelo objeto) {
-        String sql = "UPDATE modelo SET descricao = ?, status = ?, marca_id = ? WHERE id = ?";
+        // SQL ATUALIZA a coluna OBRIGATÓRIA 'nome'
+        String sql = "UPDATE modelo SET nome = ?, status = ?, marca_id = ? WHERE id = ?";
         
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             
-            ps.setString(1, objeto.getDescricao());
+            // Pega o texto do objeto Java e atualiza na coluna 'nome'
+            ps.setString(1, objeto.getNome()); // Usa getNome() -> coluna 'nome'
             ps.setString(2, String.valueOf(objeto.getStatus()));
             ps.setInt(3, objeto.getMarca().getId());
             ps.setInt(4, objeto.getId());
@@ -114,7 +115,7 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
             
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Erro ao atualizar modelo", e);
+            throw new RuntimeException("Erro ao atualizar modelo na coluna 'nome'", e);
         }
     }
 
@@ -134,18 +135,19 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
         }
     }
 
-    // Método utilitário para não repetir código
-    // Atualizado para não ler 'marca_descricao'
+    // Método utilitário atualizado para usar nomes diretos das colunas
     private Modelo construirModelo(ResultSet rs) throws SQLException {
         Marca marca = new Marca();
-        marca.setId(rs.getInt("marca_id"));
-        // A linha de setDescricao da marca foi removida, como pedido.
+        // Lê marca_id diretamente, e usa alias para descricao da marca (para clareza)
+        marca.setId(rs.getInt("marca_id")); 
+        marca.setDescricao(rs.getString("marca_descricao")); 
         
         Modelo modelo = new Modelo();
-        modelo.setId(rs.getInt("modelo_id"));
-        modelo.setDescricao(rs.getString("modelo_descricao"));
+         // Lê as colunas do modelo diretamente
+        modelo.setId(rs.getInt("id"));
+        modelo.setNome(rs.getString("nome")); // Lê da coluna 'nome' -> usa setNome()
         
-        String statusStr = rs.getString("modelo_status");
+        String statusStr = rs.getString("status");
         if (statusStr != null && !statusStr.isEmpty()) {
             modelo.setStatus(statusStr.charAt(0));
         }

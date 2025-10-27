@@ -5,10 +5,9 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+public class TelaBuscaModelo extends javax.swing.JDialog {
 
-public class TelaBuscaVeiculo extends javax.swing.JDialog {
-
-    public TelaBuscaVeiculo(java.awt.Frame parent, boolean modal) {
+    public TelaBuscaModelo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -41,38 +40,6 @@ public class TelaBuscaVeiculo extends javax.swing.JDialog {
         return jCBFiltro;
     }
 
-public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
-    // Pega o modelo da sua JTable (certifique-se que o nome 'jTableDados' está correto)
-    javax.swing.table.DefaultTableModel modeloTabela = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
-    modeloTabela.setRowCount(0); // Limpa a tabela antes de preencher
-
-    // Itera sobre a lista de veículos recebida
-    for (model.Veiculo veiculo : listaVeiculos) {
-        
-        // Forma segura de pegar a descrição do Modelo
-        String descModelo = "";
-        if (veiculo.getModelo() != null) {
-            descModelo = veiculo.getModelo().getDescricao(); 
-        }
-        
-        // Forma segura de pegar a descrição da Marca (através do Modelo)
-        String descMarca = ""; 
-        if (veiculo.getModelo() != null && veiculo.getModelo().getMarca() != null) {
-            // CORREÇÃO AQUI: Acessa a Marca através do Modelo
-            descMarca = veiculo.getModelo().getMarca().getDescricao(); 
-        }
-
-        // Adiciona a linha na tabela com os dados corretos e seguros
-        modeloTabela.addRow(new Object[]{
-            veiculo.getId(),
-            veiculo.getPlaca(),
-            veiculo.getCor(),
-            descModelo,   // Usa a variável segura para Modelo
-            descMarca,    // Usa a variável segura para Marca
-            veiculo.getStatus()
-        });
-    }
-}
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -93,7 +60,7 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
         jButtonFiltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Busca de Veículo");
+        setTitle("Busca de Marca");
         setAlwaysOnTop(true);
         setResizable(false);
 
@@ -103,7 +70,7 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
         jLabelTitulo.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabelTitulo.setForeground(new java.awt.Color(0, 51, 204));
         jLabelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTitulo.setText("Veículo");
+        jLabelTitulo.setText("Modelo");
         jLabelTitulo.setToolTipText("");
 
         javax.swing.GroupLayout jPaneltituloLayout = new javax.swing.GroupLayout(jPaneltitulo);
@@ -124,7 +91,7 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
 
             },
             new String [] {
-                "Id", "Placa", "Cor", "Modelo", "Marca", "Status"
+                "Id", "Descrição", "Status"
             }
         ));
         jTableDados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -132,8 +99,7 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
         if (jTableDados.getColumnModel().getColumnCount() > 0) {
             jTableDados.getColumnModel().getColumn(0).setMaxWidth(40);
             jTableDados.getColumnModel().getColumn(1).setMaxWidth(270);
-            jTableDados.getColumnModel().getColumn(2).setMaxWidth(150);
-            jTableDados.getColumnModel().getColumn(3).setMaxWidth(60);
+            jTableDados.getColumnModel().getColumn(2).setMaxWidth(60);
         }
 
         javax.swing.GroupLayout jPanelDadosLayout = new javax.swing.GroupLayout(jPanelDados);
@@ -149,7 +115,7 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
 
         jPanelFiltros.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jCBFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Placa", "Cor" }));
+        jCBFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID" }));
         jCBFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCBFiltroActionPerformed(evt);
@@ -265,20 +231,22 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaBuscaVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaBuscaModelo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaBuscaVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaBuscaModelo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaBuscaVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaBuscaModelo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaBuscaVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaBuscaModelo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                TelaBuscaVeiculo dialog = new TelaBuscaVeiculo(new javax.swing.JFrame(), true);
+                TelaBuscaModelo dialog = new TelaBuscaModelo(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -305,4 +273,20 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
     private javax.swing.JTextField jTFFiltro;
     private javax.swing.JTable jTableDados;
     // End of variables declaration//GEN-END:variables
+ 
+    public void preencheTabela(java.util.List<model.ProdutoCopa> listaProdutos) {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
+        modelo.setRowCount(0);
+
+        for (model.ProdutoCopa produto : listaProdutos) {
+            modelo.addRow(new Object[]{
+            produto.getId(),
+            produto.getDescricao(),
+            produto.getValor(),
+            produto.getStatus()
+            });
+        }
+    }
+
+   
 }

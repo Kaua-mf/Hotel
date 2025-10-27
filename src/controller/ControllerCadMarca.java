@@ -6,7 +6,8 @@ import javax.swing.JOptionPane;
 import model.Marca;
 import service.ServicoMarca;
 import utilities.Utilities;
-import view.TelaCadastroMarca; // Importe sua tela de cadastro de Marca
+import view.TelaBuscaMarca;      // ***** Importe a TelaBuscaMarca *****
+import view.TelaCadastroMarca; 
 
 public class ControllerCadMarca implements ActionListener {
 
@@ -38,43 +39,61 @@ public class ControllerCadMarca implements ActionListener {
             Utilities.limpaComponentes(this.tela.getjPanelDados(), true);
             this.marcaAtual = new Marca(); // Cria um novo objeto
             this.tela.getjTextFieldId().setEnabled(false); // ID não deve ser editável
+            this.tela.getjTextFieldMarca().requestFocus(); // Foco no campo de texto
 
         } else if (e.getSource() == this.tela.getjButtonCancelar()) {
             // Ação CANCELAR
             Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
             Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
+            // Limpa o objeto atual também, para evitar salvar dados antigos se clicar Novo -> Cancelar -> Gravar
+            this.marcaAtual = new Marca(); 
 
         } else if (e.getSource() == this.tela.getjButtonGravar()) {
             // Ação GRAVAR
             
-            // Pega o nome do campo de texto (verifique o nome na sua tela)
-            String nomeMarca = this.tela.getjTextFieldMarca().getText(); // Ajuste 'getjTextFieldMarca'
+            String nomeMarca = this.tela.getjTextFieldMarca().getText();            
             
             if (nomeMarca.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "O campo 'Marca' é obrigatório.");
-                return;
+               JOptionPane.showMessageDialog(null, "O campo 'Marca' é obrigatório.");
+               this.tela.getjTextFieldMarca().requestFocus(); 
+               return;
             }
             
-            // Preenche o objeto marcaAtual
-            this.marcaAtual.setDescricao(nomeMarca);
-            this.marcaAtual.setStatus('A'); // Define como Ativo
+            this.marcaAtual.setDescricao(nomeMarca); 
+            this.marcaAtual.setStatus('A'); 
             
             try {
-                servicoMarca.salvar(this.marcaAtual);
-                JOptionPane.showMessageDialog(null, "Marca salva com sucesso!");
+                if (this.marcaAtual.getId() > 0) {
+                     servicoMarca.atualizar(this.marcaAtual); 
+                     JOptionPane.showMessageDialog(null, "Marca atualizada com sucesso!");
+                } else {
+                     servicoMarca.salvar(this.marcaAtual); 
+                     JOptionPane.showMessageDialog(null, "Marca salva com sucesso!");
+                }
                 
-                // Volta ao estado inicial
                 Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
+                this.marcaAtual = new Marca(); // Limpa o objeto após salvar/atualizar
                 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Erro ao salvar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Erro ao salvar/atualizar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace(); 
             }
 
         } else if (e.getSource() == this.tela.getjButtonBuscar()) {
-            // Ação BUSCAR (implementação futura)
-            // Aqui você chamaria a TelaBuscaMarca e seu respectivo controller
-            JOptionPane.showMessageDialog(null, "Tela de Busca ainda não implementada.");
+            // ***** AÇÃO BUSCAR SIMPLIFICADA *****
+            
+            // 1. Cria a Tela de Busca
+            TelaBuscaMarca telaBusca = new TelaBuscaMarca(null, true); 
+            
+            // 2. Cria o Controller da Tela de Busca
+            ControllerBuscaMarca controllerBusca = new ControllerBuscaMarca(telaBusca); 
+            
+            // 3. Exibe a Tela de Busca (o código pausa aqui até ela fechar)
+            telaBusca.setVisible(true); 
+            
+            // 4. NÃO FAZ NADA com o resultado selecionado por enquanto.
+            //    (O código que usava getCodigoSelecionado() foi removido)
             
         } else if (e.getSource() == this.tela.getjButtonSair()) {
             // Ação SAIR

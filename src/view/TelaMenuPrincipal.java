@@ -36,6 +36,8 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         jMenuItemVagaDeEstacionamento = new javax.swing.JMenuItem();
         jMenuItemHospede = new javax.swing.JMenuItem();
         jMenuItemFuncionario = new javax.swing.JMenuItem();
+        jMenuItemCadModeloActionPerformed = new javax.swing.JMenuItem();
+        jMenuItemCadMarcaActionPerformed = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItemSair = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
@@ -123,6 +125,24 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItemFuncionario);
+
+        jMenuItemCadModeloActionPerformed.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Blue pin.png"))); // NOI18N
+        jMenuItemCadModeloActionPerformed.setText("Modelo");
+        jMenuItemCadModeloActionPerformed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCadModeloActionPerformedActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItemCadModeloActionPerformed);
+
+        jMenuItemCadMarcaActionPerformed.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Info.png"))); // NOI18N
+        jMenuItemCadMarcaActionPerformed.setText("Marca");
+        jMenuItemCadMarcaActionPerformed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCadMarcaActionPerformedActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItemCadMarcaActionPerformed);
         jMenu2.add(jSeparator2);
 
         jMenuItemSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Exit.png"))); // NOI18N
@@ -209,17 +229,6 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         tela.setVisible(true);
     }//GEN-LAST:event_jMenuItemQuartoActionPerformed
 
-private void jMenuItemCadMarcaActionPerformed(java.awt.event.ActionEvent evt) { 
-    TelaCadastroMarca telaMarca = new TelaCadastroMarca(null, true);
-    ControllerCadMarca controllerMarca = new ControllerCadMarca(telaMarca);
-    telaMarca.setVisible(true);
-}
-
-private void jMenuItemCadModeloActionPerformed(java.awt.event.ActionEvent evt) { 
-    TelaCadastroModelo telaModelo = new TelaCadastroModelo(null, true);
-    ControllerCadModelo controllerModelo = new ControllerCadModelo(telaModelo);
-    telaModelo.setVisible(true);
-}
     private void jMenuItemServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemServicoActionPerformed
          TelaCadastroServico tela = new TelaCadastroServico(null, true);
          ControllerCadServico controller = new ControllerCadServico(tela);
@@ -232,6 +241,16 @@ Veiculo veiculoVazio = new Veiculo();
 ControllerCadVeiculo controller = new ControllerCadVeiculo(telaVeiculo, veiculoVazio); // Passe a 'telaVeiculo'
 telaVeiculo.setVisible(true);
     }//GEN-LAST:event_jMenuItemVeiculoActionPerformed
+
+    private void jMenuItemCadMarcaActionPerformedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCadMarcaActionPerformedActionPerformed
+    TelaCadastroMarca telaMarca = new TelaCadastroMarca(null, true);
+    ControllerCadMarca controllerMarca = new ControllerCadMarca(telaMarca);
+    telaMarca.setVisible(true);    }//GEN-LAST:event_jMenuItemCadMarcaActionPerformedActionPerformed
+
+    private void jMenuItemCadModeloActionPerformedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCadModeloActionPerformedActionPerformed
+TelaCadastroModelo telaModelo = new TelaCadastroModelo(null, true);
+    ControllerCadModelo controllerModelo = new ControllerCadModelo(telaModelo);
+    telaModelo.setVisible(true);    }//GEN-LAST:event_jMenuItemCadModeloActionPerformedActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -273,6 +292,8 @@ telaVeiculo.setVisible(true);
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItemCadMarcaActionPerformed;
+    private javax.swing.JMenuItem jMenuItemCadModeloActionPerformed;
     private javax.swing.JMenuItem jMenuItemFornecedor;
     private javax.swing.JMenuItem jMenuItemFuncionario;
     private javax.swing.JMenuItem jMenuItemHospede;

@@ -5,19 +5,28 @@ public class Modelo {
     private int id;
     private String descricao;
     private char status;
-
+    private String nome;
     private Marca marca;
 
     public Modelo() {
     }
 
-    public Modelo(int id, String descricao, char status, Marca marca) {
+    public Modelo(int id,String nome, String descricao, char status, Marca marca) {
         this.id = id;
         this.descricao = descricao;
         this.status = status;
         this.marca = marca;
+        this.nome = nome;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
     public int getId() {
         return id;
     }
@@ -54,7 +63,7 @@ public class Modelo {
         }
     }
 
-   @Override
+@Override
 public String toString() {
     return this.getDescricao();
 }

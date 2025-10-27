@@ -10,7 +10,8 @@ import model.Modelo;
 import service.ServicoMarca;
 import service.ServicoModelo;
 import utilities.Utilities;
-import view.TelaCadastroModelo; // Importe sua tela de cadastro de Modelo
+import view.TelaBuscaModelo; // ***** IMPORTE A TELA DE BUSCA *****
+import view.TelaCadastroModelo; 
 
 public class ControllerCadModelo implements ActionListener {
 
@@ -52,6 +53,7 @@ public class ControllerCadModelo implements ActionListener {
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao carregar marcas: " + e.getMessage());
+            e.printStackTrace(); // Imprime erro no console
         }
     }
 
@@ -63,48 +65,70 @@ public class ControllerCadModelo implements ActionListener {
             Utilities.limpaComponentes(this.tela.getjPanelDados(), true);
             this.modeloAtual = new Modelo();
             this.tela.getjTextFieldId().setEnabled(false);
+            this.tela.getjTextFieldModelo().requestFocus(); // Foco no campo Modelo
 
         } else if (e.getSource() == this.tela.getjButtonCancelar()) {
             // Ação CANCELAR
             Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
             Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
+            this.modeloAtual = new Modelo(); // Limpa objeto atual
 
         } else if (e.getSource() == this.tela.getjButtonGravar()) {
             // Ação GRAVAR
             
-            // Pega os dados da tela (ajuste os nomes dos 'get')
-            String nomeModelo = this.tela.getjTextFieldModelo().getText(); // Da imagem image_81e957.png
+            String nomeModelo = this.tela.getjTextFieldModelo().getText(); 
             Marca marcaSelecionada = (Marca) this.tela.getjComboBoxMarca().getSelectedItem();
             
             // Validações
-            if (nomeModelo.trim().isEmpty()) {
+            if (nomeModelo == null || nomeModelo.trim().isEmpty()) { 
                 JOptionPane.showMessageDialog(null, "O campo 'Modelo' é obrigatório.");
+                this.tela.getjTextFieldModelo().requestFocus();
                 return;
             }
-            if (marcaSelecionada == null) {
+            if (marcaSelecionada == null || marcaSelecionada.getId() == 0) { 
                 JOptionPane.showMessageDialog(null, "Selecione uma 'Marca' válida.");
                 return;
             }
             
-            // Preenche o objeto
-            this.modeloAtual.setDescricao(nomeModelo);
-            this.modeloAtual.setMarca(marcaSelecionada); // Associa a marca
+            // Preenche o objeto (Usando setNome)
+            this.modeloAtual.setNome(nomeModelo); 
+            this.modeloAtual.setMarca(marcaSelecionada); 
             this.modeloAtual.setStatus('A');
             
+            System.out.println("DEBUG: Tentando salvar Modelo com nome: [" + this.modeloAtual.getNome() + "]"); 
+            
             try {
-                servicoModelo.salvar(this.modeloAtual);
-                JOptionPane.showMessageDialog(null, "Modelo salvo com sucesso!");
+                if (this.modeloAtual.getId() > 0) {
+                     servicoModelo.atualizar(this.modeloAtual);
+                     JOptionPane.showMessageDialog(null, "Modelo atualizado com sucesso!");
+                } else {
+                     servicoModelo.salvar(this.modeloAtual);
+                     JOptionPane.showMessageDialog(null, "Modelo salvo com sucesso!");
+                }
                 
                 Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
+                this.modeloAtual = new Modelo(); 
                 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Erro ao salvar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Erro ao salvar/atualizar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace(); 
             }
 
         } else if (e.getSource() == this.tela.getjButtonBuscar()) {
-            // Ação BUSCAR (implementação futura)
-            JOptionPane.showMessageDialog(null, "Tela de Busca ainda não implementada.");
+            // ***** AÇÃO BUSCAR SIMPLIFICADA (SEM CARREGAR DADOS) *****
+            
+            // 1. Cria a Tela de Busca de Modelo
+            TelaBuscaModelo telaBusca = new TelaBuscaModelo(null, true);
+            
+            // 2. Cria o Controller da Tela de Busca (Assume que você o criou)
+            ControllerBuscaModelo controllerBusca = new ControllerBuscaModelo(telaBusca); 
+            
+            // 3. Exibe a Tela de Busca
+            telaBusca.setVisible(true);
+            
+            // 4. NÃO FAZ NADA com o resultado selecionado.
+            //    (O código que usava getCodigoSelecionado() foi removido)
             
         } else if (e.getSource() == this.tela.getjButtonSair()) {
             // Ação SAIR
