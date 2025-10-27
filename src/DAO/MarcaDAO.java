@@ -48,7 +48,7 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
             e.printStackTrace();
             throw new RuntimeException("Erro ao buscar marca por ID", e);
         }
-        return null; // Retorna nulo se não encontrar
+        return null; 
     }
 
     @Override
@@ -104,8 +104,6 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
 
     @Override
     public void Delete(Marca objeto) {
-        // Recomendado: Usar "UPDATE SET status = 'I'" (deleção lógica)
-        // Mas seguindo o padrão, aqui está o DELETE físico:
         String sql = "DELETE FROM marca WHERE id = ?";
         
         try (Connection con = ConnectionFactory.getConnection();

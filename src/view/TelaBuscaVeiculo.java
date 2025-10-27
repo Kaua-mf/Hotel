@@ -52,7 +52,7 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
         // Forma segura de pegar a descrição do Modelo
         String descModelo = "";
         if (veiculo.getModelo() != null) {
-            descModelo = veiculo.getModelo().getDescricao(); 
+            descModelo = veiculo.getModelo().getNome(); 
         }
         
         // Forma segura de pegar a descrição da Marca (através do Modelo)
@@ -124,7 +124,7 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
 
             },
             new String [] {
-                "Id", "Placa", "Cor", "Modelo", "Marca", "Status"
+                "Id", "Placa", "Cor", "Modelo"
             }
         ));
         jTableDados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);

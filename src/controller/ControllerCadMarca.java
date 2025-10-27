@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 import model.Marca;
 import service.ServicoMarca;
 import utilities.Utilities;
-import view.TelaBuscaMarca;      // ***** Importe a TelaBuscaMarca *****
+import view.TelaBuscaMarca;      
 import view.TelaCadastroMarca; 
 
 public class ControllerCadMarca implements ActionListener {
@@ -17,16 +17,14 @@ public class ControllerCadMarca implements ActionListener {
 
     public ControllerCadMarca(TelaCadastroMarca tela) {
         this.tela = tela;
-        this.marcaAtual = new Marca(); // Inicia com um objeto vazio
+        this.marcaAtual = new Marca(); 
 
-        // Adiciona os listeners aos botões
         this.tela.getjButtonNovo().addActionListener(this);
         this.tela.getjButtonCancelar().addActionListener(this);
         this.tela.getjButtonGravar().addActionListener(this);
         this.tela.getjButtonBuscar().addActionListener(this);
         this.tela.getjButtonSair().addActionListener(this);
         
-        // Configuração inicial da tela
         Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
         Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
     }
@@ -34,22 +32,18 @@ public class ControllerCadMarca implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.tela.getjButtonNovo()) {
-            // Ação NOVO
             Utilities.ativaDesativa(this.tela.getjPanelBotoes(), false);
             Utilities.limpaComponentes(this.tela.getjPanelDados(), true);
-            this.marcaAtual = new Marca(); // Cria um novo objeto
-            this.tela.getjTextFieldId().setEnabled(false); // ID não deve ser editável
-            this.tela.getjTextFieldMarca().requestFocus(); // Foco no campo de texto
+            this.marcaAtual = new Marca();
+            this.tela.getjTextFieldId().setEnabled(false); 
+            this.tela.getjTextFieldMarca().requestFocus(); 
 
         } else if (e.getSource() == this.tela.getjButtonCancelar()) {
-            // Ação CANCELAR
             Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
             Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
-            // Limpa o objeto atual também, para evitar salvar dados antigos se clicar Novo -> Cancelar -> Gravar
             this.marcaAtual = new Marca(); 
 
         } else if (e.getSource() == this.tela.getjButtonGravar()) {
-            // Ação GRAVAR
             
             String nomeMarca = this.tela.getjTextFieldMarca().getText();            
             
@@ -81,22 +75,15 @@ public class ControllerCadMarca implements ActionListener {
             }
 
         } else if (e.getSource() == this.tela.getjButtonBuscar()) {
-            // ***** AÇÃO BUSCAR SIMPLIFICADA *****
             
-            // 1. Cria a Tela de Busca
             TelaBuscaMarca telaBusca = new TelaBuscaMarca(null, true); 
             
-            // 2. Cria o Controller da Tela de Busca
             ControllerBuscaMarca controllerBusca = new ControllerBuscaMarca(telaBusca); 
             
-            // 3. Exibe a Tela de Busca (o código pausa aqui até ela fechar)
             telaBusca.setVisible(true); 
             
-            // 4. NÃO FAZ NADA com o resultado selecionado por enquanto.
-            //    (O código que usava getCodigoSelecionado() foi removido)
             
         } else if (e.getSource() == this.tela.getjButtonSair()) {
-            // Ação SAIR
             this.tela.dispose();
         }
     }

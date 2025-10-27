@@ -3,8 +3,8 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.JOptionPane; // Adicionado
-import model.Veiculo; // Adicionado
+import javax.swing.JOptionPane;
+import model.Veiculo; 
 import service.ServicoVeiculo;
 import view.TelaBuscaVeiculo;
 

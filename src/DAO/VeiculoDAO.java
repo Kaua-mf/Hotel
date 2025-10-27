@@ -7,20 +7,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Veiculo;
-import model.Fornecedor;
-import model.Funcionario;
-import model.Hospede;
 import model.Modelo;
 import model.Marca; 
-
-// Assumindo que você tenha uma classe de conexão
-// import utilities.ConnectionFactory; 
+import DAO.ConnectionFactory; 
 
 public class VeiculoDAO implements InterfaceDAO<Veiculo> {
 
     @Override
     public void Create(Veiculo objeto) {
-        // CORRIGIDO: Removido "marca_id" do SQL e dos parâmetros
         String sqlInstrucao = "INSERT INTO veiculo (placa, cor, modelo_id, funcionario_id, fornecedor_id, hospede_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conexao = null;
         PreparedStatement pstm = null;
@@ -33,35 +27,30 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             pstm.setString(1, objeto.getPlaca());
             pstm.setString(2, objeto.getCor());
             
-            // Parâmetro 3: modelo_id
             if (objeto.getModelo() != null && objeto.getModelo().getId() != 0) {
                 pstm.setInt(3, objeto.getModelo().getId());
             } else {
                 pstm.setNull(3, java.sql.Types.INTEGER);
             }
             
-            // Parâmetro 4: funcionario_id
             if (objeto.getFuncionario() != null && objeto.getFuncionario().getId() != 0) {
                 pstm.setInt(4, objeto.getFuncionario().getId());
             } else {
                 pstm.setNull(4, java.sql.Types.INTEGER);
             }
             
-            // Parâmetro 5: fornecedor_id
             if (objeto.getFornecedor() != null && objeto.getFornecedor().getId() != 0) {
                 pstm.setInt(5, objeto.getFornecedor().getId());
             } else {
                 pstm.setNull(5, java.sql.Types.INTEGER);
             }
             
-            // Parâmetro 6: hospede_id
             if (objeto.getHospede() != null && objeto.getHospede().getId() != 0) {
                 pstm.setInt(6, objeto.getHospede().getId());
             } else {
                 pstm.setNull(6, java.sql.Types.INTEGER);
             }
             
-            // Parâmetro 7: status
             pstm.setString(7, String.valueOf(objeto.getStatus()));
 
             pstm.executeUpdate();
@@ -81,11 +70,9 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
 
     @Override
     public Veiculo Retrieve(int id) {
-        // CORRIGIDO: Adicionado JOIN com modelo e marca
         String sqlInstrucao = "SELECT v.id, v.placa, v.cor, v.status, " +
-                              "mo.id AS modelo_id, mo.descricao AS modelo_descricao, " +
+                              "mo.id AS modelo_id, mo.nome AS modelo_descricao, " + // <-- MUDANÇA AQUI
                               "ma.id AS marca_id, ma.descricao AS marca_descricao " +
-                              // Adicione JOINs para funcionario, fornecedor, hospede se precisar dos nomes
                               "FROM veiculo AS v " +
                               "LEFT JOIN modelo AS mo ON v.modelo_id = mo.id " +
                               "LEFT JOIN marca AS ma ON mo.marca_id = ma.id " +
@@ -94,7 +81,7 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
         Connection conexao = null;
         PreparedStatement pstm = null;
         ResultSet rst = null;
-        Veiculo veiculo = null; // Iniciar como nulo
+        Veiculo veiculo = null; 
 
         try {
             conexao = ConnectionFactory.getConnection();
@@ -103,27 +90,23 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             rst = pstm.executeQuery();
             
             if (rst.next()) {
-                veiculo = new Veiculo(); // Cria o veículo só se encontrar
+                veiculo = new Veiculo(); 
                 
-                // 1. Criar a Marca
                 Marca marca = new Marca();
                 marca.setId(rst.getInt("marca_id"));
                 marca.setDescricao(rst.getString("marca_descricao"));
 
-                // 2. Criar o Modelo e associar a Marca
                 Modelo modelo = new Modelo();
                 modelo.setId(rst.getInt("modelo_id"));
-                modelo.setDescricao(rst.getString("modelo_descricao"));
+                modelo.setNome(rst.getString("modelo_descricao")); // <-- MUDANÇA AQUI
                 modelo.setMarca(marca);
                 
-                // 3. Criar o Veículo e associar o Modelo
                 veiculo.setId(rst.getInt("id"));
                 veiculo.setPlaca(rst.getString("placa"));
                 veiculo.setCor(rst.getString("cor"));
                 veiculo.setStatus(rst.getString("status").charAt(0));
                 veiculo.setModelo(modelo);
                 
-                // Nota: Funcionario, Fornecedor, Hospede ainda não estão sendo buscados
                 veiculo.setFuncionario(null); 
                 veiculo.setFornecedor(null);
                 veiculo.setHospede(null); 
@@ -139,17 +122,17 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
 
     @Override
     public List<Veiculo> Retrieve(String atributo, String valor) {
-        // CORRIGIDO: Adicionado JOIN com modelo e marca
         String sqlInstrucao = "SELECT v.id, v.placa, v.cor, v.status, " +
-                              "mo.id AS modelo_id, mo.descricao AS modelo_descricao, " +
+                              "mo.id AS modelo_id, mo.nome AS modelo_descricao, " + // <-- MUDANÇA AQUI
                               "ma.id AS marca_id, ma.descricao AS marca_descricao " +
                               "FROM veiculo AS v " +
                               "LEFT JOIN modelo AS mo ON v.modelo_id = mo.id " +
                               "LEFT JOIN marca AS ma ON mo.marca_id = ma.id ";
         
-        // CUIDADO: Esta busca por atributo é frágil. Se o 'atributo' for 'marca.descricao',
-        // esta lógica 'WHERE' falhará. Por enquanto, vamos manter como estava.
         if (atributo != null && !atributo.trim().isEmpty()) {
+            if (atributo.equals("modelo.descricao")) { 
+                 atributo = "mo.nome"; 
+            }
             sqlInstrucao += " WHERE " + atributo + " LIKE ?";
         }
         
@@ -169,18 +152,16 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             rst = pstm.executeQuery();
 
             while(rst.next()) {
-                // 1. Criar a Marca
                 Marca marca = new Marca();
                 marca.setId(rst.getInt("marca_id"));
                 marca.setDescricao(rst.getString("marca_descricao"));
 
-                // 2. Criar o Modelo e associar a Marca
                 Modelo modelo = new Modelo();
                 modelo.setId(rst.getInt("modelo_id"));
-                modelo.setDescricao(rst.getString("modelo_descricao"));
+                // CORRIGIDO: Usa setNome()
+                modelo.setNome(rst.getString("modelo_descricao")); // <-- MUDANÇA AQUI
                 modelo.setMarca(marca);
                 
-                // 3. Criar o Veículo e associar o Modelo
                 Veiculo veiculo = new Veiculo();
                 veiculo.setId(rst.getInt("id"));
                 veiculo.setPlaca(rst.getString("placa"));
@@ -188,7 +169,6 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
                 veiculo.setStatus(rst.getString("status").charAt(0));
                 veiculo.setModelo(modelo);
 
-                // Nota: Funcionario, Fornecedor, Hospede ainda não estão sendo buscados
                 veiculo.setFuncionario(null);
                 veiculo.setFornecedor(null);
                 veiculo.setHospede(null);
@@ -206,7 +186,6 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
 
     @Override
     public void Update(Veiculo objeto) {
-        // CORRIGIDO: Removido "marca_id" do SQL e dos parâmetros
         String sqlInstrucao = "UPDATE veiculo SET placa = ?, cor = ?, modelo_id = ?, funcionario_id = ?, fornecedor_id = ?, hospede_id = ?, status = ? WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
@@ -219,22 +198,11 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             pstm.setString(1, objeto.getPlaca());
             pstm.setString(2, objeto.getCor());
             
-            // Parâmetro 3: modelo_id
             if (objeto.getModelo() != null) pstm.setInt(3, objeto.getModelo().getId()); else pstm.setNull(3, java.sql.Types.INTEGER);
-            
-            // Parâmetro 4: funcionario_id
             if (objeto.getFuncionario() != null) pstm.setInt(4, objeto.getFuncionario().getId()); else pstm.setNull(4, java.sql.Types.INTEGER);
-            
-            // Parâmetro 5: fornecedor_id
             if (objeto.getFornecedor() != null) pstm.setInt(5, objeto.getFornecedor().getId()); else pstm.setNull(5, java.sql.Types.INTEGER);
-            
-            // Parâmetro 6: hospede_id
             if (objeto.getHospede() != null) pstm.setInt(6, objeto.getHospede().getId()); else pstm.setNull(6, java.sql.Types.INTEGER);
-            
-            // Parâmetro 7: status
             pstm.setString(7, String.valueOf(objeto.getStatus()));
-            
-            // Parâmetro 8: id
             pstm.setInt(8, objeto.getId()); 
 
             pstm.executeUpdate();
@@ -250,7 +218,6 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
 
     @Override
     public void Delete(Veiculo objeto) {
-        // Este método estava correto, sem necessidade de alteração
         String sqlInstrucao = "DELETE FROM veiculo WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;

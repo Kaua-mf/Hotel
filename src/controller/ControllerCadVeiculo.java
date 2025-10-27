@@ -30,13 +30,12 @@ public class ControllerCadVeiculo implements ActionListener {
         this.telaCadastro.getjButtonBuscar().addActionListener(this);
         this.telaCadastro.getjButtonSair().addActionListener(this);
         
-        carregarModelos(); // Apenas modelos são necessários
+        carregarModelos(); 
 
         Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true); 
         Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false); 
     }
 
-    // 4. REMOVIDO: O método inteiro carregarMarcas() foi excluído.
     
     private void carregarModelos() {
         try {
