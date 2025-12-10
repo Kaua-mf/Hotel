@@ -15,8 +15,6 @@ public class ValidarDoc {
             return false;
         }
 
-        // Para validar o primeiro dígito a forma mais simples é inverter o nosso
-        // número de CNPJ e adicionar pesos de 2 até 9:
         int soma = 0;
         int peso = 2;
 
@@ -34,10 +32,9 @@ public class ValidarDoc {
         if (resto < 2) {
             primeiroDigito = 0;
         } else {
-            primeiroDigito = 11 - resto; // Caso contrário, 11 - resto
+            primeiroDigito = 11 - resto; 
         }
 
-        // Segundo digito
         soma = 0;
         peso = 2;
         for (int i = 1; i < 14; i++) {
@@ -56,9 +53,9 @@ public class ValidarDoc {
         int segundoDigito;
         resto = soma % 11;
         if (resto < 2) {
-            segundoDigito = 0; // Se resto for 0 ou 1, o DV é 0
+            segundoDigito = 0; 
         } else {
-            segundoDigito = 11 - resto; // Caso contrário, 11 - resto
+            segundoDigito = 11 - resto; 
         }
 
         int primeiroDigitoReal = Character.getNumericValue(cnpj.charAt(12));

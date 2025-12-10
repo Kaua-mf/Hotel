@@ -51,42 +51,29 @@ public class ControllerCadHospede implements ActionListener {
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
-            // =================================================================
-            // INÍCIO DA LÓGICA DE VALIDAÇÃO CPF/CNPJ
-            // =================================================================
             
-            // Remove caracteres não numéricos para validação
             String cnpjToValidate = this.telaCadastro.getjFormattedTextFieldCnpj().getText().replaceAll("\\D", "");
             String cpfToValidate = this.telaCadastro.getjFormattedTextFieldCpf().getText().replaceAll("\\D","");
             
-            // Chama os métodos estáticos de validação (Certifique-se que service.ValidarDoc existe no projeto)
             boolean cpfvalido = service.ValidarDoc.validarCPF(cpfToValidate);
             boolean cnpjvalido = service.ValidarDoc.validarCNPJ(cnpjToValidate);
 
-            // Validação 1: Nenhum preenchido
             if (cnpjToValidate.isEmpty() && cpfToValidate.isEmpty()) {
                 JOptionPane.showMessageDialog(telaCadastro,"Preencha pelo menos um dos campos (CPF ou CNPJ).");
                 return;
             }
-            // Validação 2: Ambos preenchidos
             if (!cnpjToValidate.isEmpty() && !cpfToValidate.isEmpty()) {
                 JOptionPane.showMessageDialog(telaCadastro, "Preencha somente um dos campos (CPF ou CNPJ).");
                 return;
             }
-            // Validação 3: CPF preenchido mas inválido
             if (!cpfToValidate.isEmpty() && !cpfvalido) {
                 JOptionPane.showMessageDialog(telaCadastro, "CPF Inválido.");
                 return;
             }
-            // Validação 4: CNPJ preenchido mas inválido
             if (!cnpjToValidate.isEmpty() && !cnpjvalido) {
                 JOptionPane.showMessageDialog(telaCadastro, "CNPJ Inválido.");
                 return;
             }
-            
-            // =================================================================
-            // FIM DA VALIDAÇÃO
-            // =================================================================
 
             if (this.telaCadastro.getjTextFieldNome().getText().trim().isEmpty()) { 
                 JOptionPane.showMessageDialog(null, "O campo 'Nome' é obrigatório.");
@@ -104,7 +91,6 @@ public class ControllerCadHospede implements ActionListener {
                 this.hospedeAtual.setCidade(this.telaCadastro.getjTextFieldCidade().getText());
                 this.hospedeAtual.setComplemento(this.telaCadastro.getjTextFieldComplemento().getText());
                 
-                // Setar CPF e CNPJ (Adicionei o setCnpj para garantir que salve o dado correto)
                 this.hospedeAtual.setCpf(this.telaCadastro.getjFormattedTextFieldCpf().getText());
                 this.hospedeAtual.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
                 

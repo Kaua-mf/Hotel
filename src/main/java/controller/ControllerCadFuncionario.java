@@ -51,6 +51,16 @@ public class ControllerCadFuncionario implements ActionListener {
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
+            
+            String cpfToValidate = this.telaCadastro.getjFormattedTextFieldCpf().getText().replaceAll("\\D","");
+            
+            boolean cpfvalido = service.ValidarDoc.validarCPF(cpfToValidate);
+
+            if (!cpfToValidate.isEmpty() && !cpfvalido) {
+                JOptionPane.showMessageDialog(telaCadastro, "CPF Inválido.");
+                return;
+            }
+           
             if (this.telaCadastro.getjTextFieldNome().getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "O campo 'Nome' é obrigatório.");
                 return; 
@@ -58,6 +68,8 @@ public class ControllerCadFuncionario implements ActionListener {
             
             try {
                 this.funcionarioAtual.setNome(this.telaCadastro.getjTextFieldNome().getText());
+                
+                this.funcionarioAtual.setCpf(this.telaCadastro.getjFormattedTextFieldCpf().getText());
                 this.funcionarioAtual.setFone(this.telaCadastro.getjFormattedTextFieldFone1().getText());
                 this.funcionarioAtual.setFone2(this.telaCadastro.getjFormattedTextFieldFone2().getText());
                 this.funcionarioAtual.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
@@ -81,6 +93,7 @@ public class ControllerCadFuncionario implements ActionListener {
                     default: sexoParaSalvar = 'O'; break;
                 }
                 this.funcionarioAtual.setSexo(String.valueOf(sexoParaSalvar));
+                
                 if (this.funcionarioAtual.getId() == 0) { 
                     servicoFuncionario.criar(this.funcionarioAtual); 
                     JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");

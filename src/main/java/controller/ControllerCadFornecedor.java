@@ -50,18 +50,12 @@ public class ControllerCadFornecedor implements ActionListener {
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
-            // =================================================================
-            // LÓGICA DE VALIDAÇÃO (CNPJ e CAMPOS OBRIGATÓRIOS)
-            // =================================================================
-            
-            // 1. Validação simples de Nome Fantasia
             if (this.telaCadastro.getjTextFieldNomeFantasia().getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(telaCadastro, "O campo 'Nome Fantasia' é obrigatório.", "Atenção", JOptionPane.WARNING_MESSAGE);
                 this.telaCadastro.getjTextFieldNomeFantasia().requestFocus();
                 return;
             }
 
-            // 2. Validação do CNPJ
             String cnpjToValidate = this.telaCadastro.getjFormattedTextFieldCnpj().getText().replaceAll("\\D", "");
             boolean cnpjValido = service.ValidarDoc.validarCNPJ(cnpjToValidate);
 
@@ -76,25 +70,15 @@ public class ControllerCadFornecedor implements ActionListener {
                 this.telaCadastro.getjFormattedTextFieldCnpj().requestFocus();
                 return;
             }
-            // =================================================================
-            // FIM DA VALIDAÇÃO
-            // =================================================================
-
-            // Se passou pelas validações, preenche o objeto e salva
+            
             this.fornecedorAtual.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
             this.fornecedorAtual.setRazaoSocial(this.telaCadastro.getjTextFieldRazaoSocial().getText());
-            
-            // Salva o CNPJ (formatado ou limpo, conforme sua preferência no banco. Aqui estou pegando o texto do campo)
             this.fornecedorAtual.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
-            
             this.fornecedorAtual.setInscricaoEstadual(this.telaCadastro.getjTextFieldInscricaoEstadual().getText());
             this.fornecedorAtual.setContato(this.telaCadastro.getjTextFieldContato().getText());
             this.fornecedorAtual.setFone1(this.telaCadastro.getjFormattedTextFieldFone1().getText());
             this.fornecedorAtual.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
             this.fornecedorAtual.setStatus('A');
-            
-            // Adicione aqui os setters de Endereço se necessário (CEP, Cidade, etc), 
-            // baseando-se no código antigo, caso sua tela nova tenha esses campos.
             
             DateTimeFormatter dtfDb = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.fornecedorAtual.setDataCadastro(dtfDb.format(LocalDateTime.now()));
