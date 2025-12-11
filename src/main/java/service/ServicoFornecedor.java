@@ -9,13 +9,22 @@ public class ServicoFornecedor {
     private FornecedorDAO fornecedorDAO = new FornecedorDAO();
 
     public void salvar(Fornecedor fornecedor) {
-        fornecedorDAO.Create(fornecedor);
+        if (fornecedor.getId() == 0) {
+            fornecedorDAO.Create(fornecedor);
+        } else {
+            fornecedorDAO.Update(fornecedor);
+        }
     }
- 
+    
+   
     public List<Fornecedor> buscarTodos() {
         return fornecedorDAO.Retrieve(); 
     }
     
+    public Fornecedor buscarPorId(int id) {
+        return fornecedorDAO.buscar(id);
+    }
+
     public List<Fornecedor> buscarPorFiltro(String filtro, int tipoBusca) {
         String nomeColuna;
 
@@ -30,9 +39,13 @@ public class ServicoFornecedor {
                 nomeColuna = "cnpj";
                 break;
             default:
-                nomeColuna = "id";
+                nomeColuna = "id"; // Default
         }
         
         return fornecedorDAO.Retrieve(nomeColuna, filtro);
+    }
+
+    public void deletar(Fornecedor fornecedor) {
+        fornecedorDAO.Delete(fornecedor);
     }
 }

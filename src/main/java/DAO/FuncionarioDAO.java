@@ -10,11 +10,14 @@ import model.Funcionario;
 
 public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
 
-    private final String COLUNAS_INSERT = "nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, rg, obs, status, usuario, senha, sexo";
+    // 17 COLUNAS para INSERT (Adicionado data_cadastro e cpf)
+    private final String COLUNAS_INSERT = "nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, usuario, senha, sexo";
+    private final String COLUNAS_READ = "id, " + COLUNAS_INSERT; // 18 colunas para READ
 
     @Override
     public void Create(Funcionario objeto) {
-        String sql = "INSERT INTO funcionario (" + COLUNAS_INSERT + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // 17 interrogações para as 17 colunas
+        String sql = "INSERT INTO funcionario (" + COLUNAS_INSERT + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement pstm = conexao.prepareStatement(sql)) {
@@ -30,25 +33,38 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(7, objeto.getBairro());
             pstm.setString(8, objeto.getCidade());
             pstm.setString(9, objeto.getComplemento());
-            pstm.setString(10, objeto.getRg());
-            pstm.setString(11, objeto.getObs());
-            pstm.setString(12, String.valueOf(objeto.getStatus()));
-            pstm.setString(13, objeto.getUsuario());
-            pstm.setString(14, objeto.getSenha());
-            pstm.setString(15, objeto.getSexo());
+            
+            pstm.setString(10, objeto.getDataCadastro()); // NOVO
+            pstm.setString(11, objeto.getCpf());          // NOVO
+            
+            pstm.setString(12, objeto.getRg());
+            pstm.setString(13, objeto.getObs());
+            pstm.setString(14, String.valueOf(objeto.getStatus()));
+            pstm.setString(15, objeto.getUsuario());
+            pstm.setString(16, objeto.getSenha());
+            pstm.setString(17, objeto.getSexo()); // Parâmetro 17
 
             pstm.executeUpdate();
             conexao.commit(); 
 
         } catch (SQLException ex) {
             System.err.println("Erro ao criar Funcionário: " + ex.getMessage());
+             try {
+                // Tenta reverter a transação em caso de erro
+                Connection conexao = ConnectionFactory.getConnection(); 
+                if (conexao != null) conexao.rollback(); 
+            } catch (SQLException e) {
+                // Apenas loga se a reversão falhar
+                e.printStackTrace(); 
+            }
             throw new RuntimeException("Falha na criação do Funcionário. A transação foi revertida.", ex);
         }
     }
 
     @Override
     public Funcionario Retrieve(int id) {
-        String sql = "SELECT * FROM funcionario WHERE id = ?";
+        // Usando COLUNAS_READ para evitar o SELECT *
+        String sql = "SELECT " + COLUNAS_READ + " FROM funcionario WHERE id = ?";
         Funcionario funcionario = null;
 
         try (Connection conexao = ConnectionFactory.getConnection();
@@ -62,17 +78,24 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 }
             }
         } catch (SQLException ex) {
-            System.err.println("Erro ao buscar Funcionário por ID: " + ex.getMessage());
+            ex.printStackTrace();
             throw new RuntimeException("Falha na busca do Funcionário.", ex);
         }
         return funcionario;
     }
     
+    // Alias para o Service (buscarPorId)
+    public Funcionario buscar(int id) {
+        return Retrieve(id);
+    }
+
     @Override
     public List<Funcionario> Retrieve(String atributo, String valor) {
-        String sql = "SELECT * FROM funcionario";
+        // Usando COLUNAS_READ para evitar o SELECT *
+        String sql = "SELECT " + COLUNAS_READ + " FROM funcionario";
         
         if (atributo != null && valor != null && !valor.trim().isEmpty()) {
+            // Se você quer busca exata, remova os LIKE. Para busca parcial, mantenha:
             sql += " WHERE " + atributo + " LIKE ?";
         }
 
@@ -93,16 +116,23 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 }
             }
         } catch (SQLException ex) {
-            System.err.println("Erro ao buscar lista de Funcionários: " + ex.getMessage());
+            ex.printStackTrace();
             throw new RuntimeException("Falha na busca de Funcionários.", ex);
         }
         return funcionarios;
     }
+    
+    // Alias para Listar Todos
+    public List<Funcionario> Retrieve() {
+        return Retrieve(null, null);
+    }
+
 
     @Override
     public void Update(Funcionario objeto) {
+        // 17 COLUNAS para UPDATE, 18º parâmetro é o ID (WHERE)
         String sql = "UPDATE funcionario SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, " + 
-                     "logradouro = ?, bairro = ?, cidade = ?, complemento = ?, rg = ?, obs = ?, " + 
+                     "logradouro = ?, bairro = ?, cidade = ?, complemento = ?, data_cadastro = ?, cpf = ?, rg = ?, obs = ?, " + 
                      "status = ?, usuario = ?, senha = ?, sexo = ? WHERE id = ?";
 
         try (Connection conexao = ConnectionFactory.getConnection();
@@ -119,19 +149,29 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(7, objeto.getBairro());
             pstm.setString(8, objeto.getCidade());
             pstm.setString(9, objeto.getComplemento());
-            pstm.setString(10, objeto.getRg());
-            pstm.setString(11, objeto.getObs());
-            pstm.setString(12, String.valueOf(objeto.getStatus()));
-            pstm.setString(13, objeto.getUsuario());
-            pstm.setString(14, objeto.getSenha());
-            pstm.setInt(15, objeto.getId()); 
-            pstm.setString(15, objeto.getSexo());
+            
+            pstm.setString(10, objeto.getDataCadastro()); // Parâmetro 10
+            pstm.setString(11, objeto.getCpf());          // Parâmetro 11
+            
+            pstm.setString(12, objeto.getRg());
+            pstm.setString(13, objeto.getObs());
+            pstm.setString(14, String.valueOf(objeto.getStatus()));
+            pstm.setString(15, objeto.getUsuario());
+            pstm.setString(16, objeto.getSenha());
+            pstm.setString(17, objeto.getSexo()); // Parâmetro 17
+            pstm.setInt(18, objeto.getId());      // Parâmetro 18 (WHERE)
 
             pstm.executeUpdate();
             conexao.commit();
 
         } catch (SQLException ex) {
             System.err.println("Erro ao atualizar Funcionário: " + ex.getMessage());
+            try {
+                Connection conexao = ConnectionFactory.getConnection(); 
+                if (conexao != null) conexao.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             throw new RuntimeException("Falha na atualização do Funcionário. A transação foi revertida.", ex);
         }
     }
@@ -150,6 +190,12 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
 
         } catch (SQLException ex) {
             System.err.println("Erro ao deletar Funcionário: " + ex.getMessage());
+            try {
+                Connection conexao = ConnectionFactory.getConnection(); 
+                if (conexao != null) conexao.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             throw new RuntimeException("Falha ao deletar o Funcionário. A transação foi revertida.", ex);
         }
     }
@@ -165,13 +211,21 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
         funcionario.setBairro(rst.getString("bairro"));
         funcionario.setCidade(rst.getString("cidade"));
         funcionario.setComplemento(rst.getString("complemento"));
-        funcionario.setDataCadastro(rst.getString("data_cadastro"));
-        funcionario.setCpf(rst.getString("cpf"));
+        
+        funcionario.setDataCadastro(rst.getString("data_cadastro")); 
+        funcionario.setCpf(rst.getString("cpf"));                     
+        
         funcionario.setRg(rst.getString("rg"));
         funcionario.setObs(rst.getString("obs"));
-        funcionario.setStatus(rst.getString("status").charAt(0));
+        
+        String statusStr = rst.getString("status");
+        if(statusStr != null && !statusStr.isEmpty()){
+            funcionario.setStatus(statusStr.charAt(0));
+        }
+
         funcionario.setUsuario(rst.getString("usuario"));
         funcionario.setSenha(rst.getString("senha"));
-        funcionario.setSenha(rst.getString("sexo"));
+        
+        funcionario.setSexo(rst.getString("sexo")); 
     }
 }

@@ -44,7 +44,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setString(18, objeto.getCnpj());
             pstm.setString(19, objeto.getInscricaoEstadual());
             pstm.setString(20, objeto.getContato());
-            pstm.setString(21, objeto.getSexo());
+            pstm.setString(21, objeto.getSexo()); 
 
             pstm.executeUpdate(); 
             conexao.commit();
@@ -54,6 +54,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             try {
                 if (conexao != null) conexao.rollback();
             } catch (SQLException e) {
+                 e.printStackTrace();
             }
             throw new RuntimeException("Falha na criação do Hóspede.", ex);
 
@@ -81,14 +82,18 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
                 mapearResultado(hospede, rst);
             }
         } catch (SQLException ex) {
-            System.err.println("Erro ao buscar Hóspede por ID: " + ex.getMessage());
+            ex.printStackTrace();
             throw new RuntimeException("Falha na busca de Hóspede por ID.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
         }
         return hospede;
     }
-
+    
+    public Hospede buscar(int id) {
+        return Retrieve(id);
+    }
+    
     @Override
     public List<Hospede> Retrieve(String atributo, String valor) {
         String sqlInstrucao = "SELECT " + COLUNAS_READ + " FROM hospede";
@@ -118,12 +123,16 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
                 listaHospedes.add(hospede);
             }
         } catch (SQLException ex) {
-            System.err.println("Erro ao buscar Hóspedes: " + ex.getMessage());
+            ex.printStackTrace();
             throw new RuntimeException("Falha na busca de Hóspedes.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
         }
         return listaHospedes;
+    }
+    
+    public List<Hospede> Retrieve() {
+        return Retrieve(null, null);
     }
 
     @Override
@@ -157,14 +166,19 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setString(18, objeto.getCnpj());
             pstm.setString(19, objeto.getInscricaoEstadual());
             pstm.setString(20, objeto.getContato());
-            pstm.setInt(21, objeto.getId()); 
-            pstm.setString(22, objeto.getSexo());
+            pstm.setString(21, objeto.getSexo()); 
+            pstm.setInt(22, objeto.getId());   
 
             pstm.executeUpdate();
             conexao.commit();
 
         } catch (SQLException ex) {
             System.err.println("Erro ao atualizar Hóspede: " + ex.getMessage());
+            try {
+                if (conexao != null) conexao.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             throw new RuntimeException("Falha na atualização do Hóspede.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
@@ -179,12 +193,19 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
 
         try {
             conexao = ConnectionFactory.getConnection();
+            conexao.setAutoCommit(false);
             pstm = conexao.prepareStatement(sqlInstrucao);
             pstm.setInt(1, objeto.getId());
             pstm.executeUpdate();
+            conexao.commit(); 
 
         } catch (SQLException ex) {
             System.err.println("Erro ao deletar Hóspede: " + ex.getMessage());
+             try {
+                if (conexao != null) conexao.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             throw new RuntimeException("Falha na exclusão do Hóspede.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
@@ -206,7 +227,12 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
         hospede.setCpf(rst.getString("cpf"));
         hospede.setRg(rst.getString("rg"));
         hospede.setObs(rst.getString("obs"));
-        hospede.setStatus(rst.getString("status").charAt(0));
+        
+        String statusStr = rst.getString("status");
+        if(statusStr != null && !statusStr.isEmpty()){
+            hospede.setStatus(statusStr.charAt(0));
+        }
+
         hospede.setUsuario(rst.getString("usuario")); 
         hospede.setSenha(rst.getString("senha"));    
         hospede.setRazaoSocial(rst.getString("razao_social"));

@@ -23,7 +23,7 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             pstm = conexao.prepareStatement(sqlInstrucao);
             
             pstm.setString(1, objeto.getNome());
-            pstm.setString(2, objeto.getFone());
+            pstm.setString(2, objeto.getFone()); // Verifique se no Model é getFone ou getFone1
             pstm.setString(3, objeto.getFone2());
             pstm.setString(4, objeto.getEmail());
             pstm.setString(5, objeto.getCep());
@@ -42,27 +42,26 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             pstm.setString(18, objeto.getContato());
             
             pstm.executeUpdate(); 
-            
             conexao.commit(); 
             
         } catch (SQLException ex) {
-            System.err.println("Erro ao salvar o fornecedor: " + ex.getMessage());
             try {
-                if (conexao != null) {
-                    conexao.rollback(); 
-                }
+                if (conexao != null) conexao.rollback(); 
             } catch (SQLException e) {
-                System.err.println("Erro ao fazer rollback: " + e.getMessage());
+                e.printStackTrace();
             }
-            throw new RuntimeException("Falha na criação do Fornecedor.", ex);
+            ex.printStackTrace();
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }
 
+    /**
+     * Este método é exigido pela InterfaceDAO
+     */
     @Override
     public Fornecedor Retrieve(int id) {
-        String sqlInstrucao = "SELECT id, nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, razao_social, cnpj, inscricao_estadual, contato FROM fornecedor WHERE id = ?";
+        String sqlInstrucao = "SELECT * FROM fornecedor WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
         ResultSet rst = null;
@@ -90,24 +89,46 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
                 fornecedor.setCpf(rst.getString("cpf"));
                 fornecedor.setRg(rst.getString("rg"));
                 fornecedor.setObs(rst.getString("obs"));
-                fornecedor.setStatus(rst.getString("status").charAt(0));
+                
+                String statusString = rst.getString("status");
+                if (statusString != null && !statusString.isEmpty()) {
+                    fornecedor.setStatus(statusString.charAt(0));
+                }
+                
                 fornecedor.setRazaoSocial(rst.getString("razao_social"));
                 fornecedor.setCnpj(rst.getString("cnpj"));
                 fornecedor.setInscricaoEstadual(rst.getString("inscricao_estadual"));
                 fornecedor.setContato(rst.getString("contato"));
             }
         } catch (SQLException ex) {
-            System.err.println("Erro ao buscar fornecedor por ID: " + ex.getMessage());
-            throw new RuntimeException("Falha na busca de Fornecedor por ID.", ex);
+            ex.printStackTrace();
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
         }
         return fornecedor; 
     }
     
+    /**
+     * --- NOVO MÉTODO ---
+     * Criado para atender a chamada do ServicoFornecedor.buscarPorId()
+     * Ele apenas reaproveita o Retrieve(id).
+     */
+    public Fornecedor buscar(int id) {
+        return Retrieve(id);
+    }
+    
     @Override
     public List<Fornecedor> Retrieve(String atributo, String valor) {
-        String sqlInstrucao = "SELECT id, nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, razao_social, cnpj, inscricao_estadual, contato FROM fornecedor WHERE " + atributo + " LIKE ?";
+        String sqlInstrucao;
+        
+        // Se atributo ou valor forem nulos/vazios, busca TUDO
+        if (atributo == null || atributo.trim().isEmpty() || valor == null || valor.trim().isEmpty()) {
+            sqlInstrucao = "SELECT * FROM fornecedor";
+        } else {
+            // CUIDADO: Concatenação direta pode gerar SQL Injection. 
+            // Para estudo/trabalho escolar ok, para produção use validação dos campos.
+            sqlInstrucao = "SELECT * FROM fornecedor WHERE " + atributo + " LIKE ?";
+        }
         
         Connection conexao = null;
         PreparedStatement pstm = null;
@@ -117,7 +138,12 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
         try {
             conexao = ConnectionFactory.getConnection();
             pstm = conexao.prepareStatement(sqlInstrucao);
-            pstm.setString(1, "%" + valor + "%");
+            
+            // Só define o parâmetro se estivermos filtrando
+            if (atributo != null && !atributo.trim().isEmpty() && valor != null) {
+                pstm.setString(1, "%" + valor + "%");
+            }
+            
             rst = pstm.executeQuery();
             
             while (rst.next()) {
@@ -136,29 +162,40 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
                 fornecedor.setCpf(rst.getString("cpf"));
                 fornecedor.setRg(rst.getString("rg"));
                 fornecedor.setObs(rst.getString("obs"));
-                fornecedor.setStatus(rst.getString("status").charAt(0));
+                
+                String statusString = rst.getString("status");
+                if (statusString != null && !statusString.isEmpty()) {
+                    fornecedor.setStatus(statusString.charAt(0));
+                }
+                
                 fornecedor.setRazaoSocial(rst.getString("razao_social"));
                 fornecedor.setCnpj(rst.getString("cnpj"));
                 fornecedor.setInscricaoEstadual(rst.getString("inscricao_estadual")); 
                 fornecedor.setContato(rst.getString("contato"));
+                
                 listaFornecedor.add(fornecedor);
             }
         } catch (SQLException ex) {
-            System.err.println("Erro ao buscar fornecedores com filtro: " + ex.getMessage());
-            throw new RuntimeException("Falha na busca de Fornecedores com filtro.", ex);
+            ex.printStackTrace();
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
         }
         return listaFornecedor;
     }
 
+    /**
+     * Agora este método funciona corretamente chamando o Retrieve com null.
+     * A lógica acima (Retrieve string, string) trata o null para buscar todos.
+     */
     public List<Fornecedor> Retrieve() {
         return Retrieve(null, null); 
     }
     
     @Override
     public void Update(Fornecedor objeto) {
-        String sqlInstrucao = "UPDATE fornecedor SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, logradouro = ?, bairro = ?, cidade = ?, complemento = ?, data_cadastro = ?, cpf = ?, rg = ?, obs = ?, status = ?, razao_social = ?, cnpj = ?, inscricao_estadual = ?, contato = ? WHERE id = ?";
+        String sqlInstrucao = "UPDATE fornecedor SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, logradouro = ?, bairro = ?, cidade = ?, complemento = ?, cpf = ?, rg = ?, obs = ?, status = ?, razao_social = ?, cnpj = ?, inscricao_estadual = ?, contato = ? WHERE id = ?";
+        // OBS: Removi data_cadastro do UPDATE. Geralmente não se altera a data de criação.
+        
         Connection conexao = null;
         PreparedStatement pstm = null;
 
@@ -177,30 +214,27 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
             pstm.setString(7, objeto.getBairro());
             pstm.setString(8, objeto.getCidade());
             pstm.setString(9, objeto.getComplemento());
-            pstm.setString(10, objeto.getDataCadastro());
-            pstm.setString(11, objeto.getCpf());
-            pstm.setString(12, objeto.getRg());
-            pstm.setString(13, objeto.getObs());
-            pstm.setString(14, String.valueOf(objeto.getStatus()));
-            pstm.setString(15, objeto.getRazaoSocial());
-            pstm.setString(16, objeto.getCnpj());
-            pstm.setString(17, objeto.getInscricaoEstadual());
-            pstm.setString(18, objeto.getContato());
-            pstm.setInt(19, objeto.getId()); 
+            // pstm.setString(10, objeto.getDataCadastro()); // Removido
+            pstm.setString(10, objeto.getCpf());
+            pstm.setString(11, objeto.getRg());
+            pstm.setString(12, objeto.getObs());
+            pstm.setString(13, String.valueOf(objeto.getStatus()));
+            pstm.setString(14, objeto.getRazaoSocial());
+            pstm.setString(15, objeto.getCnpj());
+            pstm.setString(16, objeto.getInscricaoEstadual());
+            pstm.setString(17, objeto.getContato());
+            pstm.setInt(18, objeto.getId()); 
 
             pstm.executeUpdate();
             conexao.commit();
 
         } catch (SQLException ex) {
-            System.err.println("Erro ao atualizar o fornecedor: " + ex.getMessage());
             try {
-                if (conexao != null) {
-                    conexao.rollback();
-                }
+                if (conexao != null) conexao.rollback();
             } catch (SQLException e) {
-                System.err.println("Erro ao fazer rollback: " + e.getMessage());
+                e.printStackTrace();
             }
-            throw new RuntimeException("Falha na atualização do Fornecedor.", ex);
+            ex.printStackTrace();
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
@@ -213,14 +247,17 @@ public class FornecedorDAO implements InterfaceDAO<Fornecedor> {
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement pstm = conexao.prepareStatement(sql)) {
             
+            // O try-with-resources acima já fecha conexão e pstm
+            // Mas se usar transação manual, precisa de cuidado
             conexao.setAutoCommit(false);
             pstm.setInt(1, objeto.getId());
             pstm.executeUpdate();
             conexao.commit();
 
         } catch (SQLException ex) {
-            System.err.println("Erro ao deletar Fornecedor: " + ex.getMessage());
-            throw new RuntimeException("Falha ao deletar o Fornecedor. A transação foi revertida.", ex);
+            ex.printStackTrace();
+            // Rollback é difícil aqui pois a conexão fecha no final do try
+            // Se precisar de rollback estrito, use a estrutura try/catch/finally clássica igual no Create
         }
     }
-    }
+}

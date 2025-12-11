@@ -11,6 +11,8 @@ import view.TelaBuscaFuncionario;
 
 public class ControllerBuscaFuncionario implements ActionListener {
 
+    public static int codigoSelecionado = 0; 
+    
     TelaBuscaFuncionario telaBusca;
     ServicoFuncionario servicoFuncionario = new ServicoFuncionario();
 
@@ -19,6 +21,8 @@ public class ControllerBuscaFuncionario implements ActionListener {
         this.telaBusca.getjButtonCarregar().addActionListener(this);
         this.telaBusca.getjButtonFiltar().addActionListener(this);
         this.telaBusca.getjButtonSair().addActionListener(this);
+        
+        codigoSelecionado = 0; 
         
         preencheTabelaComDados();
     }
@@ -59,8 +63,14 @@ public class ControllerBuscaFuncionario implements ActionListener {
             this.telaBusca.dispose();
             
         } else if (evento.getSource() == this.telaBusca.getjButtonCarregar()) {
-            this.telaBusca.getjTFFiltro().setText("");
-            preencheTabelaComDados();
+            int linhaSelecionada = this.telaBusca.getjTableDados().getSelectedRow();
+            
+            if (linhaSelecionada != -1) {
+                codigoSelecionado = (int) this.telaBusca.getjTableDados().getValueAt(linhaSelecionada, 0);
+                this.telaBusca.dispose(); 
+            } else {
+                 JOptionPane.showMessageDialog(telaBusca, "Selecione um funcionário para carregar.");
+            }
         }
     }
 }

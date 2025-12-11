@@ -1,13 +1,12 @@
 package service;
 
-import DAO.HospedeDAO;
-import java.util.List;
+import DAO.HospedeDAO; 
 import model.Hospede;
-import java.util.Objects;
+import java.util.List;
 
 public class ServicoHospede {
-
-    private HospedeDAO hospedeDAO = new HospedeDAO();
+    
+    private HospedeDAO hospedeDAO = new HospedeDAO(); 
 
     public void salvar(Hospede hospede) {
         if (hospede.getId() == 0) {
@@ -16,33 +15,36 @@ public class ServicoHospede {
             hospedeDAO.Update(hospede);
         }
     }
-
+    
     public List<Hospede> buscarTodos() {
-        return hospedeDAO.Retrieve(null, null);
+        return hospedeDAO.Retrieve(); 
     }
-
+    
+    public Hospede buscarPorId(int id) {
+        return hospedeDAO.Retrieve(id); 
+    }
+    
     public List<Hospede> buscarPorFiltro(String filtro, int tipoBusca) {
-        if (Objects.isNull(filtro) || filtro.trim().isEmpty()) {
-            return hospedeDAO.Retrieve(null, null);
-        }
-
         String nomeColuna;
 
         switch (tipoBusca) {
-            case 0: 
-                nomeColuna = "nome";
+            case 0:
+                nomeColuna = "id";
                 break;
-            case 1: 
-                nomeColuna = "cpf";
+            case 1:
+                nomeColuna = "nome"; 
                 break;
-            case 2: 
-                nomeColuna = "rg";
+            case 2:
+                nomeColuna = "cpf"; 
                 break;
             default:
-                nomeColuna = "nome";
-                break;
+                nomeColuna = "id";
         }
         
         return hospedeDAO.Retrieve(nomeColuna, filtro);
+    }
+    
+    public void deletar(Hospede hospede) {
+        hospedeDAO.Delete(hospede);
     }
 }
