@@ -1,7 +1,9 @@
 package view;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class TelaCadastroVaga extends javax.swing.JDialog {
 
@@ -10,7 +12,7 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
         initComponents();
     }
  public javax.swing.JTextField getjTextFieldDescricao() {
-        return jTextFieldComplemento; 
+        return jTextFieldDescricao; 
     }
 
     public JButton getjButtonBuscar() {
@@ -40,14 +42,184 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
     public JPanel getjPanelDados() {
         return jPanelDados;
     }
-    
-    public javax.swing.JTextField getjTextFieldIds() {
+
+    public JLabel getjLabelBairro() {
+        return jLabelBairro;
+    }
+
+    public void setjLabelBairro(JLabel jLabelBairro) {
+        this.jLabelBairro = jLabelBairro;
+    }
+
+    public JLabel getjLabelCadastro() {
+        return jLabelCadastro;
+    }
+
+    public void setjLabelCadastro(JLabel jLabelCadastro) {
+        this.jLabelCadastro = jLabelCadastro;
+    }
+
+    public JLabel getjLabelCep() {
+        return jLabelCep;
+    }
+
+    public void setjLabelCep(JLabel jLabelCep) {
+        this.jLabelCep = jLabelCep;
+    }
+
+    public JLabel getjLabelCidade() {
+        return jLabelCidade;
+    }
+
+    public void setjLabelCidade(JLabel jLabelCidade) {
+        this.jLabelCidade = jLabelCidade;
+    }
+
+    public JLabel getjLabelCnpj() {
+        return jLabelCnpj;
+    }
+
+    public void setjLabelCnpj(JLabel jLabelCnpj) {
+        this.jLabelCnpj = jLabelCnpj;
+    }
+
+    public JLabel getjLabelComplemento() {
+        return jLabelComplemento;
+    }
+
+    public void setjLabelComplemento(JLabel jLabelComplemento) {
+        this.jLabelComplemento = jLabelComplemento;
+    }
+
+    public JLabel getjLabelContato() {
+        return jLabelContato;
+    }
+
+    public void setjLabelContato(JLabel jLabelContato) {
+        this.jLabelContato = jLabelContato;
+    }
+
+    public JLabel getjLabelCpf() {
+        return jLabelCpf;
+    }
+
+    public void setjLabelCpf(JLabel jLabelCpf) {
+        this.jLabelCpf = jLabelCpf;
+    }
+
+    public JLabel getjLabelEmail() {
+        return jLabelEmail;
+    }
+
+    public void setjLabelEmail(JLabel jLabelEmail) {
+        this.jLabelEmail = jLabelEmail;
+    }
+
+    public JLabel getjLabelFone1() {
+        return jLabelFone1;
+    }
+
+    public void setjLabelFone1(JLabel jLabelFone1) {
+        this.jLabelFone1 = jLabelFone1;
+    }
+
+    public JLabel getjLabelFone2() {
+        return jLabelFone2;
+    }
+
+    public void setjLabelFone2(JLabel jLabelFone2) {
+        this.jLabelFone2 = jLabelFone2;
+    }
+
+    public JLabel getjLabelId() {
+        return jLabelId;
+    }
+
+    public void setjLabelId(JLabel jLabelId) {
+        this.jLabelId = jLabelId;
+    }
+
+    public JLabel getjLabelInscricaoEstadual() {
+        return jLabelInscricaoEstadual;
+    }
+
+    public void setjLabelInscricaoEstadual(JLabel jLabelInscricaoEstadual) {
+        this.jLabelInscricaoEstadual = jLabelInscricaoEstadual;
+    }
+
+    public JLabel getjLabelLogradouro() {
+        return jLabelLogradouro;
+    }
+
+    public void setjLabelLogradouro(JLabel jLabelLogradouro) {
+        this.jLabelLogradouro = jLabelLogradouro;
+    }
+
+    public JLabel getjLabelNomeFantasia() {
+        return jLabelNomeFantasia;
+    }
+
+    public void setjLabelNomeFantasia(JLabel jLabelNomeFantasia) {
+        this.jLabelNomeFantasia = jLabelNomeFantasia;
+    }
+
+    public JLabel getjLabelObs() {
+        return jLabelObs;
+    }
+
+    public void setjLabelObs(JLabel jLabelObs) {
+        this.jLabelObs = jLabelObs;
+    }
+
+    public JLabel getjLabelRazaoSocial() {
+        return jLabelRazaoSocial;
+    }
+
+    public void setjLabelRazaoSocial(JLabel jLabelRazaoSocial) {
+        this.jLabelRazaoSocial = jLabelRazaoSocial;
+    }
+
+    public JLabel getjLabelSexo() {
+        return jLabelSexo;
+    }
+
+    public void setjLabelSexo(JLabel jLabelSexo) {
+        this.jLabelSexo = jLabelSexo;
+    }
+
+    public JLabel getjLabelTitulo() {
+        return jLabelTitulo;
+    }
+
+    public void setjLabelTitulo(JLabel jLabelTitulo) {
+        this.jLabelTitulo = jLabelTitulo;
+    }
+
+    public JLabel getjLabelrg() {
+        return jLabelrg;
+    }
+
+    public void setjLabelrg(JLabel jLabelrg) {
+        this.jLabelrg = jLabelrg;
+    }
+
+    public JPanel getjPanelTitulo() {
+        return jPanelTitulo;
+    }
+
+    public void setjPanelTitulo(JPanel jPanelTitulo) {
+        this.jPanelTitulo = jPanelTitulo;
+    }
+
+    public JTextField getjTextFieldId() {
         return jTextFieldId;
     }
 
-    public javax.swing.JTextField getjTextFieldId() {
-        return jTextFieldId;
+    public void setjTextFieldId(JTextField jTextFieldId) {
+        this.jTextFieldId = jTextFieldId;
     }
+    
+  
 
 
     public javax.swing.JTextField getjTextFieldObs() {
@@ -66,7 +238,7 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
         jLabelTitulo = new javax.swing.JLabel();
         jPanelDados = new javax.swing.JPanel();
         jLabelId = new javax.swing.JLabel();
-        jTextFieldIds = new javax.swing.JTextField();
+        jTextFieldId = new javax.swing.JTextField();
         jLabelNomeFantasia = new javax.swing.JLabel();
         jLabelRazaoSocial = new javax.swing.JLabel();
         jLabelrg = new javax.swing.JLabel();
@@ -83,7 +255,7 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
         jLabelCidade = new javax.swing.JLabel();
         jLabelLogradouro = new javax.swing.JLabel();
         jLabelComplemento = new javax.swing.JLabel();
-        jTextFieldComplemento = new javax.swing.JTextField();
+        jTextFieldDescricao = new javax.swing.JTextField();
         jLabelSexo = new javax.swing.JLabel();
         jLabelContato = new javax.swing.JLabel();
         jTextFieldObs = new javax.swing.JTextField();
@@ -169,9 +341,9 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
                                     .addGroup(jPanelDadosLayout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextFieldComplemento, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabelComplemento)
-                                            .addComponent(jTextFieldIds, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabelId))
                                         .addGap(18, 18, 18)
                                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,7 +378,7 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jFormattedTextFieldMetragem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldIds, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelRazaoSocial)
@@ -228,7 +400,7 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
                             .addComponent(jLabelCpf))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldComplemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldObs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(43, 43, 43)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -386,18 +558,9 @@ public class TelaCadastroVaga extends javax.swing.JDialog {
     private javax.swing.JPanel jPanelBotoes;
     private javax.swing.JPanel jPanelDados;
     private javax.swing.JPanel jPanelTitulo;
-    private javax.swing.JTextField jTextFieldComplemento;
-    private javax.swing.JTextField jTextFieldIds;
+    private javax.swing.JTextField jTextFieldDescricao;
+    private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextFieldObs;
     // End of variables declaration//GEN-END:variables
 
-    private javax.swing.JTextField jTextFieldDescricao;
-private javax.swing.JFormattedTextField jFormattedTextFieldValor;
-private javax.swing.JTextField jTextFieldId;
-   
-    
-    public javax.swing.JTextField getjTextFieldComplemento() {
-        return jTextFieldComplemento;
-    }
 }
-

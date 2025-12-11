@@ -28,6 +28,14 @@ public class ControllerCadMarca implements ActionListener {
         Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
         Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
     }
+    
+    private void carregarDadosNaTela() {
+        if (this.marcaAtual != null) {
+            this.tela.getjTextFieldId().setText(String.valueOf(this.marcaAtual.getId()));
+            this.tela.getjTextFieldMarca().setText(this.marcaAtual.getDescricao());
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -57,17 +65,21 @@ public class ControllerCadMarca implements ActionListener {
             this.marcaAtual.setStatus('A'); 
             
             try {
-                if (this.marcaAtual.getId() > 0) {
-                     servicoMarca.atualizar(this.marcaAtual); 
-                     JOptionPane.showMessageDialog(null, "Marca atualizada com sucesso!");
+                boolean isNovoRegistro = this.marcaAtual.getId() == 0;
+                
+                servicoMarca.salvar(this.marcaAtual); 
+                
+                String mensagem;
+                if (isNovoRegistro) {
+                    mensagem = "Marca cadastrada com sucesso!";
                 } else {
-                     servicoMarca.salvar(this.marcaAtual); 
-                     JOptionPane.showMessageDialog(null, "Marca salva com sucesso!");
+                    mensagem = "Marca atualizada com sucesso!";
                 }
+                JOptionPane.showMessageDialog(null, mensagem);
                 
                 Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
-                this.marcaAtual = new Marca(); // Limpa o objeto após salvar/atualizar
+                this.marcaAtual = new Marca(); 
                 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Erro ao salvar/atualizar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -77,11 +89,24 @@ public class ControllerCadMarca implements ActionListener {
         } else if (e.getSource() == this.tela.getjButtonBuscar()) {
             
             TelaBuscaMarca telaBusca = new TelaBuscaMarca(null, true); 
-            
             ControllerBuscaMarca controllerBusca = new ControllerBuscaMarca(telaBusca); 
-            
             telaBusca.setVisible(true); 
             
+            if (ControllerBuscaMarca.codigoSelecionado != 0) {
+                
+                this.marcaAtual = servicoMarca.buscarPorId(ControllerBuscaMarca.codigoSelecionado);
+                
+                if (this.marcaAtual != null) {
+                    Utilities.ativaDesativa(this.tela.getjPanelBotoes(), false);
+                    Utilities.limpaComponentes(this.tela.getjPanelDados(), true);
+                    
+                    carregarDadosNaTela(); 
+                    
+                    ControllerBuscaMarca.codigoSelecionado = 0; 
+                } else {
+                    JOptionPane.showMessageDialog(tela, "Erro ao buscar a marca com ID: " + ControllerBuscaMarca.codigoSelecionado);
+                }
+            }
             
         } else if (e.getSource() == this.tela.getjButtonSair()) {
             this.tela.dispose();

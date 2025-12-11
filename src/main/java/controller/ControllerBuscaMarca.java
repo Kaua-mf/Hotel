@@ -2,7 +2,6 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -14,9 +13,13 @@ public class ControllerBuscaMarca implements ActionListener {
 
     TelaBuscaMarca telaBuscaMarca; 
     ServicoMarca servicoMarca = new ServicoMarca(); 
+    
+    public static int codigoSelecionado; 
 
     public ControllerBuscaMarca(TelaBuscaMarca telaBuscaMarca) {
         this.telaBuscaMarca = telaBuscaMarca;
+        
+        codigoSelecionado = 0;
 
         this.telaBuscaMarca.getjButtonCarregar().addActionListener(this);
         this.telaBuscaMarca.getjButtonFiltar().addActionListener(this); 
@@ -64,6 +67,8 @@ public class ControllerBuscaMarca implements ActionListener {
             } else {
                 int codigo = (int) this.telaBuscaMarca.getjTableDados().getValueAt(selectedRow, 0);
                 
+                ControllerBuscaMarca.codigoSelecionado = codigo; 
+                
                 this.telaBuscaMarca.dispose(); 
             }
 
@@ -90,6 +95,7 @@ public class ControllerBuscaMarca implements ActionListener {
             }
 
         } else if (evento.getSource() == this.telaBuscaMarca.getjButtonSair()) {
+            ControllerBuscaMarca.codigoSelecionado = 0; 
             this.telaBuscaMarca.dispose(); 
         }
     }

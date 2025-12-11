@@ -1,21 +1,56 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.Veiculo;
-import model.Modelo;
-import model.Marca; 
-import DAO.ConnectionFactory; 
 
 public class VeiculoDAO implements InterfaceDAO<Veiculo> {
+    
+    private static final String COLUNAS = "id, placa, cor, status, modelo_id, hospede_id, funcionario_id, fornecedor_id";
+
+    private Veiculo buildVeiculoFromResultSet(ResultSet rst) throws SQLException {
+        Veiculo veiculo = new Veiculo();
+        veiculo.setId(rst.getInt("id"));
+        veiculo.setPlaca(rst.getString("placa"));
+        veiculo.setCor(rst.getString("cor"));
+        veiculo.setStatus(rst.getString("status").charAt(0));
+        
+        int modeloId = rst.getInt("modelo_id");
+        if (modeloId != 0) {
+            model.Modelo modelo = new model.Modelo();
+            modelo.setId(modeloId);
+            veiculo.setModelo(modelo);
+        }
+        
+        
+        int hospedeId = rst.getInt("hospede_id");
+        if (hospedeId != 0) {
+            model.Hospede h = new model.Hospede();
+            h.setId(hospedeId);
+            veiculo.setHospede(h);
+        }
+        
+        int funcionarioId = rst.getInt("funcionario_id");
+        if (funcionarioId != 0) {
+            model.Funcionario f = new model.Funcionario();
+            f.setId(funcionarioId);
+            veiculo.setFuncionario(f);
+        }
+        
+        int fornecedorId = rst.getInt("fornecedor_id");
+        if (fornecedorId != 0) {
+            model.Fornecedor f = new model.Fornecedor();
+            f.setId(fornecedorId);
+            veiculo.setFornecedor(f);
+        }
+        
+        return veiculo;
+    }
 
     @Override
     public void Create(Veiculo objeto) {
-        String sqlInstrucao = "INSERT INTO veiculo (placa, cor, modelo_id, funcionario_id, fornecedor_id, hospede_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sqlInstrucao = "INSERT INTO veiculo (placa, cor, status, modelo_id, hospede_id, funcionario_id, fornecedor_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conexao = null;
         PreparedStatement pstm = null;
 
@@ -23,46 +58,23 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             conexao = ConnectionFactory.getConnection();
             conexao.setAutoCommit(false); 
             pstm = conexao.prepareStatement(sqlInstrucao);
-
+            
             pstm.setString(1, objeto.getPlaca());
             pstm.setString(2, objeto.getCor());
+            pstm.setString(3, String.valueOf(objeto.getStatus()));
+            pstm.setInt(4, objeto.getModelo().getId());
             
-            if (objeto.getModelo() != null && objeto.getModelo().getId() != 0) {
-                pstm.setInt(3, objeto.getModelo().getId());
-            } else {
-                pstm.setNull(3, java.sql.Types.INTEGER);
-            }
-            
-            if (objeto.getFuncionario() != null && objeto.getFuncionario().getId() != 0) {
-                pstm.setInt(4, objeto.getFuncionario().getId());
-            } else {
-                pstm.setNull(4, java.sql.Types.INTEGER);
-            }
-            
-            if (objeto.getFornecedor() != null && objeto.getFornecedor().getId() != 0) {
-                pstm.setInt(5, objeto.getFornecedor().getId());
-            } else {
-                pstm.setNull(5, java.sql.Types.INTEGER);
-            }
-            
-            if (objeto.getHospede() != null && objeto.getHospede().getId() != 0) {
-                pstm.setInt(6, objeto.getHospede().getId());
-            } else {
-                pstm.setNull(6, java.sql.Types.INTEGER);
-            }
-            
-            pstm.setString(7, String.valueOf(objeto.getStatus()));
+            pstm.setObject(5, objeto.getHospede() != null ? objeto.getHospede().getId() : null, Types.INTEGER);
+            pstm.setObject(6, objeto.getFuncionario() != null ? objeto.getFuncionario().getId() : null, Types.INTEGER);
+            pstm.setObject(7, objeto.getFornecedor() != null ? objeto.getFornecedor().getId() : null, Types.INTEGER);
 
-            pstm.executeUpdate();
+            pstm.executeUpdate(); 
             conexao.commit();
 
         } catch (SQLException ex) {
             System.err.println("Erro ao criar Veículo: " + ex.getMessage());
-            try {
-                if (conexao != null) conexao.rollback();
-            } catch (SQLException e) {
-            }
-            throw new RuntimeException("Erro ao criar Veículo: " + ex.getMessage());
+            try { if (conexao != null) conexao.rollback(); } catch (SQLException e) {}
+            throw new RuntimeException("Falha na criação do Veículo.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
@@ -70,18 +82,11 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
 
     @Override
     public Veiculo Retrieve(int id) {
-        String sqlInstrucao = "SELECT v.id, v.placa, v.cor, v.status, " +
-                              "mo.id AS modelo_id, mo.nome AS modelo_descricao, " + // <-- MUDANÇA AQUI
-                              "ma.id AS marca_id, ma.descricao AS marca_descricao " +
-                              "FROM veiculo AS v " +
-                              "LEFT JOIN modelo AS mo ON v.modelo_id = mo.id " +
-                              "LEFT JOIN marca AS ma ON mo.marca_id = ma.id " +
-                              "WHERE v.id = ?";
-        
+        String sqlInstrucao = "SELECT " + COLUNAS + " FROM veiculo WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
         ResultSet rst = null;
-        Veiculo veiculo = null; 
+        Veiculo veiculo = null;
 
         try {
             conexao = ConnectionFactory.getConnection();
@@ -90,56 +95,28 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             rst = pstm.executeQuery();
             
             if (rst.next()) {
-                veiculo = new Veiculo(); 
-                
-                Marca marca = new Marca();
-                marca.setId(rst.getInt("marca_id"));
-                marca.setDescricao(rst.getString("marca_descricao"));
-
-                Modelo modelo = new Modelo();
-                modelo.setId(rst.getInt("modelo_id"));
-                modelo.setNome(rst.getString("modelo_descricao")); // <-- MUDANÇA AQUI
-                modelo.setMarca(marca);
-                
-                veiculo.setId(rst.getInt("id"));
-                veiculo.setPlaca(rst.getString("placa"));
-                veiculo.setCor(rst.getString("cor"));
-                veiculo.setStatus(rst.getString("status").charAt(0));
-                veiculo.setModelo(modelo);
-                
-                veiculo.setFuncionario(null); 
-                veiculo.setFornecedor(null);
-                veiculo.setHospede(null); 
+                veiculo = buildVeiculoFromResultSet(rst);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Erro ao buscar Veículo por ID: " + ex.getMessage());
+            System.err.println("Erro ao buscar Veículo por ID: " + ex.getMessage());
+            throw new RuntimeException("Falha na busca por ID.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
-            return veiculo;
         }
+        return veiculo;
     }
 
     @Override
     public List<Veiculo> Retrieve(String atributo, String valor) {
-        String sqlInstrucao = "SELECT v.id, v.placa, v.cor, v.status, " +
-                              "mo.id AS modelo_id, mo.nome AS modelo_descricao, " + // <-- MUDANÇA AQUI
-                              "ma.id AS marca_id, ma.descricao AS marca_descricao " +
-                              "FROM veiculo AS v " +
-                              "LEFT JOIN modelo AS mo ON v.modelo_id = mo.id " +
-                              "LEFT JOIN marca AS ma ON mo.marca_id = ma.id ";
-        
+        String sqlInstrucao = "SELECT " + COLUNAS + " FROM veiculo";
         if (atributo != null && !atributo.trim().isEmpty()) {
-            if (atributo.equals("modelo.descricao")) { 
-                 atributo = "mo.nome"; 
-            }
             sqlInstrucao += " WHERE " + atributo + " LIKE ?";
         }
         
         Connection conexao = null;
         PreparedStatement pstm = null;
         ResultSet rst = null;
-        List<Veiculo> veiculos = new ArrayList();
+        List<Veiculo> listaVeiculos = new ArrayList<>();
 
         try {
             conexao = ConnectionFactory.getConnection();
@@ -150,67 +127,49 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             }
 
             rst = pstm.executeQuery();
-
-            while(rst.next()) {
-                Marca marca = new Marca();
-                marca.setId(rst.getInt("marca_id"));
-                marca.setDescricao(rst.getString("marca_descricao"));
-
-                Modelo modelo = new Modelo();
-                modelo.setId(rst.getInt("modelo_id"));
-                // CORRIGIDO: Usa setNome()
-                modelo.setNome(rst.getString("modelo_descricao")); // <-- MUDANÇA AQUI
-                modelo.setMarca(marca);
-                
-                Veiculo veiculo = new Veiculo();
-                veiculo.setId(rst.getInt("id"));
-                veiculo.setPlaca(rst.getString("placa"));
-                veiculo.setCor(rst.getString("cor"));
-                veiculo.setStatus(rst.getString("status").charAt(0));
-                veiculo.setModelo(modelo);
-
-                veiculo.setFuncionario(null);
-                veiculo.setFornecedor(null);
-                veiculo.setHospede(null);
-                
-                veiculos.add(veiculo);
+            
+            while (rst.next()) {
+                listaVeiculos.add(buildVeiculoFromResultSet(rst));
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Erro ao buscar Veículos com filtro: " + ex.getMessage());
+            System.err.println("Erro ao buscar Veículos: " + ex.getMessage());
+            throw new RuntimeException("Falha na busca de Veículos.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
-            return veiculos;
         }
+        return listaVeiculos;
     }
 
     @Override
     public void Update(Veiculo objeto) {
-        String sqlInstrucao = "UPDATE veiculo SET placa = ?, cor = ?, modelo_id = ?, funcionario_id = ?, fornecedor_id = ?, hospede_id = ?, status = ? WHERE id = ?";
+        String sqlInstrucao = "UPDATE veiculo SET placa = ?, cor = ?, status = ?, modelo_id = ?, hospede_id = ?, funcionario_id = ?, fornecedor_id = ? WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
-
+        
         try {
             conexao = ConnectionFactory.getConnection();
-            conexao.setAutoCommit(false);
+            conexao.setAutoCommit(false); 
             pstm = conexao.prepareStatement(sqlInstrucao);
-
+            
             pstm.setString(1, objeto.getPlaca());
             pstm.setString(2, objeto.getCor());
+            pstm.setString(3, String.valueOf(objeto.getStatus()));
+            pstm.setInt(4, objeto.getModelo().getId());
             
-            if (objeto.getModelo() != null) pstm.setInt(3, objeto.getModelo().getId()); else pstm.setNull(3, java.sql.Types.INTEGER);
-            if (objeto.getFuncionario() != null) pstm.setInt(4, objeto.getFuncionario().getId()); else pstm.setNull(4, java.sql.Types.INTEGER);
-            if (objeto.getFornecedor() != null) pstm.setInt(5, objeto.getFornecedor().getId()); else pstm.setNull(5, java.sql.Types.INTEGER);
-            if (objeto.getHospede() != null) pstm.setInt(6, objeto.getHospede().getId()); else pstm.setNull(6, java.sql.Types.INTEGER);
-            pstm.setString(7, String.valueOf(objeto.getStatus()));
+            pstm.setObject(5, objeto.getHospede() != null ? objeto.getHospede().getId() : null, Types.INTEGER);
+            // LINHA CORRIGIDA: removido o ': null' duplicado
+            pstm.setObject(6, objeto.getFuncionario() != null ? objeto.getFuncionario().getId() : null, Types.INTEGER);
+            pstm.setObject(7, objeto.getFornecedor() != null ? objeto.getFornecedor().getId() : null, Types.INTEGER);
+            
             pstm.setInt(8, objeto.getId()); 
-
+            
             pstm.executeUpdate();
             conexao.commit();
-
+            
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Erro ao atualizar Veículo: " + ex.getMessage());
+            System.err.println("Erro ao atualizar Veículo: " + ex.getMessage());
+             try { if (conexao != null) conexao.rollback(); } catch (SQLException e) {}
+            throw new RuntimeException("Falha na atualização do Veículo.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
@@ -218,19 +177,28 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
 
     @Override
     public void Delete(Veiculo objeto) {
-        String sqlInstrucao = "DELETE FROM veiculo WHERE id = ?";
+         String sqlInstrucao = "DELETE FROM veiculo WHERE id = ?";
         Connection conexao = null;
         PreparedStatement pstm = null;
-
+        
+        if (objeto.getId() == 0) {
+            throw new IllegalArgumentException("O objeto Veículo não possui ID válido para ser deletado.");
+        }
+        
         try {
             conexao = ConnectionFactory.getConnection();
+            conexao.setAutoCommit(false); 
             pstm = conexao.prepareStatement(sqlInstrucao);
+            
             pstm.setInt(1, objeto.getId());
+            
             pstm.executeUpdate();
+            conexao.commit();
             
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Erro ao deletar Veículo: " + ex.getMessage());
+            System.err.println("Erro ao deletar Veículo: " + ex.getMessage());
+             try { if (conexao != null) conexao.rollback(); } catch (SQLException e) {}
+            throw new RuntimeException("Falha na exclusão do Veículo.", ex);
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }

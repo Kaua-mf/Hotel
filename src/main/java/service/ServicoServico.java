@@ -1,12 +1,10 @@
 package service;
 
 import DAO.ServicoDAO;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import model.Servico; 
+import model.Servico;
 
-public class ServicoServico { 
+public class ServicoServico {
 
     private ServicoDAO servicoDAO = new ServicoDAO();
 
@@ -18,37 +16,37 @@ public class ServicoServico {
         }
     }
     
+    public Servico buscarPorId(int id) {
+        return servicoDAO.Retrieve(id);
+    }
+
     public List<Servico> buscarTodos() {
-        return servicoDAO.Retrieve(null, null); 
+        return servicoDAO.Retrieve(null, null);
     }
 
     public List<Servico> buscarPorFiltro(String filtro, int tipoBusca) {
         
-        if (Objects.isNull(filtro) || filtro.trim().isEmpty()) {
-            return servicoDAO.Retrieve(null, null);
+        if (filtro.trim().isEmpty()) {
+            return servicoDAO.Retrieve(null, null); 
         }
 
-        String nomeColuna;
+        String nomeColuna; 
 
         switch (tipoBusca) {
             case 0: 
-                try {
-                    int id = Integer.parseInt(filtro);
-                    Servico s = servicoDAO.Retrieve(id); 
-                    List<Servico> resultados = new ArrayList<>();
-                    if (s != null) {
-                        resultados.add(s);
-                    }
-                    return resultados;
-                } catch (NumberFormatException e) {
-                    return new ArrayList<>(); 
-                }
+                nomeColuna = "id"; 
+                break; 
             case 1: 
                 nomeColuna = "descricao"; 
-                return servicoDAO.Retrieve(nomeColuna, filtro);
-
+                break;
             default:
                 return servicoDAO.Retrieve(null, null);
         }
+        
+        return servicoDAO.Retrieve(nomeColuna, filtro);
+    }
+    
+    public void deletar(Servico servico) {
+        servicoDAO.Delete(servico);
     }
 }

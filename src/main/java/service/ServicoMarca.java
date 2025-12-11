@@ -9,7 +9,11 @@ public class ServicoMarca {
     private MarcaDAO marcaDAO = new MarcaDAO();
 
     public void salvar(Marca marca) {
-        marcaDAO.Create(marca);
+        if (marca.getId() == 0) {
+            marcaDAO.Create(marca);
+        } else {
+            marcaDAO.Update(marca);
+        }
     }
 
     public List<Marca> buscarTodos() {
@@ -17,7 +21,7 @@ public class ServicoMarca {
     }
     
     public Marca buscarPorId(int id) {
-        return marcaDAO.Retrieve(id);
+        return marcaDAO.Retrieve(id); 
     }
 
     public List<Marca> buscarPorFiltro(String filtro, int tipoBusca) {
@@ -40,10 +44,6 @@ public class ServicoMarca {
         }
         
         return marcaDAO.Retrieve(nomeColuna, filtro);
-    }
-    
-    public void atualizar(Marca marca) {
-        marcaDAO.Update(marca);
     }
     
     public void deletar(Marca marca) {

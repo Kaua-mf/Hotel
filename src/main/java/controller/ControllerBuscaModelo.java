@@ -13,9 +13,13 @@ public class ControllerBuscaModelo implements ActionListener {
 
     TelaBuscaModelo telaBuscaModelo; 
     ServicoModelo servicoModelo = new ServicoModelo(); 
+    
+    public static int codigoSelecionado; 
 
     public ControllerBuscaModelo(TelaBuscaModelo telaBuscaModelo) {
         this.telaBuscaModelo = telaBuscaModelo;
+        
+        codigoSelecionado = 0; 
 
         this.telaBuscaModelo.getjButtonCarregar().addActionListener(this);
         this.telaBuscaModelo.getjButtonFiltar().addActionListener(this);
@@ -64,6 +68,8 @@ public class ControllerBuscaModelo implements ActionListener {
             } else {
                 int codigo = (int) this.telaBuscaModelo.getjTableDados().getValueAt(selectedRow, 0);
                 
+                ControllerBuscaModelo.codigoSelecionado = codigo;
+                
                 this.telaBuscaModelo.dispose(); 
             }
 
@@ -90,6 +96,7 @@ public class ControllerBuscaModelo implements ActionListener {
             }
 
         } else if (evento.getSource() == this.telaBuscaModelo.getjButtonSair()) {
+            ControllerBuscaModelo.codigoSelecionado = 0;
             this.telaBuscaModelo.dispose(); 
         }
     }

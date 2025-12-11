@@ -3,7 +3,10 @@ package view;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import model.Modelo;
 
@@ -41,23 +44,11 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
     public JPanel getjPanelDados() {
         return jPanelDados;
     }
-    
-    public javax.swing.JTextField getjTextFieldIds() {
-        return jTextFieldId;
-    }
-
-    public javax.swing.JTextField getjTextFieldId() {
-        return jTextFieldId;
-    }
-
 
     public javax.swing.JTextField getjTextFieldObs() {
         return jTextFieldCor;
     }
 
-    public javax.swing.JFormattedTextField getjFormattedTextFieldMetragem() {
-        return jFormattedTextFieldPlaca;
-    }
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -69,7 +60,7 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
         jLabelTitulo = new javax.swing.JLabel();
         jPanelDados = new javax.swing.JPanel();
         jLabelId = new javax.swing.JLabel();
-        jTextFieldIds = new javax.swing.JTextField();
+        jTextFieldId = new javax.swing.JTextField();
         jFormattedTextFieldPlaca = new javax.swing.JFormattedTextField();
         jLabelCadastro = new javax.swing.JLabel();
         jLabelComplemento = new javax.swing.JLabel();
@@ -143,7 +134,7 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelObs)
                     .addComponent(jLabelId)
-                    .addComponent(jTextFieldIds, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldCor, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(60, 60, 60)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,7 +154,7 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
                     .addComponent(jLabelId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldIds, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextFieldPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -303,10 +294,9 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
     private javax.swing.JPanel jPanelTitulo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextFieldCor;
-    private javax.swing.JTextField jTextFieldIds;
+    private javax.swing.JTextField jTextFieldId;
     // End of variables declaration//GEN-END:variables
 
-private javax.swing.JTextField jTextFieldId;
 
     public static JFormattedTextField getjFormattedTextFieldPlaca() {
         return jFormattedTextFieldPlaca;
@@ -331,6 +321,10 @@ private javax.swing.JTextField jTextFieldId;
     public void setjComboBoxModelo(JComboBox<Modelo> jComboBoxModelo) {
         this.jComboBoxModelo = jComboBoxModelo;
     }
+
+    public javax.swing.JTextField getjTextFieldId() {
+    return jTextFieldId; 
+}
 
 }
 

@@ -11,13 +11,13 @@ import service.ServicoMarca;
 import service.ServicoModelo;
 import utilities.Utilities;
 import view.TelaBuscaModelo;
-import view.TelaCadastroModelo; 
+import view.TelaCadastroModelo;
 
 public class ControllerCadModelo implements ActionListener {
 
     TelaCadastroModelo tela;
     ServicoModelo servicoModelo = new ServicoModelo();
-    ServicoMarca servicoMarca = new ServicoMarca(); 
+    ServicoMarca servicoMarca = new ServicoMarca();
     Modelo modeloAtual;
 
     public ControllerCadModelo(TelaCadastroModelo tela) {
@@ -35,6 +35,25 @@ public class ControllerCadModelo implements ActionListener {
         Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
         Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
     }
+
+    private void carregarDadosNaTela() {
+        if (this.modeloAtual != null) {
+            this.tela.getjTextFieldId().setText(String.valueOf(this.modeloAtual.getId()));
+            this.tela.getjTextFieldModelo().setText(this.modeloAtual.getNome());
+            
+            Marca marcaDoModelo = this.modeloAtual.getMarca();
+            if (marcaDoModelo != null) {
+                DefaultComboBoxModel<Marca> model = (DefaultComboBoxModel<Marca>) this.tela.getjComboBoxMarca().getModel();
+                for (int i = 0; i < model.getSize(); i++) {
+                    if (model.getElementAt(i).getId() == marcaDoModelo.getId()) {
+                        this.tela.getjComboBoxMarca().setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 
     private void carregarMarcasNoComboBox() {
         try {
@@ -59,16 +78,16 @@ public class ControllerCadModelo implements ActionListener {
             Utilities.limpaComponentes(this.tela.getjPanelDados(), true);
             this.modeloAtual = new Modelo();
             this.tela.getjTextFieldId().setEnabled(false);
-            this.tela.getjTextFieldModelo().requestFocus(); // Foco no campo Modelo
+            this.tela.getjTextFieldModelo().requestFocus(); 
 
         } else if (e.getSource() == this.tela.getjButtonCancelar()) {
             Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
             Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
-            this.modeloAtual = new Modelo(); // Limpa objeto atual
+            this.modeloAtual = new Modelo(); 
 
         } else if (e.getSource() == this.tela.getjButtonGravar()) {
             
-            String nomeModelo = this.tela.getjTextFieldModelo().getText(); 
+            String nomeModelo = this.tela.getjTextFieldModelo().getText();
             Marca marcaSelecionada = (Marca) this.tela.getjComboBoxMarca().getSelectedItem();
             
             if (nomeModelo == null || nomeModelo.trim().isEmpty()) { 
@@ -85,16 +104,16 @@ public class ControllerCadModelo implements ActionListener {
             this.modeloAtual.setMarca(marcaSelecionada); 
             this.modeloAtual.setStatus('A');
             
-            System.out.println("DEBUG: Tentando salvar Modelo com nome: [" + this.modeloAtual.getNome() + "]"); 
-            
             try {
-                if (this.modeloAtual.getId() > 0) {
-                     servicoModelo.atualizar(this.modeloAtual);
-                     JOptionPane.showMessageDialog(null, "Modelo atualizado com sucesso!");
-                } else {
-                     servicoModelo.salvar(this.modeloAtual);
-                     JOptionPane.showMessageDialog(null, "Modelo salvo com sucesso!");
-                }
+                boolean isNovoRegistro = this.modeloAtual.getId() == 0;
+                
+                servicoModelo.salvar(this.modeloAtual); 
+                
+                String mensagem = isNovoRegistro ? 
+                                  "Modelo salvo com sucesso!" : 
+                                  "Modelo atualizado com sucesso!";
+                                  
+                JOptionPane.showMessageDialog(null, mensagem);
                 
                 Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.tela.getjPanelDados(), false);
@@ -102,16 +121,30 @@ public class ControllerCadModelo implements ActionListener {
                 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Erro ao salvar/atualizar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                ex.printStackTrace(); 
+                ex.printStackTrace();
             }
 
         } else if (e.getSource() == this.tela.getjButtonBuscar()) {
             
             TelaBuscaModelo telaBusca = new TelaBuscaModelo(null, true);
-            
             ControllerBuscaModelo controllerBusca = new ControllerBuscaModelo(telaBusca); 
-            
             telaBusca.setVisible(true);
+            
+            if (ControllerBuscaModelo.codigoSelecionado != 0) {
+                
+                this.modeloAtual = servicoModelo.buscarPorId(ControllerBuscaModelo.codigoSelecionado);
+                
+                if (this.modeloAtual != null) {
+                    Utilities.ativaDesativa(this.tela.getjPanelBotoes(), false);
+                    Utilities.limpaComponentes(this.tela.getjPanelDados(), true);
+                    
+                    carregarDadosNaTela(); 
+                    
+                    ControllerBuscaModelo.codigoSelecionado = 0; 
+                } else {
+                    JOptionPane.showMessageDialog(tela, "Erro ao buscar o modelo com ID: " + ControllerBuscaModelo.codigoSelecionado);
+                }
+            }
             
         } else if (e.getSource() == this.tela.getjButtonSair()) {
             this.tela.dispose();

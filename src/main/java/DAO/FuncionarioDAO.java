@@ -10,13 +10,11 @@ import model.Funcionario;
 
 public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
 
-    // 17 COLUNAS para INSERT (Adicionado data_cadastro e cpf)
     private final String COLUNAS_INSERT = "nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, usuario, senha, sexo";
     private final String COLUNAS_READ = "id, " + COLUNAS_INSERT; // 18 colunas para READ
 
     @Override
     public void Create(Funcionario objeto) {
-        // 17 interrogações para as 17 colunas
         String sql = "INSERT INTO funcionario (" + COLUNAS_INSERT + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conexao = ConnectionFactory.getConnection();
@@ -33,28 +31,23 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(7, objeto.getBairro());
             pstm.setString(8, objeto.getCidade());
             pstm.setString(9, objeto.getComplemento());
-            
-            pstm.setString(10, objeto.getDataCadastro()); // NOVO
-            pstm.setString(11, objeto.getCpf());          // NOVO
-            
+            pstm.setString(10, objeto.getDataCadastro()); 
+            pstm.setString(11, objeto.getCpf());          
             pstm.setString(12, objeto.getRg());
             pstm.setString(13, objeto.getObs());
             pstm.setString(14, String.valueOf(objeto.getStatus()));
             pstm.setString(15, objeto.getUsuario());
             pstm.setString(16, objeto.getSenha());
-            pstm.setString(17, objeto.getSexo()); // Parâmetro 17
-
+            pstm.setString(17, objeto.getSexo()); 
             pstm.executeUpdate();
             conexao.commit(); 
 
         } catch (SQLException ex) {
             System.err.println("Erro ao criar Funcionário: " + ex.getMessage());
              try {
-                // Tenta reverter a transação em caso de erro
                 Connection conexao = ConnectionFactory.getConnection(); 
                 if (conexao != null) conexao.rollback(); 
             } catch (SQLException e) {
-                // Apenas loga se a reversão falhar
                 e.printStackTrace(); 
             }
             throw new RuntimeException("Falha na criação do Funcionário. A transação foi revertida.", ex);
@@ -63,7 +56,6 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
 
     @Override
     public Funcionario Retrieve(int id) {
-        // Usando COLUNAS_READ para evitar o SELECT *
         String sql = "SELECT " + COLUNAS_READ + " FROM funcionario WHERE id = ?";
         Funcionario funcionario = null;
 
@@ -84,18 +76,15 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
         return funcionario;
     }
     
-    // Alias para o Service (buscarPorId)
     public Funcionario buscar(int id) {
         return Retrieve(id);
     }
 
     @Override
     public List<Funcionario> Retrieve(String atributo, String valor) {
-        // Usando COLUNAS_READ para evitar o SELECT *
         String sql = "SELECT " + COLUNAS_READ + " FROM funcionario";
         
         if (atributo != null && valor != null && !valor.trim().isEmpty()) {
-            // Se você quer busca exata, remova os LIKE. Para busca parcial, mantenha:
             sql += " WHERE " + atributo + " LIKE ?";
         }
 
@@ -122,15 +111,12 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
         return funcionarios;
     }
     
-    // Alias para Listar Todos
     public List<Funcionario> Retrieve() {
         return Retrieve(null, null);
     }
 
-
     @Override
     public void Update(Funcionario objeto) {
-        // 17 COLUNAS para UPDATE, 18º parâmetro é o ID (WHERE)
         String sql = "UPDATE funcionario SET nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, " + 
                      "logradouro = ?, bairro = ?, cidade = ?, complemento = ?, data_cadastro = ?, cpf = ?, rg = ?, obs = ?, " + 
                      "status = ?, usuario = ?, senha = ?, sexo = ? WHERE id = ?";
@@ -149,17 +135,15 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(7, objeto.getBairro());
             pstm.setString(8, objeto.getCidade());
             pstm.setString(9, objeto.getComplemento());
-            
-            pstm.setString(10, objeto.getDataCadastro()); // Parâmetro 10
-            pstm.setString(11, objeto.getCpf());          // Parâmetro 11
-            
+            pstm.setString(10, objeto.getDataCadastro()); 
+            pstm.setString(11, objeto.getCpf());          
             pstm.setString(12, objeto.getRg());
             pstm.setString(13, objeto.getObs());
             pstm.setString(14, String.valueOf(objeto.getStatus()));
             pstm.setString(15, objeto.getUsuario());
             pstm.setString(16, objeto.getSenha());
-            pstm.setString(17, objeto.getSexo()); // Parâmetro 17
-            pstm.setInt(18, objeto.getId());      // Parâmetro 18 (WHERE)
+            pstm.setString(17, objeto.getSexo()); 
+            pstm.setInt(18, objeto.getId());      
 
             pstm.executeUpdate();
             conexao.commit();

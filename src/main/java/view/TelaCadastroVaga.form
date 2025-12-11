@@ -142,9 +142,9 @@
                                       <Group type="102" alignment="1" attributes="0">
                                           <EmptySpace max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jTextFieldComplemento" alignment="0" min="-2" pref="142" max="-2" attributes="0"/>
+                                              <Component id="jTextFieldDescricao" alignment="0" min="-2" pref="142" max="-2" attributes="0"/>
                                               <Component id="jLabelComplemento" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jTextFieldIds" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
+                                              <Component id="jTextFieldId" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
                                               <Component id="jLabelId" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -193,7 +193,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jFormattedTextFieldMetragem" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextFieldIds" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldId" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -222,7 +222,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jTextFieldComplemento" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldDescricao" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jTextFieldObs" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -263,7 +263,7 @@
             <Property name="text" type="java.lang.String" value="ID"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldIds">
+        <Component class="javax.swing.JTextField" name="jTextFieldId">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelNomeFantasia">
         </Component>
@@ -313,7 +313,7 @@
             <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldComplemento">
+        <Component class="javax.swing.JTextField" name="jTextFieldDescricao">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelSexo">
         </Component>

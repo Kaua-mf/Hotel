@@ -27,17 +27,33 @@ public class ControllerCadProdutoCopa implements ActionListener {
         Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
         Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
     }
+    
+    private void carregarDadosNaTela() {
+        if (this.produtoAtual != null) {
+            this.telaCadastro.getjTextFieldIds().setText(String.valueOf(this.produtoAtual.getId()));
+            this.telaCadastro.getjTextFieldDescricao().setText(this.produtoAtual.getDescricao());
+            // Formata float para String de exibição (ex: 10,50)
+            this.telaCadastro.getjFormattedTextFieldValor().setText(String.format("%.2f", this.produtoAtual.getValor()).replace(".", ","));
+            this.telaCadastro.getjTextFieldObs().setText(this.produtoAtual.getObs());
+            
+            this.telaCadastro.getjTextFieldIds().setEnabled(false); // ID não é editável
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource() == this.telaCadastro.getjButtonNovo()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
-            this.produtoAtual = new ProdutoCopa(); // Novo objeto
+            this.produtoAtual = new ProdutoCopa(); 
+            this.telaCadastro.getjTextFieldIds().setEnabled(false);
+            this.telaCadastro.getjTextFieldDescricao().requestFocus();
         
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+            this.produtoAtual = new ProdutoCopa();
         
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
@@ -58,17 +74,21 @@ public class ControllerCadProdutoCopa implements ActionListener {
 
                 this.produtoAtual.setDescricao(this.telaCadastro.getjTextFieldDescricao().getText());
                 this.produtoAtual.setValor(valor);
-                
                 this.produtoAtual.setObs(this.telaCadastro.getjTextFieldObs().getText()); 
-                
                 this.produtoAtual.setStatus('A');
                 
+                boolean isNovoRegistro = this.produtoAtual.getId() == 0;
                 servicoProdutoCopa.salvar(this.produtoAtual);
                 
-                JOptionPane.showMessageDialog(telaCadastro, "Produto salvo com sucesso!");
+                String mensagem = isNovoRegistro ? 
+                                  "Produto cadastrado com sucesso!" : 
+                                  "Produto atualizado com sucesso!";
+                
+                JOptionPane.showMessageDialog(telaCadastro, mensagem);
                 
                 Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+                this.produtoAtual = new ProdutoCopa();
 
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(telaCadastro, "O 'Valor' inserido não é um número válido.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
@@ -80,6 +100,22 @@ public class ControllerCadProdutoCopa implements ActionListener {
             TelaBuscaProdutoCopa telaBusca = new TelaBuscaProdutoCopa(null, true);
             ControllerBuscaProdutoCopa controllerBusca = new ControllerBuscaProdutoCopa(telaBusca);
             telaBusca.setVisible(true);
+            
+            if (ControllerBuscaProdutoCopa.codigoSelecionado != 0) {
+                
+                this.produtoAtual = servicoProdutoCopa.buscarPorId(ControllerBuscaProdutoCopa.codigoSelecionado);
+                
+                if (this.produtoAtual != null) {
+                    Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
+                    Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
+                    
+                    carregarDadosNaTela(); 
+                    
+                    ControllerBuscaProdutoCopa.codigoSelecionado = 0; 
+                } else {
+                    JOptionPane.showMessageDialog(telaCadastro, "Erro ao buscar o produto com ID: " + ControllerBuscaProdutoCopa.codigoSelecionado);
+                }
+            }
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonSair()) {
             this.telaCadastro.dispose();

@@ -6,7 +6,7 @@ import java.util.List;
 import model.ProdutoCopa;
 
 public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
-
+    
     @Override
     public void Create(ProdutoCopa objeto) {
         String sqlInstrucao = "INSERT INTO produto_copa (descricao, valor, obs, status) VALUES (?, ?, ?, ?)";
@@ -112,12 +112,62 @@ public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
     @Override
     public void Update(ProdutoCopa objeto) {
         String sqlInstrucao = "UPDATE produto_copa SET descricao = ?, valor = ?, obs = ?, status = ? WHERE id = ?";
-        throw new UnsupportedOperationException("Update ainda não implementado.");
+        Connection conexao = null;
+        PreparedStatement pstm = null;
+        
+        try {
+            conexao = ConnectionFactory.getConnection();
+            conexao.setAutoCommit(false); 
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            
+            pstm.setString(1, objeto.getDescricao());
+            pstm.setFloat(2, objeto.getValor());
+            pstm.setString(3, objeto.getObs());
+            pstm.setString(4, String.valueOf(objeto.getStatus()));
+            pstm.setInt(5, objeto.getId()); 
+            
+            pstm.executeUpdate();
+            conexao.commit();
+            
+        } catch (SQLException ex) {
+            System.err.println("Erro ao atualizar Produto Copa: " + ex.getMessage());
+             try {
+                if (conexao != null) conexao.rollback();
+            } catch (SQLException e) {
+                // ...
+            }
+            throw new RuntimeException("Falha na atualização do Produto Copa.", ex);
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm);
+        }
     }
 
     @Override
     public void Delete(ProdutoCopa objeto) {
         String sqlInstrucao = "DELETE FROM produto_copa WHERE id = ?";
-        throw new UnsupportedOperationException("Delete ainda não implementado.");
+        Connection conexao = null;
+        PreparedStatement pstm = null;
+        
+        try {
+            conexao = ConnectionFactory.getConnection();
+            conexao.setAutoCommit(false); 
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            
+            pstm.setInt(1, objeto.getId());
+            
+            pstm.executeUpdate();
+            conexao.commit();
+            
+        } catch (SQLException ex) {
+            System.err.println("Erro ao deletar Produto Copa: " + ex.getMessage());
+             try {
+                if (conexao != null) conexao.rollback();
+            } catch (SQLException e) {
+                // ...
+            }
+            throw new RuntimeException("Falha na exclusão do Produto Copa.", ex);
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm);
+        }
     }
 }

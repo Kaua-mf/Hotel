@@ -134,7 +134,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabelObs" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelId" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldIds" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="jTextFieldId" min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="jTextFieldCor" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
@@ -160,7 +160,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jTextFieldIds" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldId" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jFormattedTextFieldPlaca" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
@@ -184,7 +184,7 @@
             <Property name="text" type="java.lang.String" value="ID"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldIds">
+        <Component class="javax.swing.JTextField" name="jTextFieldId">
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldPlaca">
           <AccessibilityProperties>
