@@ -10,6 +10,7 @@ import controller.ControllerCadProdutoCopa;
 import controller.ControllerCadServico;
 import controller.ControllerCadVaga;
 import controller.ControllerCadVeiculo;
+import model.Quarto;
 import model.Veiculo;
 
 
@@ -224,10 +225,9 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemFuncionarioActionPerformed
 
     private void jMenuItemQuartoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemQuartoActionPerformed
-
-        TelaCadastroQuarto tela = new TelaCadastroQuarto(null, true);
-        ControllerCadQuarto controller = new ControllerCadQuarto(tela);
-        tela.setVisible(true);
+TelaCadastroQuarto telaCadastroQuarto = new TelaCadastroQuarto(null, true); 
+ControllerCadQuarto controllerCadQuarto = new ControllerCadQuarto(telaCadastroQuarto, new Quarto()); 
+telaCadastroQuarto.setVisible(true);
     }//GEN-LAST:event_jMenuItemQuartoActionPerformed
 
     private void jMenuItemServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemServicoActionPerformed

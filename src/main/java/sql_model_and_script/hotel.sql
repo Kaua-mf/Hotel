@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 09/10/2025 às 18:03
+-- Tempo de geração: 11/12/2025 às 20:37
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -151,7 +151,8 @@ INSERT INTO `fornecedor` (`id`, `nome`, `fone`, `fone2`, `email`, `cep`, `lograd
 (1, 'Fornecedor Padrão', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'A', NULL, NULL, 'Razao Social Padrao', NULL, NULL, NULL),
 (3, '', '(0  )      -    ', NULL, '', NULL, NULL, NULL, NULL, NULL, '2025-10-08 23:10:30', NULL, NULL, NULL, 'A', NULL, NULL, '', '  .   /    -  ', '', ''),
 (4, 'oi', '(0  )      -    ', NULL, 'asdasdasd', NULL, NULL, NULL, NULL, NULL, '2025-10-08 23:10:53', NULL, NULL, NULL, 'A', NULL, NULL, 'oi', '  .   /    -  ', '', ''),
-(5, 'asdasdas', '(0  )      -    ', NULL, '', NULL, NULL, NULL, NULL, NULL, '2025-10-09 02:43:03', NULL, NULL, NULL, 'A', NULL, NULL, '', '  .   /    -  ', '', '');
+(5, 'asdasdas', '(0  )      -    ', NULL, '', NULL, NULL, NULL, NULL, NULL, '2025-10-09 02:43:03', NULL, NULL, NULL, 'A', NULL, NULL, '', '  .   /    -  ', '', ''),
+(6, 'dsadasdasd', '(0  )      -    ', '(0  )      -    ', '', NULL, NULL, NULL, NULL, NULL, '2025-12-11 09:58:55', NULL, NULL, NULL, 'A', NULL, NULL, '', '71.288/2340-00124', '', '');
 
 -- --------------------------------------------------------
 
@@ -176,25 +177,29 @@ CREATE TABLE `funcionario` (
   `obs` varchar(100) DEFAULT NULL,
   `status` varchar(1) DEFAULT NULL,
   `usuario` varchar(45) DEFAULT NULL,
-  `senha` varchar(45) DEFAULT NULL
+  `senha` varchar(45) DEFAULT NULL,
+  `sexo` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `funcionario`
 --
 
-INSERT INTO `funcionario` (`id`, `nome`, `fone`, `fone2`, `email`, `cep`, `logradouro`, `bairro`, `cidade`, `complemento`, `data_cadastro`, `cpf`, `rg`, `obs`, `status`, `usuario`, `senha`) VALUES
-(1, 'Funcionário Padrão', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'A', NULL, NULL),
-(2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(7, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(9, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL),
-(11, 'asdasda', '(0  )      -    ', '', '', '  .   -   ', '', '', '', '', NULL, NULL, '', '', 'A', 'wadawd22', 'sada22');
+INSERT INTO `funcionario` (`id`, `nome`, `fone`, `fone2`, `email`, `cep`, `logradouro`, `bairro`, `cidade`, `complemento`, `data_cadastro`, `cpf`, `rg`, `obs`, `status`, `usuario`, `senha`, `sexo`) VALUES
+(1, 'Funcionário Padrão', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'A', NULL, NULL, NULL),
+(2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(7, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(9, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '\0', NULL, NULL, NULL),
+(11, 'asdasda', '(0  )      -    ', '(0  )      -    ', '', '  .   -   ', '', '', '', '', NULL, '   .   .   -  ', '', '', 'A', 'wadawd22', 'sada22', 'O'),
+(12, 'nhhhhh', '(0  )      -    ', '(0  )      -    ', '', '  .   -   ', '', '', '', '', '2025-12-11 11:19:36', '133.675.769-80', '', '', 'A', '', '', 'F'),
+(13, 'oçijpçp´pk', '(0  )      -    ', '(0  )      -    ', '', '  .   -   ', '', '', '', '', '2025-12-11 11:19:53', '   .   .   -  ', '', '', 'A', '', '', 'M'),
+(14, 'kyutytjyt', '(0  )      -    ', '(0  )      -    ', '', '  .   -   ', '', '', '', '', '2025-12-11 11:25:39', '133.675.769-80', '', '', 'A', '', '', 'M');
 
 -- --------------------------------------------------------
 
@@ -223,18 +228,20 @@ CREATE TABLE `hospede` (
   `razao_social` varchar(100) DEFAULT NULL,
   `cnpj` varchar(18) DEFAULT NULL,
   `inscricao_estadual` varchar(15) DEFAULT NULL,
-  `contato` varchar(100) DEFAULT NULL
+  `contato` varchar(100) DEFAULT NULL,
+  `sexo` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `hospede`
 --
 
-INSERT INTO `hospede` (`id`, `nome`, `fone`, `fone2`, `email`, `cep`, `logradouro`, `bairro`, `cidade`, `complemento`, `data_cadastro`, `cpf`, `rg`, `obs`, `status`, `usuario`, `senha`, `razao_social`, `cnpj`, `inscricao_estadual`, `contato`) VALUES
-(1, 'Hóspede Padrão', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 'kaua', '(0  )      -    ', '', 'dasdas', '  .   -   ', 'asdasd', 'sadas', '', 'dasdasda', '2009-10-25 00:00:00', '   .   .   -  ', '', 'sdasdas', 'A', NULL, NULL, 'asdasdas', '  .   /    -  ', '', 'asdad'),
-(3, 'asdasd', '(0  )      -    ', '', '', '  .   -   ', '', '', '', '', '2002-02-02 00:00:00', '   .   .   -  ', '', 'sdasdas', 'A', NULL, NULL, '', '  .   /    -  ', '', ''),
-(4, 'aaaaaaaaa', '(0  )      -    ', '12312312312', 'dsadasd', '31.312-312', 'sdasda', 'asdasda', 'dsasd', 'sdasd', '2002-02-02 00:00:00', '   .   .   -  ', '312312312312', 'asdasda', 'A', NULL, NULL, 'aaaaaa', '  .   /    -  ', 'aaaaa', 'sdasdasda');
+INSERT INTO `hospede` (`id`, `nome`, `fone`, `fone2`, `email`, `cep`, `logradouro`, `bairro`, `cidade`, `complemento`, `data_cadastro`, `cpf`, `rg`, `obs`, `status`, `usuario`, `senha`, `razao_social`, `cnpj`, `inscricao_estadual`, `contato`, `sexo`) VALUES
+(1, 'Hóspede Padrão', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'kaua', '(0  )      -    ', '', 'dasdas', '  .   -   ', 'asdasd', 'sadas', '', 'dasdasda', '2009-10-25 00:00:00', '   .   .   -  ', '', 'sdasdas', 'A', NULL, NULL, 'asdasdas', '  .   /    -  ', '', 'asdad', NULL),
+(3, 'asdasd', '(0  )      -    ', '', '', '  .   -   ', '', '', '', '', '2002-02-02 00:00:00', '   .   .   -  ', '', 'sdasdas', 'A', NULL, NULL, '', '  .   /    -  ', '', '', NULL),
+(4, 'aaaaaaaaa', '(0  )      -    ', '12312312312', 'dsadasd', '31.312-312', 'sdasda', 'asdasda', 'dsasd', 'sdasd', '2002-02-02 00:00:00', '   .   .   -  ', '312312312312', 'asdasda', 'A', NULL, NULL, 'aaaaaa', '  .   /    -  ', 'aaaaa', 'sdasdasda', NULL),
+(5, 'lolo', '(0  )      -    ', '(0  )      -    ', '', '  .   -   ', '', '', '', '', '2025-12-11 11:03:14', '133.675.769-80', '', '', 'A', NULL, NULL, NULL, '  .   /    -     ', NULL, NULL, 'Feminino');
 
 -- --------------------------------------------------------
 
@@ -253,7 +260,7 @@ CREATE TABLE `marca` (
 --
 
 INSERT INTO `marca` (`id`, `descricao`, `status`) VALUES
-(1, 'Marca de Teste OK', 'A');
+(1, 'Marca de Teste ', 'A');
 
 -- --------------------------------------------------------
 
@@ -274,7 +281,7 @@ CREATE TABLE `modelo` (
 --
 
 INSERT INTO `modelo` (`id`, `descricao`, `status`, `marca_id`, `nome`) VALUES
-(1, NULL, NULL, NULL, 'Sedan Básico'),
+(1, NULL, '\0', 1, 'Sedan '),
 (2, NULL, NULL, NULL, 'SUV');
 
 -- --------------------------------------------------------
@@ -332,7 +339,8 @@ CREATE TABLE `produto_copa` (
 --
 
 INSERT INTO `produto_copa` (`id`, `descricao`, `valor`, `obs`, `status`, `copa_quarto_id`) VALUES
-(1, 'asadas', 123, 'asadas', 'A', NULL);
+(1, 'asadas', 123, 'asadas', 'A', NULL),
+(2, '8788222', 999, '8788222', 'A', NULL);
 
 -- --------------------------------------------------------
 
@@ -433,7 +441,9 @@ CREATE TABLE `servico` (
 
 INSERT INTO `servico` (`id`, `descricao`, `obs`, `STATUS`) VALUES
 (1, NULL, 'asdasdasa', 'A'),
-(2, NULL, 'sadas', 'A');
+(2, NULL, 'sadas', 'A'),
+(3, 'teste2', 'testa', 'A'),
+(4, 'kjkjkj', 'jkjjklj', 'A');
 
 -- --------------------------------------------------------
 
@@ -454,7 +464,8 @@ CREATE TABLE `vaga_estacionamento` (
 --
 
 INSERT INTO `vaga_estacionamento` (`id`, `descricao`, `obs`, `metragem_vaga`, `status`) VALUES
-(1, 'asas', 'asasa', 12, 'A');
+(1, '66', '666', 65666, 'A'),
+(2, 'teste', 'vaga5', 98999, 'A');
 
 -- --------------------------------------------------------
 
@@ -479,7 +490,10 @@ CREATE TABLE `veiculo` (
 --
 
 INSERT INTO `veiculo` (`id`, `placa`, `cor`, `modelo_id`, `funcionario_id`, `fornecedor_id`, `hospede_id`, `status`, `marca_id`) VALUES
-(15, 'as212', 'asas', 2, NULL, NULL, NULL, 'A', 1);
+(15, 'as212', 'asas', 2, NULL, NULL, NULL, 'A', 1),
+(17, 'ss2', 'ww', 1, NULL, NULL, NULL, 'A', NULL),
+(18, 'edfs33', 'sads', 2, NULL, NULL, NULL, 'A', NULL),
+(19, 'sdf333', 'azul2', 2, NULL, NULL, NULL, 'A', NULL);
 
 --
 -- Índices para tabelas despejadas
@@ -680,19 +694,19 @@ ALTER TABLE `copa_quarto`
 -- AUTO_INCREMENT de tabela `fornecedor`
 --
 ALTER TABLE `fornecedor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `funcionario`
 --
 ALTER TABLE `funcionario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `hospede`
 --
 ALTER TABLE `hospede`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `marca`
@@ -722,7 +736,7 @@ ALTER TABLE `oderm_servico`
 -- AUTO_INCREMENT de tabela `produto_copa`
 --
 ALTER TABLE `produto_copa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `quarto`
@@ -752,19 +766,19 @@ ALTER TABLE `reserva_quarto`
 -- AUTO_INCREMENT de tabela `servico`
 --
 ALTER TABLE `servico`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `vaga_estacionamento`
 --
 ALTER TABLE `vaga_estacionamento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `veiculo`
 --
 ALTER TABLE `veiculo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restrições para tabelas despejadas
