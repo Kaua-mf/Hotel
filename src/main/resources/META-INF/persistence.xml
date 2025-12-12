@@ -14,13 +14,24 @@
         <class>model.Hospede</class>
         <class>model.Marca</class>
         <class>model.Modelo</class>
-        <class>model.Pessoa</class> <class>model.ProdutoCopa</class>
+        <class>model.Pessoa</class>
+        <class>model.ProdutoCopa</class>
         <class>model.Quarto</class>
         <class>model.Servico</class>
         <class>model.TipoQuarto</class>
         <class>model.Triangulo</class>
         <class>model.VagaEstacionamento</class>
         <class>model.Veiculo</class>
+
+        <class>model.AlocacaoVaga</class>
+        <class>model.Caixa</class>
+        <class>model.Check</class>
+        <class>model.CheckHospede</class>
+        <class>model.CheckQuarto</class>
+        <class>model.CopaQuarto</class>
+        <class>model.Receber</class>
+        <class>model.Reserva</class>
+        <class>model.ReservaQuarto</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
