@@ -88,11 +88,11 @@ public class TelaCadastroQuarto extends javax.swing.JDialog {
         jCheckBoxFlagAnimais = new java.awt.Checkbox();
         jLabelId1 = new javax.swing.JLabel();
         jPanelBotoes = new javax.swing.JPanel();
+        jButtonNovo = new javax.swing.JButton();
+        jButtonCancelar = new javax.swing.JButton();
         jButtonGravar = new javax.swing.JButton();
         jButtonBuscar = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
-        jButtonCancelar = new javax.swing.JButton();
-        jButtonNovo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Quartos");
@@ -327,6 +327,17 @@ public class TelaCadastroQuarto extends javax.swing.JDialog {
 
         jPanelBotoes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jButtonNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Create.png"))); // NOI18N
+        jButtonNovo.setText("Novo");
+        jButtonNovo.setActionCommand("0");
+        jPanelBotoes.add(jButtonNovo);
+
+        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Cancel.png"))); // NOI18N
+        jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.setActionCommand("1");
+        jButtonCancelar.setEnabled(false);
+        jPanelBotoes.add(jButtonCancelar);
+
         jButtonGravar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/OK.png"))); // NOI18N
         jButtonGravar.setText("Gravar");
         jButtonGravar.setActionCommand("1");
@@ -342,17 +353,6 @@ public class TelaCadastroQuarto extends javax.swing.JDialog {
         jButtonSair.setText("Sair");
         jButtonSair.setActionCommand("0");
         jPanelBotoes.add(jButtonSair);
-
-        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Cancel.png"))); // NOI18N
-        jButtonCancelar.setText("Cancelar");
-        jButtonCancelar.setActionCommand("1");
-        jButtonCancelar.setEnabled(false);
-        jPanelBotoes.add(jButtonCancelar);
-
-        jButtonNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Create.png"))); // NOI18N
-        jButtonNovo.setText("Novo");
-        jButtonNovo.setActionCommand("0");
-        jPanelBotoes.add(jButtonNovo);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
