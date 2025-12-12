@@ -1,21 +1,39 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "vaga_estacionamento") 
 public class VagaEstacionamento {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false)
     private String descricao;
+
     private String obs;
-    private float metragemvaga;
+
+    @Column(name = "metragem_vaga")
+    private float metragemVaga;
+
+    @Column(nullable = false, length = 1)
     private char status;
 
     public VagaEstacionamento() {
     }
 
-    public VagaEstacionamento(int id, String descricao, String obs, float metragemvaga, char status) {
+    public VagaEstacionamento(int id, String descricao, String obs, float metragemVaga, char status) {
         this.id = id;
         this.descricao = descricao;
         this.obs = obs;
-        this.metragemvaga = metragemvaga;
+        this.metragemVaga = metragemVaga;
         this.status = status;
     }
 
@@ -44,11 +62,11 @@ public class VagaEstacionamento {
     }
 
     public float getMetragemVaga() {
-        return metragemvaga;
+        return metragemVaga;
     }
 
-    public void setMetragemVaga(float metragemvaga) {
-        this.metragemvaga = metragemvaga;
+    public void setMetragemVaga(float metragemVaga) {
+        this.metragemVaga = metragemVaga;
     }
 
     public char getStatus() {
@@ -56,8 +74,16 @@ public class VagaEstacionamento {
     }
 
     public void setStatus(char status) {
-        this.status = status;
+        if ((status == 'A') || (status == 'O') || (status == 'L') || 
+            (status == 'a') || (status == 'o') || (status == 'l')) {
+            this.status = status;
+        } else {
+            this.status = 'A'; 
+        }
     }
 
- 
+    @Override
+    public String toString() {
+        return this.getDescricao();
+    }
 }

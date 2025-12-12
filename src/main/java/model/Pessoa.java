@@ -1,27 +1,48 @@
 package model;
 
-public class Pessoa {
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
+@MappedSuperclass // <--- CRUCIAL: Diz que esta classe doa seus atributos para as filhas
+public abstract class Pessoa { // 'abstract' evita que alguém tente criar uma Pessoa genérica
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false)
     private String nome;
-    String fone1;
+
+    @Column(name = "fone1") // Garante o nome da coluna
+    private String fone1;
+
+    @Column(name = "fone2")
     private String fone2;
+
     private String email;
     private String cep;
     private String logradouro;
     private String bairro;
     private String cidade;
     private String complemento;
-    String dataCadastro;
+
+    @Column(name = "data_cadastro") // Mapeia camelCase para snake_case do banco
+    private String dataCadastro;
+
     private String cpf;
     private String rg;
-    String obs;
+    private String obs;
     private char status;
     private String sexo;
+
+    // --- CONSTRUTOR VAZIO (Obrigatório para o Hibernate) ---
     public Pessoa() {
     }
 
-    public Pessoa(int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String obs, char status,String sexo) {
+    public Pessoa(int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String obs, char status, String sexo) {
         this.id = id;
         this.nome = nome;
         this.fone1 = fone1;
@@ -39,6 +60,9 @@ public class Pessoa {
         this.status = status;
         this.sexo = sexo;
     }
+
+    // --- GETTERS E SETTERS ---
+
     public int getId() {
         return id;
     }
@@ -155,6 +179,14 @@ public class Pessoa {
         return status;
     }
 
+    public void setStatus(char status) {
+        if ((status == 'A') || (status == 'C') || (status == 'a') || (status == 'c')) {
+            this.status = status;
+        } else {
+            this.status = 'A';
+        }
+    }
+
     public String getSexo() {
         return sexo;
     }
@@ -163,27 +195,16 @@ public class Pessoa {
         this.sexo = sexo;
     }
 
-    public void setStatus(char status) {
-        
-        if ( (status == 'A') || (status == 'C') || (status == 'a') || (status == 'c') ) {
-            this.status = status;
-        }else {
-            this.status = 'A';
-        }
-        
-    }
-
     @Override
     public String toString() {
-        return  "id      = " + this.id + 
-                "\nnome   = " + this.nome +
-                "\nfone1  = " + this.fone1 +
-                "\nfone2  = " + this.fone2 +
-                "\nemail  = " + this.email +
-                "\nrg     = " + this.rg +
-                "\ncpf    = " + this.cpf +
-                "\nobs    = " + this.obs +
-                "\nstatus = " + this.status  ;
+        return "id       = " + this.id +
+               "\nnome   = " + this.nome +
+               "\nfone1  = " + this.fone1 +
+               "\nfone2  = " + this.fone2 +
+               "\nemail  = " + this.email +
+               "\nrg     = " + this.rg +
+               "\ncpf    = " + this.cpf +
+               "\nobs    = " + this.obs +
+               "\nstatus = " + this.status;
     }
-
 }

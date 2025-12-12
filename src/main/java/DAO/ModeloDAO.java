@@ -1,146 +1,101 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import model.Marca;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import model.Modelo;
-import DAO.ConnectionFactory; 
+import utilities.JPAUtil;
 
 public class ModeloDAO implements InterfaceDAO<Modelo> {
 
     @Override
     public void Create(Modelo objeto) {
-        String sql = "INSERT INTO modelo (nome, status, marca_id) VALUES (?, ?, ?)";
-        
-        try (Connection con = ConnectionFactory.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            
-            ps.setString(1, objeto.getNome()); 
-            ps.setString(2, String.valueOf(objeto.getStatus()));
-            ps.setInt(3, objeto.getMarca().getId());
-            ps.executeUpdate();
-            
-        } catch (SQLException e) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(objeto);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
             e.printStackTrace();
-            throw new RuntimeException("Erro ao salvar modelo na coluna 'nome'", e);
+        } finally {
+            em.close();
         }
     }
 
     @Override
     public Modelo Retrieve(int id) {
-        String sql = "SELECT modelo.id, modelo.nome, modelo.status, modelo.marca_id, " +
-                     "       marca.descricao AS marca_descricao " + 
-                     "FROM modelo " +
-                     "LEFT JOIN marca ON modelo.marca_id = marca.id " +
-                     "WHERE modelo.id = ?";
-        
-        try (Connection con = ConnectionFactory.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            
-            ps.setInt(1, id);
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return construirModelo(rs); 
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao buscar modelo por ID", e);
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.find(Modelo.class, id);
+        } finally {
+            em.close();
         }
-        return null;
+    }
+
+    public Modelo buscar(int id) {
+        return Retrieve(id);
+    }
+
+    @Override
+    public List<Modelo> Retrieve() {
+        return Retrieve(null, null);
     }
 
     @Override
     public List<Modelo> Retrieve(String atributo, String valor) {
-        String sql = "SELECT modelo.id, modelo.nome, modelo.status, modelo.marca_id, " +
-                     "       marca.descricao AS marca_descricao " + 
-                     "FROM modelo " +
-                     "LEFT JOIN marca ON modelo.marca_id = marca.id";
-
-        if (atributo != null && valor != null) {
-             String colunaBusca = atributo;
-             if (atributo.equalsIgnoreCase("descricao") || atributo.equalsIgnoreCase("modelo.descricao")) {
-                 colunaBusca = "modelo.nome"; 
-             }
-            sql += " WHERE " + colunaBusca + " LIKE ?";
-        }
-
-        List<Modelo> modelos = new ArrayList<>();
-        
-        try (Connection con = ConnectionFactory.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT m FROM Modelo m";
             
-            if (atributo != null && valor != null) {
-                ps.setString(1, "%" + valor + "%");
-            }
-            
-            try (ResultSet rs = ps.executeQuery()) { 
-                while (rs.next()) {
-                    modelos.add(construirModelo(rs));
+            if (atributo != null && !atributo.trim().isEmpty() && valor != null) {
+                if (atributo.equalsIgnoreCase("descricao")) {
+                    jpql += " WHERE m.nome LIKE :valor";
+                } else {
+                    jpql += " WHERE m." + atributo + " LIKE :valor";
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace(); 
-            throw new RuntimeException("Erro ao buscar modelos com marcas", e);
+            
+            TypedQuery<Modelo> query = em.createQuery(jpql, Modelo.class);
+            
+            if (atributo != null && !atributo.trim().isEmpty() && valor != null) {
+                query.setParameter("valor", "%" + valor + "%");
+            }
+            
+            return query.getResultList();
+        } finally {
+            em.close();
         }
-        return modelos;
     }
 
     @Override
     public void Update(Modelo objeto) {
-        String sql = "UPDATE modelo SET nome = ?, status = ?, marca_id = ? WHERE id = ?";
-        
-        try (Connection con = ConnectionFactory.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            
-            ps.setString(1, objeto.getNome());
-            ps.setString(2, String.valueOf(objeto.getStatus()));
-            ps.setInt(3, objeto.getMarca().getId());
-            ps.setInt(4, objeto.getId());
-            ps.executeUpdate();
-            
-        } catch (SQLException e) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(objeto);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
             e.printStackTrace();
-            throw new RuntimeException("Erro ao atualizar modelo na coluna 'nome'", e);
+        } finally {
+            em.close();
         }
     }
 
     @Override
     public void Delete(Modelo objeto) {
-        String sql = "DELETE FROM modelo WHERE id = ?";
-        
-        try (Connection con = ConnectionFactory.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            
-            ps.setInt(1, objeto.getId());
-            ps.executeUpdate();
-            
-        } catch (SQLException e) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Modelo objParaRemover = em.merge(objeto);
+            em.remove(objParaRemover);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
             e.printStackTrace();
-            throw new RuntimeException("Erro ao deletar modelo", e);
+        } finally {
+            em.close();
         }
-    }
-
-    private Modelo construirModelo(ResultSet rs) throws SQLException {
-        Marca marca = new Marca();
-        marca.setId(rs.getInt("marca_id")); 
-        marca.setDescricao(rs.getString("marca_descricao")); 
-        
-        Modelo modelo = new Modelo();
-        modelo.setId(rs.getInt("id"));
-        modelo.setNome(rs.getString("nome")); 
-        
-        String statusStr = rs.getString("status");
-        if (statusStr != null && !statusStr.isEmpty()) {
-            modelo.setStatus(statusStr.charAt(0));
-        }
-        
-        modelo.setMarca(marca);
-        return modelo;
     }
 }

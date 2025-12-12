@@ -1,19 +1,29 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "hospede") 
 public class Hospede extends Pessoa {
     
+    @Column(name = "razao_social")
     private String razaoSocial;
+    
     private String cnpj;
+    
+    @Column(name = "inscricao_estadual")
     private String inscricaoEstadual;   
+    
     private String contato;
     private String usuario; 
     private String senha;  
-    private String sexo;
-
+    
     public Hospede() {
     }
     
-    public Hospede( String usuario,String senha,int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String razaoSocial, String cnpj, String inscricaoEstadual, String contato, String obs, char status, String sexo) {
+    public Hospede(String usuario, String senha, int id, String nome, String fone1, String fone2, String email, String cep, String logradouro, String bairro, String cidade, String complemento, String dataCadastro, String cpf, String rg, String razaoSocial, String cnpj, String inscricaoEstadual, String contato, String obs, char status, String sexo) {
         super(id, nome, fone1, fone2, email, cep, logradouro, bairro, cidade, complemento, dataCadastro, cpf, rg, obs, status, sexo);
         
         this.razaoSocial = razaoSocial;
@@ -23,7 +33,6 @@ public class Hospede extends Pessoa {
         this.usuario = usuario;
         this.senha = senha;
     }
-
 
     public String getUsuario() {
         return usuario;
@@ -81,27 +90,6 @@ public class Hospede extends Pessoa {
         super.setFone1(fone); 
     }
     
-    public String getFone1() {
-        return super.getFone1();
-    }
-    public void setFone1(String fone1) {
-        super.setFone1(fone1);
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-    
-public String getObs() { return obs; }
-public void setObs(String obs) { this.obs = obs; } 
-
-public String getDataCadastro() { return dataCadastro; }
-public void setDataCadastro(String dataCadastro) { this.dataCadastro = dataCadastro; }
-
     @Override
     public String toString() {
         return  super.toString() + 

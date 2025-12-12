@@ -1,9 +1,24 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity 
+@Table(name = "marca") 
 public class Marca {
 
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private int id;
+    
+    @Column(nullable = false) 
     private String descricao;
+    
+    @Column(nullable = false, length = 1) 
     private char status;
 
     public Marca() {
@@ -36,16 +51,15 @@ public class Marca {
     }
 
     public void setStatus(char status) {
-        if ( (status == 'A') || (status == 'C') || (status == 'a') || (status == 'c') ) {
+        if ((status == 'A') || (status == 'C') || (status == 'a') || (status == 'c')) {
             this.status = status;
-        }else {
+        } else {
             this.status = 'A';
         }
     }
 
     @Override
-public String toString() {
-    return this.getDescricao();
-}
-
+    public String toString() {
+        return this.getDescricao();
+    }
 }

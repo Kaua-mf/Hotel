@@ -1,44 +1,24 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "funcionario") 
 public class Funcionario extends Pessoa {
     
+    @Column(nullable = false, unique = true) 
     private String usuario;
+    
+    @Column(nullable = false)
     private String senha;
-    private String sexo;
+    
+    public Funcionario() {
+    }
+
     public String getUsuario() {
         return usuario;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-
-    public String getFone1() {
-        return fone1;
-    }
-
-    public void setFone1(String fone1) {
-        this.fone1 = fone1;
-    }
-
-    public String getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(String dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
-    public String getObs() {
-        return obs;
-    }
-
-    public void setObs(String obs) {
-        this.obs = obs;
     }
 
     public void setUsuario(String usuario) {
@@ -54,11 +34,11 @@ public class Funcionario extends Pessoa {
     }
     
     public String getFone() {
-        return this.getFone1();
+        return this.getFone1(); 
     }
     
     public void setFone(String fone) {
-        this.setFone1(fone);
+        this.setFone1(fone); 
     }
 
     @Override

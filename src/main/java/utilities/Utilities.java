@@ -13,11 +13,10 @@ import javax.swing.JTextField;
 public class Utilities {
 
     public static void ativaDesativa(JPanel painel, boolean ativa) {
-
         Component[] vetComponentes = painel.getComponents();
         for (Component componenteAtual : vetComponentes) {
             if (componenteAtual instanceof JButton) {
-                if (((JButton) componenteAtual).getActionCommand() == "0") {
+                if ("0".equals(((JButton) componenteAtual).getActionCommand())) {
                     componenteAtual.setEnabled(ativa);
                 } else {
                     componenteAtual.setEnabled(!ativa);
