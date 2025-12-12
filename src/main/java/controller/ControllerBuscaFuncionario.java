@@ -8,7 +8,6 @@ import model.Funcionario;
 import service.ServicoFuncionario; 
 import view.TelaBuscaFuncionario; 
 
-
 public class ControllerBuscaFuncionario implements ActionListener {
 
     public static int codigoSelecionado = 0; 
@@ -18,6 +17,7 @@ public class ControllerBuscaFuncionario implements ActionListener {
 
     public ControllerBuscaFuncionario(TelaBuscaFuncionario telaBusca) {
         this.telaBusca = telaBusca;
+        
         this.telaBusca.getjButtonCarregar().addActionListener(this);
         this.telaBusca.getjButtonFiltar().addActionListener(this);
         this.telaBusca.getjButtonSair().addActionListener(this);
@@ -31,9 +31,10 @@ public class ControllerBuscaFuncionario implements ActionListener {
         try {
             List<Funcionario> listaFuncionarios = servicoFuncionario.buscarTodos();
             this.telaBusca.preencheTabela(listaFuncionarios);
-        } catch (RuntimeException e) {
+            
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, 
-                "Falha ao carregar dados! Verifique a conexão com o banco de dados.", 
+                "Falha ao carregar dados: " + e.getMessage(), 
                 "Erro de Conexão", 
                 JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -51,9 +52,9 @@ public class ControllerBuscaFuncionario implements ActionListener {
                 List<Funcionario> resultados = servicoFuncionario.buscarPorFiltro(filtro, tipoBusca);
                 this.telaBusca.preencheTabela(resultados);
                 
-            } catch (RuntimeException e) {
+            } catch (Exception e) {
                  JOptionPane.showMessageDialog(null, 
-                    "Falha ao realizar a busca no banco de dados. Tente novamente.", 
+                    "Falha ao realizar a busca: " + e.getMessage(), 
                     "Erro de Busca", 
                     JOptionPane.ERROR_MESSAGE);
                  e.printStackTrace();
@@ -63,6 +64,7 @@ public class ControllerBuscaFuncionario implements ActionListener {
             this.telaBusca.dispose();
             
         } else if (evento.getSource() == this.telaBusca.getjButtonCarregar()) {
+            
             int linhaSelecionada = this.telaBusca.getjTableDados().getSelectedRow();
             
             if (linhaSelecionada != -1) {

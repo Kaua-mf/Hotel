@@ -13,10 +13,12 @@ public class ControllerCadVaga implements ActionListener {
 
     TelaCadastroVaga telaCadastro;
     ServicoVagaEstacionamento servicoVaga = new ServicoVagaEstacionamento();
-    private VagaEstacionamento vagaAtual = new VagaEstacionamento(); 
+    private VagaEstacionamento vagaAtual; 
 
     public ControllerCadVaga(TelaCadastroVaga telaCadastro) {
         this.telaCadastro = telaCadastro;
+        this.vagaAtual = new VagaEstacionamento();
+        
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
         this.telaCadastro.getjButtonGravar().addActionListener(this);
@@ -28,8 +30,6 @@ public class ControllerCadVaga implements ActionListener {
         
         if (this.telaCadastro.getjTextFieldId() != null) {
             this.telaCadastro.getjTextFieldId().setEnabled(false); 
-        } else {
-             System.err.println("ERRO FATAL: getjTextFieldId() retornou NULL. Verifique a TelaCadastroVaga.java");
         }
     }
     
@@ -43,7 +43,6 @@ public class ControllerCadVaga implements ActionListener {
             this.telaCadastro.getjFormattedTextFieldMetragem().setText(metragemFormatada);
         }
     }
-
 
     @Override
     public void actionPerformed(ActionEvent evento) {
@@ -77,18 +76,21 @@ public class ControllerCadVaga implements ActionListener {
                 this.vagaAtual.setStatus('A'); 
 
                 boolean isNovoRegistro = this.vagaAtual.getId() == 0;
+                
                 servicoVaga.salvar(this.vagaAtual);
                 
-                JOptionPane.showMessageDialog(null, isNovoRegistro ? "Vaga cadastrada com sucesso!" : "Vaga atualizada com sucesso!");
+                String mensagem = isNovoRegistro ? "Vaga cadastrada com sucesso!" : "Vaga atualizada com sucesso!";
+                JOptionPane.showMessageDialog(null, mensagem);
                 
                 Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
                 this.vagaAtual = new VagaEstacionamento();
                 
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "O campo 'Metragem' deve ser um número válido. Use ',' ou '.' para decimal.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
-            } catch (RuntimeException e) {
-                JOptionPane.showMessageDialog(null, "Erro de Persistência: " + e.getMessage(), "ERRO DE BANCO DE DADOS", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "O campo 'Metragem' deve ser um número válido.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
             }
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonBuscar()) {

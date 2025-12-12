@@ -10,8 +10,8 @@ import javax.swing.JCheckBox;
 import model.Quarto;
 import service.ServicoQuarto;
 import view.TelaBuscaQuarto;
+import view.TelaCadastroQuarto;
 import utilities.Utilities; 
-import view.TelaCadastroQuarto; 
 
 public class ControllerCadQuarto implements ActionListener {
 
@@ -24,7 +24,7 @@ public class ControllerCadQuarto implements ActionListener {
 
    public ControllerCadQuarto(TelaCadastroQuarto telaCadastro, Quarto quarto) { 
         this.telaCadastro = telaCadastro;
-        this.quartoAtual = quarto; 
+        this.quartoAtual = quarto != null ? quarto : new Quarto(); 
         
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
@@ -38,7 +38,7 @@ public class ControllerCadQuarto implements ActionListener {
         Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false); 
         
         Object idField = this.telaCadastro.getjTextFieldId();
-        if (idField != null) {
+        if (idField instanceof JTextField) {
              ((JTextField) idField).setEnabled(false); 
         }
     }
@@ -55,9 +55,8 @@ public class ControllerCadQuarto implements ActionListener {
     private void carregarDadosNaTela() {
         if (this.quartoAtual != null) {
             
-            // ID
             Object idField = this.telaCadastro.getjTextFieldId();
-            if (idField != null) {
+            if (idField instanceof JTextField) {
                 ((JTextField) idField).setText(String.valueOf(this.quartoAtual.getId()));
             }
 
@@ -75,11 +74,7 @@ public class ControllerCadQuarto implements ActionListener {
             
             Object checkAnimais = this.telaCadastro.getjCheckBoxFlagAnimais();
             if (checkAnimais instanceof JCheckBox) {
-                if (this.quartoAtual.getFlagAnimais() == '1') {
-                    ((JCheckBox) checkAnimais).setSelected(true); 
-                } else {
-                    ((JCheckBox) checkAnimais).setSelected(false);
-                }
+                ((JCheckBox) checkAnimais).setSelected(this.quartoAtual.getFlagAnimais() == '1'); 
             }
         }
     }
@@ -90,8 +85,9 @@ public class ControllerCadQuarto implements ActionListener {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false); 
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true); 
             this.quartoAtual = new Quarto();
+            
             Object idField = this.telaCadastro.getjTextFieldId();
-            if (idField != null) { ((JTextField) idField).setEnabled(false); }
+            if (idField instanceof JTextField) { ((JTextField) idField).setEnabled(false); }
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true); 
@@ -100,10 +96,12 @@ public class ControllerCadQuarto implements ActionListener {
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
-            String identificacaoSelecionada = (String) this.telaCadastro.getjComboBoxTipoQuarto().getSelectedItem();
+            Object comboBox = this.telaCadastro.getjComboBoxTipoQuarto();
+            String identificacaoSelecionada = (String) ((JComboBox) comboBox).getSelectedItem();
             
             if (this.telaCadastro.getjTextFieldDescricao().getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "O campo 'Descrição' é obrigatório.");
+                this.telaCadastro.getjTextFieldDescricao().requestFocus();
                 return;
             }
             if (identificacaoSelecionada == null || identificacaoSelecionada.equals(IDENTIFICACOES[0])) {
@@ -156,10 +154,8 @@ public class ControllerCadQuarto implements ActionListener {
                 this.quartoAtual = new Quarto();
                 
             } catch (RuntimeException e) {
-                 JOptionPane.showMessageDialog(null, 
-                         "Erro ao salvar no banco: " + e.getMessage(), 
-                         "ERRO DE PERSISTÊNCIA", 
-                         JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                 e.printStackTrace();
             }
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonBuscar()) {
@@ -174,9 +170,7 @@ public class ControllerCadQuarto implements ActionListener {
                 if (this.quartoAtual != null) {
                     Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
                     Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
-                    
                     carregarDadosNaTela(); 
-                    
                     ControllerBuscaQuarto.codigoSelecionado = 0;
                 }
             }

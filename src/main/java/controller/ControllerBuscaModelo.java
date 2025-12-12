@@ -14,7 +14,7 @@ public class ControllerBuscaModelo implements ActionListener {
     TelaBuscaModelo telaBuscaModelo; 
     ServicoModelo servicoModelo = new ServicoModelo(); 
     
-    public static int codigoSelecionado; 
+    public static int codigoSelecionado = 0; 
 
     public ControllerBuscaModelo(TelaBuscaModelo telaBuscaModelo) {
         this.telaBuscaModelo = telaBuscaModelo;
@@ -50,7 +50,7 @@ public class ControllerBuscaModelo implements ActionListener {
                 tabela.addRow(new Object[]{
                     modelo.getId(),
                     modelo.getNome(), 
-                    (modelo.getMarca() != null ? modelo.getMarca().getDescricao() : ""), 
+                    (modelo.getMarca() != null ? modelo.getMarca().getDescricao() : "Sem Marca"), 
                     modelo.getStatus() 
                 });
             }
@@ -61,19 +61,19 @@ public class ControllerBuscaModelo implements ActionListener {
     public void actionPerformed(ActionEvent evento) {
 
         if (evento.getSource() == this.telaBuscaModelo.getjButtonCarregar()) { 
+            
             int selectedRow = this.telaBuscaModelo.getjTableDados().getSelectedRow(); 
 
             if (selectedRow == -1) { 
                 JOptionPane.showMessageDialog(this.telaBuscaModelo, "Selecione uma linha para carregar.");
             } else {
                 int codigo = (int) this.telaBuscaModelo.getjTableDados().getValueAt(selectedRow, 0);
-                
                 ControllerBuscaModelo.codigoSelecionado = codigo;
-                
                 this.telaBuscaModelo.dispose(); 
             }
 
         } else if (evento.getSource() == this.telaBuscaModelo.getjButtonFiltar()) { 
+            
             String filtro = this.telaBuscaModelo.getjTFFiltro().getText();
             int tipoBuscaIndex = this.telaBuscaModelo.getjCBFiltro().getSelectedIndex(); 
 

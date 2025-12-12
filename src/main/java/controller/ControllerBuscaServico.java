@@ -23,20 +23,50 @@ public class ControllerBuscaServico implements ActionListener {
         this.telaBusca.getjButtonFiltar().addActionListener(this);
         this.telaBusca.getjButtonSair().addActionListener(this);
         
-        List<Servico> listaServicos = servicoServico.buscarTodos();
-        this.telaBusca.preencheTabela(listaServicos);
+        carregarDadosIniciais();
+    }
+    
+    private void carregarDadosIniciais() {
+        try {
+            List<Servico> listaServicos = servicoServico.buscarTodos();
+            this.telaBusca.preencheTabela(listaServicos);
+        } catch (Exception e) {
+             JOptionPane.showMessageDialog(this.telaBusca, 
+                "Erro ao carregar dados iniciais: " + e.getMessage(), 
+                "Erro de Carga", 
+                JOptionPane.ERROR_MESSAGE);
+             e.printStackTrace();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource() == this.telaBusca.getjButtonFiltar()) { 
+            
             String filtro = this.telaBusca.getjTFFiltro().getText();
             int tipoBusca = this.telaBusca.getjCBFiltro().getSelectedIndex();
             
-            List<Servico> resultados = servicoServico.buscarPorFiltro(filtro, tipoBusca);
-            this.telaBusca.preencheTabela(resultados);
+            try {
+                List<Servico> resultados;
+                
+                if (filtro.trim().isEmpty()) {
+                    resultados = servicoServico.buscarTodos();
+                } else {
+                    resultados = servicoServico.buscarPorFiltro(filtro, tipoBusca);
+                }
+                
+                this.telaBusca.preencheTabela(resultados);
+                
+            } catch (Exception e) {
+                 JOptionPane.showMessageDialog(this.telaBusca, 
+                    "Erro ao filtrar dados: " + e.getMessage(), 
+                    "Erro de Busca", 
+                    JOptionPane.ERROR_MESSAGE);
+                 e.printStackTrace();
+            }
             
         } else if (evento.getSource() == this.telaBusca.getjButtonCarregar()) {
+            
             int selectedRow = this.telaBusca.getjTableDados().getSelectedRow(); 
 
             if (selectedRow == -1) { 
@@ -46,6 +76,7 @@ public class ControllerBuscaServico implements ActionListener {
                 ControllerBuscaServico.codigoSelecionado = codigo;
                 this.telaBusca.dispose(); 
             }
+            
         } else if (evento.getSource() == this.telaBusca.getjButtonSair()) {
              ControllerBuscaServico.codigoSelecionado = 0;
             this.telaBusca.dispose();

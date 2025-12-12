@@ -14,7 +14,7 @@ public class ControllerBuscaProdutoCopa implements ActionListener {
     TelaBuscaProdutoCopa telaBusca; 
     ServicoProdutoCopa servico = new ServicoProdutoCopa(); 
     
-    public static int codigoSelecionado; 
+    public static int codigoSelecionado = 0; 
 
     public ControllerBuscaProdutoCopa(TelaBuscaProdutoCopa telaBusca) {
         this.telaBusca = telaBusca;
@@ -50,7 +50,7 @@ public class ControllerBuscaProdutoCopa implements ActionListener {
                 tabela.addRow(new Object[]{
                     produto.getId(),
                     produto.getDescricao(), 
-                    produto.getValor(),
+                    String.format("%.2f", produto.getValor()), // Pequeno ajuste visual para formatar preço
                     produto.getStatus() 
                 });
             }
@@ -61,19 +61,19 @@ public class ControllerBuscaProdutoCopa implements ActionListener {
     public void actionPerformed(ActionEvent evento) {
 
         if (evento.getSource() == this.telaBusca.getjButtonCarregar()) { 
+            
             int selectedRow = this.telaBusca.getjTableDados().getSelectedRow(); 
 
             if (selectedRow == -1) { 
                 JOptionPane.showMessageDialog(this.telaBusca, "Selecione uma linha para carregar.");
             } else {
                 int codigo = (int) this.telaBusca.getjTableDados().getValueAt(selectedRow, 0);
-                
                 ControllerBuscaProdutoCopa.codigoSelecionado = codigo;
-                
                 this.telaBusca.dispose(); 
             }
 
         } else if (evento.getSource() == this.telaBusca.getjButtonFiltar()) { 
+            
             String filtro = this.telaBusca.getjTFFiltro().getText();
             int tipoBuscaIndex = this.telaBusca.getjCBFiltro().getSelectedIndex(); 
 

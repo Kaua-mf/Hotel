@@ -7,9 +7,9 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import model.Fornecedor;
 import service.ServicoFornecedor;
+import utilities.Utilities;
 import view.TelaBuscaFornecedor;
 import view.TelaCadastroFornecedor;
-import utilities.Utilities;
 
 public class ControllerCadFornecedor implements ActionListener {
     
@@ -66,14 +66,6 @@ public class ControllerCadFornecedor implements ActionListener {
                  return;
             }
             
-            boolean cnpjValido = service.ValidarDoc.validarCNPJ(cnpjToValidate); 
-
-            if (!cnpjValido) {
-                JOptionPane.showMessageDialog(telaCadastro, "CNPJ Inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
-                this.telaCadastro.getjFormattedTextFieldCnpj().requestFocus();
-                return;
-            }
-            
             this.fornecedorAtual.setNome(this.telaCadastro.getjTextFieldNomeFantasia().getText());
             this.fornecedorAtual.setRazaoSocial(this.telaCadastro.getjTextFieldRazaoSocial().getText());
             this.fornecedorAtual.setCnpj(this.telaCadastro.getjFormattedTextFieldCnpj().getText());
@@ -81,9 +73,9 @@ public class ControllerCadFornecedor implements ActionListener {
             this.fornecedorAtual.setContato(this.telaCadastro.getjTextFieldContato().getText());
             this.fornecedorAtual.setFone1(this.telaCadastro.getjFormattedTextFieldFone1().getText());
             this.fornecedorAtual.setEmail(this.telaCadastro.getjTextFieldEmail().getText());
-            this.fornecedorAtual.setStatus('A');
             
             if (this.fornecedorAtual.getId() == 0) { 
+                this.fornecedorAtual.setStatus('A');
                 DateTimeFormatter dtfDb = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 this.fornecedorAtual.setDataCadastro(dtfDb.format(LocalDateTime.now()));
             }
@@ -122,7 +114,6 @@ public class ControllerCadFornecedor implements ActionListener {
         }
     }
 
-   
     private void carregarDadosNaTela() {
         if (this.fornecedorAtual != null) {
             this.telaCadastro.getjTextFieldNomeFantasia().setText(this.fornecedorAtual.getNome());
@@ -133,13 +124,9 @@ public class ControllerCadFornecedor implements ActionListener {
             this.telaCadastro.getjFormattedTextFieldFone1().setText(this.fornecedorAtual.getFone1());
             this.telaCadastro.getjTextFieldEmail().setText(this.fornecedorAtual.getEmail());
             
-            try {
-                String dataDoBanco = this.fornecedorAtual.getDataCadastro();
-                this.telaCadastro.getjTextFieldDataCadastro().setText(dataDoBanco); 
-            } catch (Exception e) {
-                this.telaCadastro.getjTextFieldDataCadastro().setText("");
+            if (this.fornecedorAtual.getDataCadastro() != null) {
+                this.telaCadastro.getjTextFieldDataCadastro().setText(this.fornecedorAtual.getDataCadastro()); 
             }
-            
         }
     }
 }

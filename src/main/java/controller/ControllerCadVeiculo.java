@@ -9,8 +9,8 @@ import model.Modelo;
 import model.Veiculo;
 import service.ServicoModelo;
 import service.ServicoVeiculo;
-import view.TelaBuscaVeiculo;
 import utilities.Utilities; 
+import view.TelaBuscaVeiculo;
 import view.TelaCadastroVeiculo; 
 
 public class ControllerCadVeiculo implements ActionListener {
@@ -23,7 +23,7 @@ public class ControllerCadVeiculo implements ActionListener {
 
    public ControllerCadVeiculo(TelaCadastroVeiculo telaCadastro, Veiculo veiculo) { 
         this.telaCadastro = telaCadastro;
-        this.veiculoAtual = veiculo; 
+        this.veiculoAtual = (veiculo != null) ? veiculo : new Veiculo();
         
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
@@ -41,19 +41,20 @@ public class ControllerCadVeiculo implements ActionListener {
         }
     }
 
-    
     private void carregarModelos() {
         try {
             List<Modelo> modelos = servicoModelo.buscarTodos();
             
-            Modelo placeholder = new Modelo(); // Usa o construtor vazio
+            Modelo placeholder = new Modelo(); 
             placeholder.setId(0); 
+            placeholder.setNome("Selecione um Modelo..."); 
             modelos.add(0, placeholder); 
             
             DefaultComboBoxModel<Modelo> model = new DefaultComboBoxModel<>(modelos.toArray(new Modelo[0]));
             this.telaCadastro.getjComboBoxModelo().setModel(model); 
-        } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao carregar Modelos: " + e.getMessage(), "Erro de Carga", JOptionPane.ERROR_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao carregar Modelos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -64,16 +65,16 @@ public class ControllerCadVeiculo implements ActionListener {
             this.telaCadastro.getjTextFieldCor().setText(this.veiculoAtual.getCor());
             
             DefaultComboBoxModel<Modelo> model = (DefaultComboBoxModel<Modelo>) this.telaCadastro.getjComboBoxModelo().getModel();
+            
             for (int i = 0; i < model.getSize(); i++) {
-                // Compara pelo ID do Modelo carregado
-                if (this.veiculoAtual.getModelo() != null && model.getElementAt(i).getId() == this.veiculoAtual.getModelo().getId()) {
+                Modelo itemCombo = model.getElementAt(i);
+                if (this.veiculoAtual.getModelo() != null && itemCombo.getId() == this.veiculoAtual.getModelo().getId()) {
                     this.telaCadastro.getjComboBoxModelo().setSelectedIndex(i);
                     break;
                 }
             }
         }
     }
-
 
     @Override
     public void actionPerformed(ActionEvent evento) {
@@ -109,25 +110,27 @@ public class ControllerCadVeiculo implements ActionListener {
             this.veiculoAtual.setCor(this.telaCadastro.getjTextFieldCor().getText());
             this.veiculoAtual.setModelo(modeloSelecionado);
             this.veiculoAtual.setStatus('A');
+            
+            // Definindo proprietários como null conforme lógica original
             this.veiculoAtual.setFuncionario(null); 
             this.veiculoAtual.setFornecedor(null);
             this.veiculoAtual.setHospede(null); 
 
             try {
                 boolean isNovoRegistro = this.veiculoAtual.getId() == 0;
+                
                 servicoVeiculo.salvar(this.veiculoAtual);
                 
-                JOptionPane.showMessageDialog(null, isNovoRegistro ? "Veículo cadastrado com sucesso!" : "Veículo atualizado com sucesso!");
+                String mensagem = isNovoRegistro ? "Veículo cadastrado com sucesso!" : "Veículo atualizado com sucesso!";
+                JOptionPane.showMessageDialog(null, mensagem);
                 
                 Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
                 this.veiculoAtual = new Veiculo();
                 
-            } catch (RuntimeException e) {
-                 JOptionPane.showMessageDialog(null, 
-                         "Erro ao salvar no banco: " + e.getMessage(), 
-                         "ERRO DE PERSISTÊNCIA", 
-                         JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                 JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
+                 e.printStackTrace();
             }
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonBuscar()) {

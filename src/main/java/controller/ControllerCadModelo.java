@@ -109,10 +109,7 @@ public class ControllerCadModelo implements ActionListener {
                 
                 servicoModelo.salvar(this.modeloAtual); 
                 
-                String mensagem = isNovoRegistro ? 
-                                  "Modelo salvo com sucesso!" : 
-                                  "Modelo atualizado com sucesso!";
-                                  
+                String mensagem = isNovoRegistro ? "Modelo salvo com sucesso!" : "Modelo atualizado com sucesso!";
                 JOptionPane.showMessageDialog(null, mensagem);
                 
                 Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);

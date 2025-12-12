@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import model.Servico;
 import service.ServicoServico;
+import utilities.Utilities;
 import view.TelaBuscaServico;
 import view.TelaCadastroServico; 
 
@@ -12,10 +13,11 @@ public class ControllerCadServico implements ActionListener {
 
     TelaCadastroServico telaCadastro;
     ServicoServico servicoServico = new ServicoServico();
-    Servico servicoAtual = new Servico(); 
+    Servico servicoAtual; 
 
     public ControllerCadServico(TelaCadastroServico telaCadastro) {
         this.telaCadastro = telaCadastro;
+        this.servicoAtual = new Servico();
         
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
@@ -23,55 +25,59 @@ public class ControllerCadServico implements ActionListener {
         this.telaCadastro.getjButtonBuscar().addActionListener(this);
         this.telaCadastro.getjButtonSair().addActionListener(this);
 
-        utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
-        utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false); 
+        Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
+        Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false); 
     }
     
     private void carregarDadosNaTela() {
         if (this.servicoAtual != null) {
             this.telaCadastro.getjTextFieldId().setText(String.valueOf(this.servicoAtual.getId()));
             this.telaCadastro.getjTextFieldDescricao().setText(this.servicoAtual.getDescricao());
-            this.telaCadastro.getjTextFieldObs().setText(this.servicoAtual.getObs()); // Novo campo
+            this.telaCadastro.getjTextFieldObs().setText(this.servicoAtual.getObs());
             
+            this.telaCadastro.getjTextFieldId().setEnabled(false);
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource() == this.telaCadastro.getjButtonNovo()) {
-            utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
-            utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
+            Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
+            Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
             this.servicoAtual = new Servico();
             this.telaCadastro.getjTextFieldId().setEnabled(false);
+            this.telaCadastro.getjTextFieldDescricao().requestFocus();
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
-            utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
-            utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+            Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
+            Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
             this.servicoAtual = new Servico();
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
             if (this.telaCadastro.getjTextFieldDescricao().getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this.telaCadastro, "Descrição é obrigatória.");
+                JOptionPane.showMessageDialog(this.telaCadastro, "Descrição é obrigatória.", "Atenção", JOptionPane.WARNING_MESSAGE);
+                this.telaCadastro.getjTextFieldDescricao().requestFocus();
                 return;
             }
 
             try {
                 this.servicoAtual.setDescricao(this.telaCadastro.getjTextFieldDescricao().getText());
-                this.servicoAtual.setObs(this.telaCadastro.getjTextFieldObs().getText()); // Novo campo
-                
+                this.servicoAtual.setObs(this.telaCadastro.getjTextFieldObs().getText());
                 this.servicoAtual.setStatus('A'); 
 
                 boolean isNovoRegistro = this.servicoAtual.getId() == 0;
+                
                 servicoServico.salvar(this.servicoAtual);
                 
-                JOptionPane.showMessageDialog(telaCadastro, isNovoRegistro ? "Serviço cadastrado com sucesso!" : "Serviço atualizado com sucesso!");
+                String mensagem = isNovoRegistro ? "Serviço cadastrado com sucesso!" : "Serviço atualizado com sucesso!";
+                JOptionPane.showMessageDialog(telaCadastro, mensagem);
                 
-                utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
-                utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+                Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
+                Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
                 this.servicoAtual = new Servico();
 
-            } catch (RuntimeException ex) {
+            } catch (Exception ex) {
                  JOptionPane.showMessageDialog(telaCadastro, "Erro ao salvar: " + ex.getMessage(), "ERRO DE PERSISTÊNCIA", JOptionPane.ERROR_MESSAGE);
                  ex.printStackTrace();
             }
@@ -85,8 +91,8 @@ public class ControllerCadServico implements ActionListener {
                 this.servicoAtual = servicoServico.buscarPorId(ControllerBuscaServico.codigoSelecionado);
                 
                 if (this.servicoAtual != null) {
-                    utilities.Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
-                    utilities.Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
+                    Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
+                    Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
                     
                     carregarDadosNaTela();
                     

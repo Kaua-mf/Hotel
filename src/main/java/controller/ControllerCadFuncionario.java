@@ -7,9 +7,9 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import model.Funcionario;
 import service.ServicoFuncionario;
+import utilities.Utilities;
 import view.TelaBuscaFuncionario;
 import view.TelaCadastroFuncionario;
-import utilities.Utilities;
 
 public class ControllerCadFuncionario implements ActionListener {
 
@@ -21,6 +21,7 @@ public class ControllerCadFuncionario implements ActionListener {
         this.telaCadastro = telaCadastro;
         
         this.funcionarioAtual = new Funcionario(); 
+        
         this.telaCadastro.getjButtonNovo().addActionListener(this);
         this.telaCadastro.getjButtonCancelar().addActionListener(this);
         this.telaCadastro.getjButtonGravar().addActionListener(this);
@@ -33,7 +34,7 @@ public class ControllerCadFuncionario implements ActionListener {
     
     private void carregarDadosNaTela() {
         DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        DateTimeFormatter formatoBanco = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // Formato esperado do banco
+        DateTimeFormatter formatoBanco = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         this.telaCadastro.getjTextFieldNome().setText(this.funcionarioAtual.getNome());
         this.telaCadastro.getjFormattedTextFieldCpf().setText(this.funcionarioAtual.getCpf());
@@ -51,13 +52,15 @@ public class ControllerCadFuncionario implements ActionListener {
         this.telaCadastro.getjTextFieldObs().setText(this.funcionarioAtual.getObs());
 
         try {
-             LocalDateTime dataDb = LocalDateTime.parse(this.funcionarioAtual.getDataCadastro(), formatoBanco);
-             this.telaCadastro.getjTextFieldDataCadastro().setText(dataDb.format(formatoBrasileiro));
+             if (this.funcionarioAtual.getDataCadastro() != null) {
+                LocalDateTime dataDb = LocalDateTime.parse(this.funcionarioAtual.getDataCadastro(), formatoBanco);
+                this.telaCadastro.getjTextFieldDataCadastro().setText(dataDb.format(formatoBrasileiro));
+             }
         } catch (Exception e) {
-             this.telaCadastro.getjTextFieldDataCadastro().setText("Data Indisponível");
+             this.telaCadastro.getjTextFieldDataCadastro().setText("");
         }
         
-        this.telaCadastro.getjTextFieldDataCadastro().setEnabled(false); // Adição/Correção
+        this.telaCadastro.getjTextFieldDataCadastro().setEnabled(false);
 
         String sexoDB = this.funcionarioAtual.getSexo();
         if ("M".equalsIgnoreCase(sexoDB)) {
@@ -77,14 +80,14 @@ public class ControllerCadFuncionario implements ActionListener {
             Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
             
             this.funcionarioAtual = new Funcionario(); 
-            
             this.telaCadastro.getjComboBoxSexo().setSelectedIndex(0);
 
             LocalDateTime agora = LocalDateTime.now();
             DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            String dataFormatada = agora.format(formatoBrasileiro);
-            this.telaCadastro.getjTextFieldDataCadastro().setText(dataFormatada);
+            this.telaCadastro.getjTextFieldDataCadastro().setText(agora.format(formatoBrasileiro));
             this.telaCadastro.getjTextFieldDataCadastro().setEnabled(false);
+            
+            this.telaCadastro.getjTextFieldNome().requestFocus();
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonCancelar()) {
             Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
@@ -93,17 +96,20 @@ public class ControllerCadFuncionario implements ActionListener {
 
         } else if (evento.getSource() == this.telaCadastro.getjButtonGravar()) {
             
+            if (this.telaCadastro.getjTextFieldNome().getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "O campo 'Nome' é obrigatório.");
+                this.telaCadastro.getjTextFieldNome().requestFocus();
+                return; 
+            }
+
             String cpfToValidate = this.telaCadastro.getjFormattedTextFieldCpf().getText().replaceAll("\\D","");
+            
             boolean cpfvalido = service.ValidarDoc.validarCPF(cpfToValidate);
 
             if (!cpfToValidate.isEmpty() && !cpfvalido) {
                 JOptionPane.showMessageDialog(telaCadastro, "CPF Inválido.");
+                this.telaCadastro.getjFormattedTextFieldCpf().requestFocus();
                 return;
-            }
-           
-            if (this.telaCadastro.getjTextFieldNome().getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "O campo 'Nome' é obrigatório.");
-                return; 
             }
             
             try {
@@ -125,7 +131,6 @@ public class ControllerCadFuncionario implements ActionListener {
 
                 int indiceSelecionado = this.telaCadastro.getjComboBoxSexo().getSelectedIndex();
                 String sexoParaSalvar; 
-
                 switch (indiceSelecionado) {
                     case 0: sexoParaSalvar = "M"; break;
                     case 1: sexoParaSalvar = "F"; break;
@@ -141,16 +146,12 @@ public class ControllerCadFuncionario implements ActionListener {
 
                 servicoFuncionario.salvar(this.funcionarioAtual);
                 
-                String mensagem;
-                if (this.funcionarioAtual.getId() == 0) {
-                    mensagem = "Funcionário cadastrado com sucesso!";
-                } else {
-                    mensagem = "Funcionário atualizado com sucesso!";
-                }
+                String mensagem = (this.funcionarioAtual.getId() == 0) ? "Funcionário cadastrado!" : "Funcionário atualizado!";
                 JOptionPane.showMessageDialog(null, mensagem);
 
                 Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), true);
                 Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), false);
+                ControllerBuscaFuncionario.codigoSelecionado = 0;
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Erro ao gravar dados: \n" + e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
@@ -164,19 +165,13 @@ public class ControllerCadFuncionario implements ActionListener {
             telaBusca.setVisible(true); 
 
             if (ControllerBuscaFuncionario.codigoSelecionado != 0) {
-                
                 this.funcionarioAtual = servicoFuncionario.buscarPorId(ControllerBuscaFuncionario.codigoSelecionado);
                 
                 if (this.funcionarioAtual != null) {
                     Utilities.ativaDesativa(this.telaCadastro.getjPanelBotoes(), false);
                     Utilities.limpaComponentes(this.telaCadastro.getjPanelDados(), true);
-                    
                     carregarDadosNaTela(); 
-                    
-                    ControllerBuscaFuncionario.codigoSelecionado = 0; 
-                } else {
-                    JOptionPane.showMessageDialog(telaCadastro, "Erro ao buscar o funcionário com ID: " + ControllerBuscaFuncionario.codigoSelecionado);
-                }
+                } 
             }
             
         } else if (evento.getSource() == this.telaCadastro.getjButtonSair()) {

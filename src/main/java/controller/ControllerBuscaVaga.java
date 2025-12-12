@@ -35,6 +35,7 @@ public class ControllerBuscaVaga implements ActionListener {
                 "Erro ao carregar dados iniciais: " + e.getMessage(), 
                 "Erro de Carga", 
                 JOptionPane.ERROR_MESSAGE);
+             e.printStackTrace();
         }
     }
 
@@ -42,17 +43,31 @@ public class ControllerBuscaVaga implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource() == this.telaBusca.getjButtonFiltar()) { 
+            
             String filtro = this.telaBusca.getjTFFiltro().getText();
             int tipoBusca = this.telaBusca.getjCBFiltro().getSelectedIndex();
             
             try {
-                List<VagaEstacionamento> resultados = servicoVaga.buscarPorFiltro(filtro, tipoBusca);
+                List<VagaEstacionamento> resultados;
+                
+                if (filtro.trim().isEmpty()) {
+                    resultados = servicoVaga.buscarTodos();
+                } else {
+                    resultados = servicoVaga.buscarPorFiltro(filtro, tipoBusca);
+                }
+                
                 this.telaBusca.preencheTabela(resultados);
+                
             } catch (Exception e) {
-                 JOptionPane.showMessageDialog(this.telaBusca, "Erro ao filtrar dados.", "Erro de Busca", JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(this.telaBusca, 
+                         "Erro ao filtrar dados: " + e.getMessage(), 
+                         "Erro de Busca", 
+                         JOptionPane.ERROR_MESSAGE);
+                 e.printStackTrace();
             }
             
         } else if (evento.getSource() == this.telaBusca.getjButtonCarregar()) {
+            
             int selectedRow = this.telaBusca.getjTableDados().getSelectedRow(); 
 
             if (selectedRow == -1) { 
@@ -62,6 +77,7 @@ public class ControllerBuscaVaga implements ActionListener {
                 ControllerBuscaVaga.codigoSelecionado = codigo;
                 this.telaBusca.dispose(); 
             }
+            
         } else if (evento.getSource() == this.telaBusca.getjButtonSair()) {
             ControllerBuscaVaga.codigoSelecionado = 0;
             this.telaBusca.dispose();

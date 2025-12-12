@@ -36,7 +36,6 @@ public class ControllerCadMarca implements ActionListener {
         }
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.tela.getjButtonNovo()) {
@@ -69,12 +68,7 @@ public class ControllerCadMarca implements ActionListener {
                 
                 servicoMarca.salvar(this.marcaAtual); 
                 
-                String mensagem;
-                if (isNovoRegistro) {
-                    mensagem = "Marca cadastrada com sucesso!";
-                } else {
-                    mensagem = "Marca atualizada com sucesso!";
-                }
+                String mensagem = isNovoRegistro ? "Marca cadastrada com sucesso!" : "Marca atualizada com sucesso!";
                 JOptionPane.showMessageDialog(null, mensagem);
                 
                 Utilities.ativaDesativa(this.tela.getjPanelBotoes(), true);

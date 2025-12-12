@@ -14,7 +14,7 @@ public class ControllerBuscaMarca implements ActionListener {
     TelaBuscaMarca telaBuscaMarca; 
     ServicoMarca servicoMarca = new ServicoMarca(); 
     
-    public static int codigoSelecionado; 
+    public static int codigoSelecionado = 0; 
 
     public ControllerBuscaMarca(TelaBuscaMarca telaBuscaMarca) {
         this.telaBuscaMarca = telaBuscaMarca;
@@ -60,19 +60,19 @@ public class ControllerBuscaMarca implements ActionListener {
     public void actionPerformed(ActionEvent evento) {
 
         if (evento.getSource() == this.telaBuscaMarca.getjButtonCarregar()) {
+            
             int selectedRow = this.telaBuscaMarca.getjTableDados().getSelectedRow(); 
 
             if (selectedRow == -1) { 
                 JOptionPane.showMessageDialog(this.telaBuscaMarca, "Selecione uma linha para carregar.");
             } else {
                 int codigo = (int) this.telaBuscaMarca.getjTableDados().getValueAt(selectedRow, 0);
-                
                 ControllerBuscaMarca.codigoSelecionado = codigo; 
-                
                 this.telaBuscaMarca.dispose(); 
             }
 
         } else if (evento.getSource() == this.telaBuscaMarca.getjButtonFiltar()) { 
+            
             String filtro = this.telaBuscaMarca.getjTFFiltro().getText();
             int tipoBuscaIndex = this.telaBuscaMarca.getjCBFiltro().getSelectedIndex(); 
 
