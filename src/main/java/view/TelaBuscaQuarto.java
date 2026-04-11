@@ -1,17 +1,49 @@
 package view;
 
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import model.Quarto;
 
 public class TelaBuscaQuarto extends javax.swing.JDialog {
-
+private List<Quarto> listaQuartos; // ou o nome que você usou para carregar do DAO
+private Quarto quartoSelecionado;
     public TelaBuscaQuarto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        carregarDados();
     }
+   public void carregarDados() {
+    try {
+        DAO.QuartoDAO dao = new DAO.QuartoDAO();
+        this.listaQuartos = dao.Retrieve(); 
+        
+        // CORREÇÃO: Passe a lista para o método
+        preencheTabela(this.listaQuartos); 
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao carregar: " + e.getMessage());
+    }
+}
+    public void preencheTabela(java.util.List<model.Quarto> listaQuartos) {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
+        modelo.setRowCount(0);
 
+        for (model.Quarto quarto : listaQuartos) {
+            modelo.addRow(new Object[]{
+            quarto.getId(),
+            quarto.getDescricao(),
+            quarto.getValorDiaria(),
+            quarto.getStatus()
+            });
+        }
+    }
+public model.Quarto getQuartoSelecionado() {
+    return quartoSelecionado;
+}
     public JButton getjButtonCarregar() {
         return jButtonCarregar;
     }
@@ -40,19 +72,7 @@ public class TelaBuscaQuarto extends javax.swing.JDialog {
         return jCBFiltro;
     }
 
-      public void preencheTabela(java.util.List<model.Quarto> listaQuartos) {
-        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
-        modelo.setRowCount(0);
-
-        for (model.Quarto quarto : listaQuartos) {
-            modelo.addRow(new Object[]{
-            quarto.getId(),
-            quarto.getDescricao(),
-            quarto.getValorDiaria(),
-            quarto.getStatus()
-            });
-        }
-    }
+      
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -224,7 +244,13 @@ public class TelaBuscaQuarto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCarregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCarregarActionPerformed
-        // TODO add your handling code here:
+       int linha = jTableDados.getSelectedRow();
+    if (linha != -1 && listaQuartos != null) {
+        this.quartoSelecionado = listaQuartos.get(linha);
+        dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecione um quarto na tabela!");
+    }
     }//GEN-LAST:event_jButtonCarregarActionPerformed
 
     private void jCBFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBFiltroActionPerformed

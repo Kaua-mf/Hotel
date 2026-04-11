@@ -16,20 +16,54 @@ public class CheckHospede implements Serializable {
     private Check check;
 
     @ManyToOne
-    @JoinColumn(name = "id_hospede")
-    private Hospede hospede;
+    @JoinColumn(name = "id_pessoa")
+    private Pessoa pessoa;
 
     private String obs;
+
+    @Column(name = "tipo_pessoa")
+    private String tipoPessoa;
 
     public CheckHospede() {
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public Check getCheck() { return check; }
-    public void setCheck(Check check) { this.check = check; }
-    public Hospede getHospede() { return hospede; }
-    public void setHospede(Hospede hospede) { this.hospede = hospede; }
-    public String getObs() { return obs; }
-    public void setObs(String obs) { this.obs = obs; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Check getCheck() {
+        return check;
+    }
+
+    public void setCheck(Check check) {
+        this.check = check;
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+
+    public String getObs() {
+        return obs;
+    }
+
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
+
+    public String getTipoPessoa() {
+        return tipoPessoa;
+    }
+
+    public void setTipoPessoa(String tipoPessoa) {
+        this.tipoPessoa = tipoPessoa;
+    }
 }

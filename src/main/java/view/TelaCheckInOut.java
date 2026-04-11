@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -20,7 +21,7 @@ public class TelaCheckInOut extends javax.swing.JDialog {
     private JFormattedTextField jTextFieldCheckDataHoraCadastro, jTextFieldCheckDataHoraEntrada, jTextFieldCheckDataHoraSaida;
     private JComboBox<Reserva> jComboBoxCheckReserva;
     private JButton jButtonCheckNovo, jButtonCheckGravar, jButtonCheckCancelar, jButtonCheckBuscar, jButtonCheckSair;
-
+    private List<CheckQuarto> listaCheckQuartos = new ArrayList<>();
     private JPanel jPanelCheckHospede, jPanelCheckHospedeTitulo, jPanelCheckHospedeDados;
     private JPanel jPanelCheckHospedeBotoes, jPanelCheckHospedeTabela;
     private JComboBox<String> jComboBoxTipoPessoa;
@@ -29,8 +30,8 @@ public class TelaCheckInOut extends javax.swing.JDialog {
     private JButton jButtonCheckHospedeAdicionar, jButtonCheckHospedeRemover, jButtonCheckHospedeGravar;
     private DefaultListModel<String> listModelHospedes;
     private JList<String> jListHospedes;
-    private List<CheckHospede> listaCheckHospedes;
-
+    private List<CheckHospede> listaCheckHospedes = new ArrayList<>();
+    private Check checkAtual;
     private JPanel jPanelCheckQuarto, jPanelCheckQuartoTitulo, jPanelCheckQuartoDados;
     private JPanel jPanelCheckQuartoBotoes, jPanelCheckQuartoTabela;
     private JComboBox<Quarto> jComboBoxQuarto;
@@ -39,7 +40,6 @@ public class TelaCheckInOut extends javax.swing.JDialog {
     private JButton jButtonCheckQuartoAdicionar, jButtonCheckQuartoRemover, jButtonCheckQuartoGravar;
     private DefaultListModel<String> listModelQuartos;
     private JList<String> jListQuartos;
-    private List<CheckQuarto> listaCheckQuartos;
 
     private JPanel jPanelAlocacaoVaga, jPanelAlocacaoVagaTitulo, jPanelAlocacaoVagaDados;
     private JPanel jPanelAlocacaoVagaBotoes, jPanelAlocacaoVagaTabela;
@@ -226,6 +226,14 @@ public class TelaCheckInOut extends javax.swing.JDialog {
 jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         try {
+            String entrada = jTextFieldCheckDataHoraEntrada.getText().replace("-", "").trim();
+            String saida = jTextFieldCheckDataHoraSaida.getText().replace("-", "").trim();
+
+            if (entrada.isEmpty() || saida.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha as datas de entrada e saída!");
+                return;
+            }
+
             Check check = new Check();
             check.setDataHoraEntrada(jTextFieldCheckDataHoraEntrada.getText());
             check.setDataHoraSaida(jTextFieldCheckDataHoraSaida.getText());
@@ -246,15 +254,18 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
             DAO.CheckDAO dao = new DAO.CheckDAO();
             dao.Create(check);
 
+            checkAtual = check;
+
             JOptionPane.showMessageDialog(null, "Check-in gravado com sucesso!");
 
             jTabbedPane.setEnabledAt(1, true);
             jTabbedPane.setSelectedIndex(1);
             
-            ativaBotoes(false);
+            ativaBotoes(true);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao gravar: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 });
@@ -279,7 +290,7 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
 
     int y = 20;
     label(jPanelCheckHospedeDados, "Tipo Pessoa:", 20, y);
-    jComboBoxTipoPessoa = new JComboBox<>(new String[]{"Hospede", "Funcionario", "Fornecedor"});
+    jComboBoxTipoPessoa = new JComboBox<>(new String[]{"Hospede"});
     jComboBoxTipoPessoa.setBounds(170, y, 180, 25);
     jPanelCheckHospedeDados.add(jComboBoxTipoPessoa);
 
@@ -300,22 +311,28 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
                 TelaBuscaHospede busca = new TelaBuscaHospede(null, true);
                 busca.setVisible(true);
                 if (busca.getHospedeSelecionado() != null) {
-                    jComboBoxPessoa.setSelectedItem(busca.getHospedeSelecionado());
-                    jTextFieldCheckHospedeObs.setText(busca.getHospedeSelecionado().getObs());
+                    Hospede h = busca.getHospedeSelecionado();
+                    jComboBoxPessoa.addItem(h); // ADICIONA NA LISTA
+                    jComboBoxPessoa.setSelectedItem(h); // SELECIONA
+                    jTextFieldCheckHospedeObs.setText(h.getObs());
                 }
             } else if ("Funcionario".equals(tipo)) {
                 TelaBuscaFuncionario busca = new TelaBuscaFuncionario(null, true);
                 busca.setVisible(true);
                 if (busca.getFuncionarioSelecionado() != null) {
-                    jComboBoxPessoa.setSelectedItem(busca.getFuncionarioSelecionado());
-                    jTextFieldCheckHospedeObs.setText(busca.getFuncionarioSelecionado().getObs());
+                    Funcionario f = busca.getFuncionarioSelecionado();
+                    jComboBoxPessoa.addItem(f); // ADICIONA NA LISTA
+                    jComboBoxPessoa.setSelectedItem(f); // SELECIONA
+                    jTextFieldCheckHospedeObs.setText(f.getObs());
                 }
             } else if ("Fornecedor".equals(tipo)) {
                 TelaBuscaFornecedor busca = new TelaBuscaFornecedor(null, true);
                 busca.setVisible(true);
                 if (busca.getFornecedorSelecionado() != null) {
-                    jComboBoxPessoa.setSelectedItem(busca.getFornecedorSelecionado());
-                    jTextFieldCheckHospedeObs.setText(busca.getFornecedorSelecionado().getObs());
+                    Fornecedor fo = busca.getFornecedorSelecionado();
+                    jComboBoxPessoa.addItem(fo); // ADICIONA NA LISTA
+                    jComboBoxPessoa.setSelectedItem(fo); // SELECIONA
+                    jTextFieldCheckHospedeObs.setText(fo.getObs());
                 }
             }
         }
@@ -341,10 +358,72 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     jButtonCheckHospedeAdicionar = btn("Adicionar", "/imagens/Create.png", "0");
     jButtonCheckHospedeRemover = btn("Remover", "/imagens/Cancel.png", "0");
     jButtonCheckHospedeGravar = btn("Gravar Todos", "/imagens/OK.png", "0");
-    
+    jButtonCheckHospedeGravar.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            if (listaCheckHospedes == null || listaCheckHospedes.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Adicione pessoas à lista antes de gravar!");
+                return;
+            }
+
+            DAO.CheckHospedeDAO daoH = new DAO.CheckHospedeDAO();
+            
+            for (CheckHospede ch : listaCheckHospedes) {
+                if (checkAtual != null) {
+                    ch.setCheck(checkAtual);
+                    daoH.Create(ch);
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Hóspedes gravados com sucesso!");
+            
+            jTabbedPane.setEnabledAt(2, true);
+            jTabbedPane.setSelectedIndex(2);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao gravar pessoas: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+});
     jPanelCheckHospedeBotoes.add(jButtonCheckHospedeAdicionar);
     jPanelCheckHospedeBotoes.add(jButtonCheckHospedeRemover);
+    jButtonCheckHospedeRemover.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        int index = jListHospedes.getSelectedIndex();
+        if (index != -1) {
+            listModelHospedes.remove(index);
+            listaCheckHospedes.remove(index);
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione alguém na lista para remover!");
+        }
+    }
+});
     jPanelCheckHospedeBotoes.add(jButtonCheckHospedeGravar);
+
+    jButtonCheckHospedeAdicionar.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Pessoa p = (Pessoa) jComboBoxPessoa.getSelectedItem();
+        String tipo = (String) jComboBoxTipoPessoa.getSelectedItem();
+        
+        if (p != null) {
+            for (CheckHospede existente : listaCheckHospedes) {
+                if (existente.getPessoa().getId() == p.getId()) {
+                    JOptionPane.showMessageDialog(null, "Esta pessoa já foi adicionada!");
+                    return; 
+                }
+            }
+
+            CheckHospede ch = new CheckHospede();
+            ch.setCheck(checkAtual);
+            ch.setPessoa(p);
+            ch.setTipoPessoa(tipo);
+            ch.setObs(jTextFieldCheckHospedeObs.getText());
+            
+            listaCheckHospedes.add(ch);
+            listModelHospedes.addElement(p.getNome() + " [" + tipo + "]");
+        }
+    }
+});
 
     jPanelCheckHospede.add(jPanelCheckHospedeTitulo, BorderLayout.NORTH);
     jPanelCheckHospede.add(split, BorderLayout.CENTER);
@@ -353,54 +432,142 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     return jPanelCheckHospede;
 }
 
-    private JPanel buildPanelCheckQuarto() {
-        jPanelCheckQuarto = new JPanel(new BorderLayout(5, 5));
-        jPanelCheckQuarto.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+   private JPanel buildPanelCheckQuarto() {
+    jPanelCheckQuarto = new JPanel(new BorderLayout(5, 5));
+    jPanelCheckQuarto.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    jPanelCheckQuartoTitulo = titulo("Quartos do Check", new Color(153, 255, 102));
+    
+    jPanelCheckQuartoDados = new JPanel(null);
+    jPanelCheckQuartoDados.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+    jPanelCheckQuartoDados.setPreferredSize(new Dimension(840, 160));
 
-        jPanelCheckQuartoTitulo = titulo("Quartos do Check", new Color(153, 255, 102));
+    int y = 20;
+    label(jPanelCheckQuartoDados, "Quarto:", 20, y);
+    jComboBoxQuarto = new JComboBox<>();
+    jComboBoxQuarto.setBounds(170, y, 380, 25);
+    jPanelCheckQuartoDados.add(jComboBoxQuarto);
 
-        jPanelCheckQuartoDados = new JPanel(null);
-        jPanelCheckQuartoDados.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanelCheckQuartoDados.setPreferredSize(new Dimension(840, 160));
+    // BOTAO BUSCAR QUARTO
+    JButton jButtonQuartoBuscar = btn("Buscar", "/imagens/Load.png", "0");
+    jButtonQuartoBuscar.setBounds(560, y, 100, 25);
+    jPanelCheckQuartoDados.add(jButtonQuartoBuscar);
 
-        int y = 20;
-        label(jPanelCheckQuartoDados, "Quarto:", 20, y);
-        jComboBoxQuarto = new JComboBox<>();
-        jComboBoxQuarto.setBounds(170, y, 380, 25);
-        jPanelCheckQuartoDados.add(jComboBoxQuarto);
+    jButtonQuartoBuscar.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            TelaBuscaQuarto busca = new TelaBuscaQuarto(null, true);
+            busca.setVisible(true);
+            
+            if (busca.getQuartoSelecionado() != null) {
+                Quarto q = busca.getQuartoSelecionado();
+                
+                jComboBoxQuarto.addItem(q);
+                jComboBoxQuarto.setSelectedItem(q);
+                
+                // Puxa a observação do quarto automaticamente
+                jTextFieldCheckQuartoObs.setText(q.getObs());
+            }
+        }
+    });
 
-        y += 35; label(jPanelCheckQuartoDados, "Dt/Hr Inicio:", 20, y);
-        jTextFieldCheckQuartoDataHoraInicio = ftf(jPanelCheckQuartoDados, 170, y, 140);
+    y += 35; label(jPanelCheckQuartoDados, "Dt/Hr Inicio:", 20, y);
+    jTextFieldCheckQuartoDataHoraInicio = ftf(jPanelCheckQuartoDados, 170, y, 140);
+    y += 35; label(jPanelCheckQuartoDados, "Dt/Hr Fim:", 20, y);
+    jTextFieldCheckQuartoDataHoraFim = ftf(jPanelCheckQuartoDados, 170, y, 140);
+    y += 35; label(jPanelCheckQuartoDados, "Obs:", 20, y);
+    jTextFieldCheckQuartoObs = tf(jPanelCheckQuartoDados, 170, y, 560);
 
-        y += 35; label(jPanelCheckQuartoDados, "Dt/Hr Fim:", 20, y);
-        jTextFieldCheckQuartoDataHoraFim = ftf(jPanelCheckQuartoDados, 170, y, 140);
+    jPanelCheckQuartoTabela = new JPanel(new BorderLayout());
+    jPanelCheckQuartoTabela.setBorder(new TitledBorder("Quartos adicionados ao Check"));
+    listModelQuartos = new DefaultListModel<>();
+    jListQuartos = new JList<>(listModelQuartos);
+    jListQuartos.setFont(new Font("Monospaced", Font.PLAIN, 12));
+    jPanelCheckQuartoTabela.add(new JScrollPane(jListQuartos), BorderLayout.CENTER);
 
-        y += 35; label(jPanelCheckQuartoDados, "Obs:", 20, y);
-        jTextFieldCheckQuartoObs = tf(jPanelCheckQuartoDados, 170, y, 560);
+    JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jPanelCheckQuartoDados, jPanelCheckQuartoTabela);
+    split.setResizeWeight(0.45); split.setDividerSize(5);
 
-        jPanelCheckQuartoTabela = new JPanel(new BorderLayout());
-        jPanelCheckQuartoTabela.setBorder(new TitledBorder("Quartos adicionados ao Check"));
-        listModelQuartos = new DefaultListModel<>();
-        jListQuartos = new JList<>(listModelQuartos);
-        jListQuartos.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        jPanelCheckQuartoTabela.add(new JScrollPane(jListQuartos), BorderLayout.CENTER);
+    jPanelCheckQuartoBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    jPanelCheckQuartoBotoes.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+    
+    jButtonCheckQuartoAdicionar = btn("Adicionar", "/imagens/Create.png", "0");
+    jButtonCheckQuartoRemover = btn("Remover", "/imagens/Cancel.png", "0");
+    jButtonCheckQuartoGravar = btn("Gravar Todos", "/imagens/OK.png", "0");
 
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jPanelCheckQuartoDados, jPanelCheckQuartoTabela);
-        split.setResizeWeight(0.45); split.setDividerSize(5);
+    // Lógica Adicionar Quarto
+    jButtonCheckQuartoAdicionar.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            Quarto q = (Quarto) jComboBoxQuarto.getSelectedItem();
+            
+            if (q != null && checkAtual != null) {
+                // Verifica se já está na lista
+                for (CheckQuarto existente : listaCheckQuartos) {
+                    if (existente.getQuarto().getId() == q.getId()) {
+                        JOptionPane.showMessageDialog(null, "Este quarto já foi adicionado!");
+                        return;
+                    }
+                }
+                
+                // Cria o vínculo
+                CheckQuarto cq = new CheckQuarto();
+                cq.setCheck(checkAtual);
+                cq.setQuarto(q);
+                cq.setDataHoraInicio(jTextFieldCheckQuartoDataHoraInicio.getText());
+                cq.setDataHoraFim(jTextFieldCheckQuartoDataHoraFim.getText());
+                cq.setObs(jTextFieldCheckQuartoObs.getText());
+                
+                // Salva na lista da memória e na lista visual
+                listaCheckQuartos.add(cq);
+                listModelQuartos.addElement(q.getDescricao() + " - " + q.getNumero());
+                
+                // Limpa campos para o próximo
+                jTextFieldCheckQuartoObs.setText("");
+            } else if (checkAtual == null) {
+                JOptionPane.showMessageDialog(null, "Grave o Check na aba 1 primeiro!");
+            }
+        }
+    });
 
-        jPanelCheckQuartoBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        jPanelCheckQuartoBotoes.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonCheckQuartoAdicionar = btn("Adicionar",    "/imagens/Create.png", "0");
-        jButtonCheckQuartoRemover   = btn("Remover",      "/imagens/Cancel.png", "0");
-        jButtonCheckQuartoGravar    = btn("Gravar Todos", "/imagens/OK.png",     "0");
-        for (JButton b : new JButton[]{jButtonCheckQuartoAdicionar,jButtonCheckQuartoRemover,jButtonCheckQuartoGravar})
-            jPanelCheckQuartoBotoes.add(b);
+    // Lógica Remover Quarto
+    jButtonCheckQuartoRemover.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            int index = jListQuartos.getSelectedIndex();
+            if (index != -1) {
+                listModelQuartos.remove(index);
+                listaCheckQuartos.remove(index);
+            }
+        }
+    });
 
-        jPanelCheckQuarto.add(jPanelCheckQuartoTitulo, BorderLayout.NORTH);
-        jPanelCheckQuarto.add(split,                   BorderLayout.CENTER);
-        jPanelCheckQuarto.add(jPanelCheckQuartoBotoes, BorderLayout.SOUTH);
-        return jPanelCheckQuarto;
-    }
+    // Lógica Gravar Todos (Quartos)
+    jButtonCheckQuartoGravar.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            try {
+                if (listaCheckQuartos.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Adicione quartos à lista!");
+                    return;
+                }
+                DAO.CheckQuartoDAO daoQ = new DAO.CheckQuartoDAO();
+                for (CheckQuarto cq : listaCheckQuartos) {
+                    daoQ.Create(cq);
+                }
+                JOptionPane.showMessageDialog(null, "Quartos gravados!");
+                jTabbedPane.setEnabledAt(3, true); // Libera Vagas
+                jTabbedPane.setSelectedIndex(3);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            }
+        }
+    });
+
+    jPanelCheckQuartoBotoes.add(jButtonCheckQuartoAdicionar);
+    jPanelCheckQuartoBotoes.add(jButtonCheckQuartoRemover);
+    jPanelCheckQuartoBotoes.add(jButtonCheckQuartoGravar);
+
+    jPanelCheckQuarto.add(jPanelCheckQuartoTitulo, BorderLayout.NORTH);
+    jPanelCheckQuarto.add(split, BorderLayout.CENTER);
+    jPanelCheckQuarto.add(jPanelCheckQuartoBotoes, BorderLayout.SOUTH);
+    return jPanelCheckQuarto;
+}
 
     public void carregarReservas() {
         try {

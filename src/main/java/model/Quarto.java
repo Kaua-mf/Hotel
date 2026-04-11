@@ -22,7 +22,12 @@ public class Quarto {
     private int capacidadeHospedes; 
     
     private float metragem;
-    
+    // Dentro da classe Quarto, verifique se você tem o campo numero. 
+// Se não tiver, use o getId() na tela.
+
+public String getNumero() {
+    return String.valueOf(this.id); // Ou retorne a variável numero se ela existir
+}
     @Column(nullable = false)
     private String identificacao; 
     

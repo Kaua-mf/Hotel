@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "pessoa")
 public abstract class Pessoa implements Serializable {
 
     @Id
