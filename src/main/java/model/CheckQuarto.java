@@ -13,7 +13,8 @@ public class CheckQuarto implements Serializable {
     @ManyToOne
     @JoinColumn(name = "check_id")
     private Check check; // Verifique se o nome é 'check'
-
+@Column(name = "valor_quarto")
+    private Double valorQuarto; // ADICIONE ESTA LINHA
     @ManyToOne
     @JoinColumn(name = "quarto_id")
     private Quarto quarto;
@@ -32,7 +33,15 @@ public class CheckQuarto implements Serializable {
     public Check getCheck() {
         return check;
     }
+   
+    public Double getValorQuarto() {
+        return valorQuarto;
+    }
 
+    // ADICIONE ESTE SETTER
+    public void setValorQuarto(Double valorQuarto) {
+        this.valorQuarto = valorQuarto;
+    }
     public void setQuarto(Quarto quarto) {
         this.quarto = quarto;
     }

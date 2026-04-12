@@ -65,6 +65,17 @@ private JButton jButtonAlocacaoAdicionar;
 private JButton jButtonAlocacaoRemover;
 private JButton jButtonAlocacaoGravar;
 
+
+
+public void calcularTotalRecebimento() {
+    double total = 0;
+    // Soma o valor de cada quarto adicionado na lista da Aba 3
+    for (model.CheckQuarto cq : listaCheckQuartos) {
+        total += cq.getValorQuarto(); 
+    }
+    jTextFieldReceberValorOriginal.setText(String.valueOf(total));
+    jTextFieldReceberValorPago.setText(String.valueOf(total));
+}
     public TelaCheckInOut(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -716,38 +727,126 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     return jPanelAlocacaoVaga;
 }
 
-    private JPanel buildPanelReceber() {
+   private JPanel buildPanelReceber() {
         jPanelReceber = new JPanel(new BorderLayout(5, 5));
         jPanelReceber.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanelReceberTitulo = titulo("Recebimento do Check", new Color(153, 153, 255));
         jPanelReceberDados = new JPanel(null);
         jPanelReceberDados.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        
         int y = 20;
         label(jPanelReceberDados, "ID:", 20, y);
         jTextFieldReceberId = tf(jPanelReceberDados, 220, y, 80);
         jTextFieldReceberId.setEnabled(false);
+        
         y += 35; label(jPanelReceberDados, "Dt/Hr Cadastro:", 20, y);
         jTextFieldReceberDataHoraCadastro = ftf(jPanelReceberDados, 220, y, 140);
         jTextFieldReceberDataHoraCadastro.setEnabled(false);
+        
         y += 35; label(jPanelReceberDados, "Valor Original (R$):", 20, y);
         jTextFieldReceberValorOriginal = tf(jPanelReceberDados, 220, y, 150);
+        
         y += 35; label(jPanelReceberDados, "Desconto (R$):", 20, y);
         jTextFieldReceberDesconto = tf(jPanelReceberDados, 220, y, 150);
         jTextFieldReceberDesconto.setText("0.00");
+        
         y += 35; label(jPanelReceberDados, "Acrescimo (R$):", 20, y);
         jTextFieldReceberAcrescimo = tf(jPanelReceberDados, 220, y, 150);
         jTextFieldReceberAcrescimo.setText("0.00");
+        
         y += 35; label(jPanelReceberDados, "Valor Pago (R$):", 20, y);
         jTextFieldReceberValorPago = tf(jPanelReceberDados, 220, y, 150);
+        
         y += 35; label(jPanelReceberDados, "Obs:", 20, y);
         jTextFieldReceberObs = tf(jPanelReceberDados, 220, y, 560);
+        
+        // --- LOGICA PARA CALCULO AUTOMATICO ---
+        java.awt.event.FocusAdapter calculoEvento = new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                try {
+                    double vOriginal = Double.parseDouble(jTextFieldReceberValorOriginal.getText());
+                    double vDesconto = Double.parseDouble(jTextFieldReceberDesconto.getText());
+                    double vAcrescimo = Double.parseDouble(jTextFieldReceberAcrescimo.getText());
+                    double vTotal = (vOriginal + vAcrescimo) - vDesconto;
+                    jTextFieldReceberValorPago.setText(String.format("%.2f", vTotal).replace(",", "."));
+                } catch (Exception e) {}
+            }
+        };
+        jTextFieldReceberDesconto.addFocusListener(calculoEvento);
+        jTextFieldReceberAcrescimo.addFocusListener(calculoEvento);
+
         jPanelReceberBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         jPanelReceberBotoes.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonReceberNovo     = btn("Novo",     "/imagens/Create.png", "0");
+        
+        jButtonReceberNovo     = btn("Novo",      "/imagens/Create.png", "0");
         jButtonReceberCancelar = btn("Cancelar", "/imagens/Cancel.png", "1");
         jButtonReceberGravar   = btn("Gravar",   "/imagens/OK.png",     "1");
+
+        // --- LÓGICA DOS BOTÕES ---
+
+        jButtonReceberNovo.addActionListener(e -> {
+            jTextFieldReceberDesconto.setText("0.00");
+            jTextFieldReceberAcrescimo.setText("0.00");
+            jTextFieldReceberObs.setText("");
+            calcularTotalRecebimento();
+        });
+
+        jButtonReceberCancelar.addActionListener(e -> {
+            dispose();
+        });
+
+        jButtonReceberGravar.addActionListener(e -> {
+            try {
+                if (checkAtual == null) {
+                    JOptionPane.showMessageDialog(null, "Grave o Check na Aba 1 primeiro!");
+                    return;
+                }
+                
+                // 1. SALVA FINANCEIRO
+                model.Receber rec = new model.Receber();
+                rec.setCheck(checkAtual);
+                rec.setValorOriginal(Double.parseDouble(jTextFieldReceberValorOriginal.getText()));
+                rec.setValorPago(Double.parseDouble(jTextFieldReceberValorPago.getText()));
+                rec.setObs(jTextFieldReceberObs.getText());
+                rec.setDataEmissao(new java.util.Date());
+                rec.setStatus("P");
+                new DAO.ReceberDAO().Create(rec);
+
+                // 2. SALVA RESUMO EM DADOS_CHECK (NOVA TABELA)
+                model.DadosCheck resumo = new model.DadosCheck();
+                resumo.setCheckId(checkAtual.getId());
+                resumo.setValorTotal(Double.parseDouble(jTextFieldReceberValorPago.getText()));
+                resumo.setDataFinalizacao(new java.util.Date());
+                resumo.setObservacaoGeral(jTextFieldReceberObs.getText());
+
+                // Coleta nomes dos hospedes
+                String hStr = "";
+                for (model.CheckHospede ch : listaCheckHospedes) hStr += ch.getPessoa().getNome() + "; ";
+                resumo.setHospedePrincipal(hStr);
+
+                // Coleta números dos quartos
+                String qStr = "";
+                for (model.CheckQuarto cq : listaCheckQuartos) qStr += cq.getQuarto().getNumero() + " ";
+                resumo.setQuartosUtilizados(qStr);
+
+                // Coleta placas dos carros
+                String pStr = "";
+                for (model.AlocacaoVaga av : listaAlocacoes) pStr += av.getVeiculo().getPlaca() + " ";
+                resumo.setVagasUtilizadas(pStr);
+
+                // Salva o resumo
+                new DAO.DadosCheckDAO().Create(resumo);
+
+                JOptionPane.showMessageDialog(null, "Check finalizado e resumo salvo em Dados_Check!");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao gravar: " + ex.getMessage());
+            }
+        });
+
         for (JButton b : new JButton[]{jButtonReceberNovo,jButtonReceberCancelar,jButtonReceberGravar})
             jPanelReceberBotoes.add(b);
+            
         jPanelReceber.add(jPanelReceberTitulo, BorderLayout.NORTH);
         jPanelReceber.add(jPanelReceberDados,  BorderLayout.CENTER);
         jPanelReceber.add(jPanelReceberBotoes, BorderLayout.SOUTH);

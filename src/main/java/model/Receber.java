@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,17 +12,20 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "receber")
-public class Receber {
+public class Receber implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "valor_total")
-    private float valorTotal;
+    @Column(name = "valor_original")
+    private Double valorOriginal;
 
-    @Column(name = "data_lancamento")
-    private String dataLancamento;
+    @Column(name = "valor_pago")
+    private Double valorPago;
+
+    @Column(name = "data_emissao")
+    private java.util.Date dataEmissao;
 
     @Column(name = "data_vencimento")
     private String dataVencimento;
@@ -30,9 +34,13 @@ public class Receber {
     private String dataPagamento;
 
     @Column(length = 1)
-    private char status;
+    private String status; // String evita erro de NULL vindo do banco
 
     private String obs;
+
+    @ManyToOne
+    @JoinColumn(name = "id_check")
+    private Check check; // Vinculo com o Check-in atual
 
     @ManyToOne
     @JoinColumn(name = "id_reserva")
@@ -45,17 +53,7 @@ public class Receber {
     public Receber() {
     }
 
-    public Receber(int id, float valorTotal, String dataLancamento, String dataVencimento, String dataPagamento, char status, String obs, Reserva reserva, Hospede hospede) {
-        this.id = id;
-        this.valorTotal = valorTotal;
-        this.dataLancamento = dataLancamento;
-        this.dataVencimento = dataVencimento;
-        this.dataPagamento = dataPagamento;
-        this.status = status;
-        this.obs = obs;
-        this.reserva = reserva;
-        this.hospede = hospede;
-    }
+    // --- MÉTODOS QUE A TELA USA ---
 
     public int getId() {
         return id;
@@ -65,43 +63,35 @@ public class Receber {
         this.id = id;
     }
 
-    public float getValorTotal() {
-        return valorTotal;
+    public Double getValorOriginal() {
+        return valorOriginal;
     }
 
-    public void setValorTotal(float valorTotal) {
-        this.valorTotal = valorTotal;
+    public void setValorOriginal(Double valorOriginal) {
+        this.valorOriginal = valorOriginal;
     }
 
-    public String getDataLancamento() {
-        return dataLancamento;
+    public Double getValorPago() {
+        return valorPago;
     }
 
-    public void setDataLancamento(String dataLancamento) {
-        this.dataLancamento = dataLancamento;
+    public void setValorPago(Double valorPago) {
+        this.valorPago = valorPago;
     }
 
-    public String getDataVencimento() {
-        return dataVencimento;
+    public java.util.Date getDataEmissao() {
+        return dataEmissao;
     }
 
-    public void setDataVencimento(String dataVencimento) {
-        this.dataVencimento = dataVencimento;
+    public void setDataEmissao(java.util.Date dataEmissao) {
+        this.dataEmissao = dataEmissao;
     }
 
-    public String getDataPagamento() {
-        return dataPagamento;
-    }
-
-    public void setDataPagamento(String dataPagamento) {
-        this.dataPagamento = dataPagamento;
-    }
-
-    public char getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(char status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -111,6 +101,14 @@ public class Receber {
 
     public void setObs(String obs) {
         this.obs = obs;
+    }
+
+    public Check getCheck() {
+        return check;
+    }
+
+    public void setCheck(Check check) {
+        this.check = check;
     }
 
     public Reserva getReserva() {
