@@ -69,7 +69,6 @@ private JButton jButtonAlocacaoGravar;
 
 public void calcularTotalRecebimento() {
     double total = 0;
-    // Soma o valor de cada quarto adicionado na lista da Aba 3
     for (model.CheckQuarto cq : listaCheckQuartos) {
         total += cq.getValorQuarto(); 
     }
@@ -243,30 +242,17 @@ public void calcularTotalRecebimento() {
 jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            String entradaTxt = jTextFieldCheckDataHoraEntrada.getText().trim();
-            String saidaTxt = jTextFieldCheckDataHoraSaida.getText().trim();
+            String entrada = jTextFieldCheckDataHoraEntrada.getText().replace("-", "").trim();
+            String saida = jTextFieldCheckDataHoraSaida.getText().replace("-", "").trim();
 
-            if (entradaTxt.replace("-", "").trim().isEmpty() || saidaTxt.replace("-", "").trim().isEmpty()) {
+            if (entrada.isEmpty() || saida.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha as datas de entrada e saída!");
                 return;
             }
 
-            try {
-                java.time.LocalDate dEntrada = java.time.LocalDate.parse(entradaTxt);
-                java.time.LocalDate dSaida = java.time.LocalDate.parse(saidaTxt);
-
-                if (dSaida.isBefore(dEntrada)) {
-                    JOptionPane.showMessageDialog(null, "Erro: A data de saída não pode ser anterior à data de entrada!");
-                    return;
-                }
-            } catch (java.time.format.DateTimeParseException e) {
-                JOptionPane.showMessageDialog(null, "Formato de data inválido! Certifique-se de usar AAAA-MM-DD.");
-                return;
-            }
-
             Check check = new Check();
-            check.setDataHoraEntrada(entradaTxt);
-            check.setDataHoraSaida(saidaTxt);
+            check.setDataHoraEntrada(jTextFieldCheckDataHoraEntrada.getText());
+            check.setDataHoraSaida(jTextFieldCheckDataHoraSaida.getText());
             check.setObs(jTextFieldCheckObs.getText());
             check.setStatus("A");
             
@@ -342,8 +328,8 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
                 busca.setVisible(true);
                 if (busca.getHospedeSelecionado() != null) {
                     Hospede h = busca.getHospedeSelecionado();
-                    jComboBoxPessoa.addItem(h); // ADICIONA NA LISTA
-                    jComboBoxPessoa.setSelectedItem(h); // SELECIONA
+                    jComboBoxPessoa.addItem(h); 
+                    jComboBoxPessoa.setSelectedItem(h); 
                     jTextFieldCheckHospedeObs.setText(h.getObs());
                 }
             } else if ("Funcionario".equals(tipo)) {
@@ -351,8 +337,8 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
                 busca.setVisible(true);
                 if (busca.getFuncionarioSelecionado() != null) {
                     Funcionario f = busca.getFuncionarioSelecionado();
-                    jComboBoxPessoa.addItem(f); // ADICIONA NA LISTA
-                    jComboBoxPessoa.setSelectedItem(f); // SELECIONA
+                    jComboBoxPessoa.addItem(f); 
+                    jComboBoxPessoa.setSelectedItem(f); 
                     jTextFieldCheckHospedeObs.setText(f.getObs());
                 }
             } else if ("Fornecedor".equals(tipo)) {
@@ -360,8 +346,8 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
                 busca.setVisible(true);
                 if (busca.getFornecedorSelecionado() != null) {
                     Fornecedor fo = busca.getFornecedorSelecionado();
-                    jComboBoxPessoa.addItem(fo); // ADICIONA NA LISTA
-                    jComboBoxPessoa.setSelectedItem(fo); // SELECIONA
+                    jComboBoxPessoa.addItem(fo); 
+                    jComboBoxPessoa.setSelectedItem(fo); 
                     jTextFieldCheckHospedeObs.setText(fo.getObs());
                 }
             }
@@ -493,7 +479,6 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
                 jComboBoxQuarto.addItem(q);
                 jComboBoxQuarto.setSelectedItem(q);
                 
-                // Puxa a observação do quarto automaticamente
                 jTextFieldCheckQuartoObs.setText(q.getObs());
             }
         }
@@ -523,39 +508,63 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     jButtonCheckQuartoRemover = btn("Remover", "/imagens/Cancel.png", "0");
     jButtonCheckQuartoGravar = btn("Gravar Todos", "/imagens/OK.png", "0");
 
-    // Lógica Adicionar Quarto
-    jButtonCheckQuartoAdicionar.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            Quarto q = (Quarto) jComboBoxQuarto.getSelectedItem();
-            
-            if (q != null && checkAtual != null) {
-                // Verifica se já está na lista
-                for (CheckQuarto existente : listaCheckQuartos) {
-                    if (existente.getQuarto().getId() == q.getId()) {
-                        JOptionPane.showMessageDialog(null, "Este quarto já foi adicionado!");
-                        return;
-                    }
+
+// Lógica do Botão Adicionar (Aba 3)
+jButtonCheckQuartoAdicionar.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Quarto q = (Quarto) jComboBoxQuarto.getSelectedItem();
+        
+        if (q != null && checkAtual != null) {
+            for (CheckQuarto existente : listaCheckQuartos) {
+                if (existente.getQuarto().getId() == q.getId()) {
+                    JOptionPane.showMessageDialog(null, "Este quarto já está na lista!");
+                    return;
                 }
-                
-                // Cria o vínculo
-                CheckQuarto cq = new CheckQuarto();
-                cq.setCheck(checkAtual);
-                cq.setQuarto(q);
-                cq.setDataHoraInicio(jTextFieldCheckQuartoDataHoraInicio.getText());
-                cq.setDataHoraFim(jTextFieldCheckQuartoDataHoraFim.getText());
-                cq.setObs(jTextFieldCheckQuartoObs.getText());
-                
-                // Salva na lista da memória e na lista visual
-                listaCheckQuartos.add(cq);
-                listModelQuartos.addElement(q.getDescricao() + " - " + q.getNumero());
-                
-                // Limpa campos para o próximo
-                jTextFieldCheckQuartoObs.setText("");
-            } else if (checkAtual == null) {
-                JOptionPane.showMessageDialog(null, "Grave o Check na aba 1 primeiro!");
             }
+            
+            CheckQuarto cq = new CheckQuarto();
+            cq.setCheck(checkAtual); 
+            cq.setQuarto(q);
+            cq.setDataHoraInicio(jTextFieldCheckQuartoDataHoraInicio.getText());
+            cq.setDataHoraFim(jTextFieldCheckQuartoDataHoraFim.getText());
+            cq.setObs(jTextFieldCheckQuartoObs.getText());
+            
+            listaCheckQuartos.add(cq);
+            
+            listModelQuartos.addElement("Quarto: " + q.getNumero() + " - " + q.getDescricao());
+            
+            jTextFieldCheckQuartoObs.setText("");
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione um quarto e garanta que o Check foi salvo na Aba 1!");
         }
-    });
+    }
+});
+
+jButtonCheckQuartoGravar.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            if (listaCheckQuartos.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Adicione pelo menos um quarto antes de gravar!");
+                return;
+            }
+
+            DAO.CheckQuartoDAO daoQ = new DAO.CheckQuartoDAO();
+            
+            for (CheckQuarto cq : listaCheckQuartos) {
+                daoQ.Create(cq);
+            }
+
+            JOptionPane.showMessageDialog(null, "Todos os quartos foram vinculados ao Check com sucesso!");
+            
+            jTabbedPane.setEnabledAt(3, true); 
+            jTabbedPane.setSelectedIndex(3);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao gravar quartos: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+});
 
     // Lógica Remover Quarto
     jButtonCheckQuartoRemover.addActionListener(new java.awt.event.ActionListener() {
@@ -569,25 +578,31 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     });
 
     // Lógica Gravar Todos (Quartos)
-    jButtonCheckQuartoGravar.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            try {
-                if (listaCheckQuartos.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Adicione quartos à lista!");
-                    return;
-                }
-                DAO.CheckQuartoDAO daoQ = new DAO.CheckQuartoDAO();
-                for (CheckQuarto cq : listaCheckQuartos) {
-                    daoQ.Create(cq);
-                }
-                JOptionPane.showMessageDialog(null, "Quartos gravados!");
-                jTabbedPane.setEnabledAt(3, true); // Libera Vagas
-                jTabbedPane.setSelectedIndex(3);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+   jButtonCheckQuartoGravar.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            if (listaCheckQuartos.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Adicione pelo menos um quarto antes de gravar!");
+                return;
             }
+
+            DAO.CheckQuartoDAO daoQ = new DAO.CheckQuartoDAO();
+            
+            for (CheckQuarto cq : listaCheckQuartos) {
+                daoQ.Create(cq);
+            }
+
+            JOptionPane.showMessageDialog(null, "Todos os quartos foram vinculados ao Check com sucesso!");
+            
+            jTabbedPane.setEnabledAt(3, true); 
+            jTabbedPane.setSelectedIndex(3);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao gravar quartos: " + e.getMessage());
+            e.printStackTrace();
         }
-    });
+    }
+});
 
     jPanelCheckQuartoBotoes.add(jButtonCheckQuartoAdicionar);
     jPanelCheckQuartoBotoes.add(jButtonCheckQuartoRemover);
@@ -623,6 +638,7 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     jPanelAlocacaoVagaDados.setPreferredSize(new Dimension(840, 160));
 
     int y = 20;
+    
     // VEICULO
     label(jPanelAlocacaoVagaDados, "Veiculo:", 20, y);
     jComboBoxVeiculo = new JComboBox<>();
@@ -644,6 +660,7 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     });
 
     y += 35;
+    
     // VAGA
     label(jPanelAlocacaoVagaDados, "Vaga:", 20, y);
     jComboBoxVaga = new JComboBox<>();
@@ -773,7 +790,6 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
         y += 35; label(jPanelReceberDados, "Obs:", 20, y);
         jTextFieldReceberObs = tf(jPanelReceberDados, 220, y, 560);
         
-        // --- LOGICA PARA CALCULO AUTOMATICO ---
         java.awt.event.FocusAdapter calculoEvento = new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 try {
@@ -809,53 +825,64 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
         });
 
         jButtonReceberGravar.addActionListener(e -> {
-            try {
-                if (checkAtual == null) {
-                    JOptionPane.showMessageDialog(null, "Grave o Check na Aba 1 primeiro!");
-                    return;
-                }
-                
-                // 1. SALVA FINANCEIRO
-                model.Receber rec = new model.Receber();
-                rec.setCheck(checkAtual);
-                rec.setValorOriginal(Double.parseDouble(jTextFieldReceberValorOriginal.getText()));
-                rec.setValorPago(Double.parseDouble(jTextFieldReceberValorPago.getText()));
-                rec.setObs(jTextFieldReceberObs.getText());
-                rec.setDataEmissao(new java.util.Date());
-                rec.setStatus("P");
-                new DAO.ReceberDAO().Create(rec);
+    try {
+        if (checkAtual == null) {
+            JOptionPane.showMessageDialog(null, "Grave o Check na Aba 1 primeiro!");
+            return;
+        }
+        
+        // 1. SALVA FINANCEIRO
+        model.Receber rec = new model.Receber();
+        rec.setCheck(checkAtual);
+        rec.setValorOriginal(Double.parseDouble(jTextFieldReceberValorOriginal.getText()));
+        rec.setValorPago(Double.parseDouble(jTextFieldReceberValorPago.getText()));
+        rec.setObs(jTextFieldReceberObs.getText());
+        rec.setDataEmissao(new java.util.Date());
+        rec.setStatus("P");
+        new DAO.ReceberDAO().Create(rec);
 
-                // 2. SALVA RESUMO EM DADOS_CHECK (NOVA TABELA)
-                model.DadosCheck resumo = new model.DadosCheck();
-                resumo.setCheckId(checkAtual.getId());
-                resumo.setValorTotal(Double.parseDouble(jTextFieldReceberValorPago.getText()));
-                resumo.setDataFinalizacao(new java.util.Date());
-                resumo.setObservacaoGeral(jTextFieldReceberObs.getText());
+        // 2. SALVA RESUMO EM DADOS_CHECK
+        model.DadosCheck resumo = new model.DadosCheck();
+        resumo.setCheckId(checkAtual.getId());
+        resumo.setValorTotal(Double.parseDouble(jTextFieldReceberValorPago.getText()));
+        resumo.setDataFinalizacao(new java.util.Date());
+        resumo.setObservacaoGeral(jTextFieldReceberObs.getText());
 
-                // Coleta nomes dos hospedes
-                String hStr = "";
-                for (model.CheckHospede ch : listaCheckHospedes) hStr += ch.getPessoa().getNome() + "; ";
-                resumo.setHospedePrincipal(hStr);
+        String hStr = "";
+        for (model.CheckHospede ch : listaCheckHospedes) {
+            hStr += ch.getPessoa().getNome() + "; ";
+        }
+        resumo.setHospedePrincipal(hStr.trim());
 
-                // Coleta números dos quartos
-                String qStr = "";
-                for (model.CheckQuarto cq : listaCheckQuartos) qStr += cq.getQuarto().getNumero() + " ";
-                resumo.setQuartosUtilizados(qStr);
-
-                // Coleta placas dos carros
-                String pStr = "";
-                for (model.AlocacaoVaga av : listaAlocacoes) pStr += av.getVeiculo().getPlaca() + " ";
-                resumo.setVagasUtilizadas(pStr);
-
-                // Salva o resumo
-                new DAO.DadosCheckDAO().Create(resumo);
-
-                JOptionPane.showMessageDialog(null, "Check finalizado e resumo salvo em Dados_Check!");
-                dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Erro ao gravar: " + ex.getMessage());
+        String qStr = ""; 
+        String idQStr = ""; 
+        
+        for (model.CheckQuarto cq : listaCheckQuartos) {
+            if (cq.getQuarto() != null) {
+                qStr += cq.getQuarto().getNumero() + " ";
+                idQStr += cq.getQuarto().getId() + " ";
             }
-        });
+        }
+        
+        resumo.setQuartosUtilizados(qStr.trim());
+        resumo.setIDquartosUtilizados(idQStr.trim()); 
+
+        String pStr = "";
+        for (model.AlocacaoVaga aloc : listaAlocacoes) {
+            pStr += aloc.getVeiculo().getPlaca() + " ";
+        }
+        resumo.setVagasUtilizadas(pStr.trim());
+
+        new DAO.DadosCheckDAO().Create(resumo);
+
+        JOptionPane.showMessageDialog(null, "Check finalizado e resumo salvo em Dados_Check!");
+        dispose();
+        
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Erro ao gravar finalização: " + ex.getMessage());
+        ex.printStackTrace();
+    }
+});
 
         for (JButton b : new JButton[]{jButtonReceberNovo,jButtonReceberCancelar,jButtonReceberGravar})
             jPanelReceberBotoes.add(b);

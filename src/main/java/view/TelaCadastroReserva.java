@@ -9,9 +9,10 @@ import javax.swing.text.MaskFormatter;
 public class TelaCadastroReserva extends javax.swing.JDialog {
 
     private JPanel jPanelTitulo, jPanelDados, jPanelBotoes;
-    private JTextField jTextFieldId, jTextFieldObs, jTextFieldStatus;
+    private JTextField jTextFieldId, jTextFieldObs, jTextFieldStatus, jTextFieldHospede;
     private JFormattedTextField jftfDtReserva, jftfDtEntrada, jftfDtSaida;
-    private JButton jButtonNovo, jButtonCancelar, jButtonGravar, jButtonSair;
+    private JButton jButtonNovo, jButtonCancelar, jButtonGravar, jButtonSair, jButtonBuscaHospede;
+    private model.Hospede hospedeSelecionado;
 
     public TelaCadastroReserva(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -22,7 +23,7 @@ public class TelaCadastroReserva extends javax.swing.JDialog {
 
     private void initComponents() {
         setTitle("Cadastro de Reserva");
-        setSize(600, 420);
+        setSize(600, 480);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -55,6 +56,17 @@ public class TelaCadastroReserva extends javax.swing.JDialog {
         jftfDtReserva.setFocusable(false);
 
         y += 40;
+        label(jPanelDados, "Hóspede:", 20, y);
+        
+        y += 25;
+        jTextFieldHospede = tf(jPanelDados, 20, y, 400);
+        jTextFieldHospede.setEditable(false);
+        
+        jButtonBuscaHospede = new JButton("...");
+        jButtonBuscaHospede.setBounds(430, y, 40, 25);
+        jPanelDados.add(jButtonBuscaHospede);
+
+        y += 40;
         label(jPanelDados, "Data Prevista Entrada:", 20, y);
         label(jPanelDados, "Data Prevista Saída:", 250, y);
         
@@ -81,6 +93,15 @@ public class TelaCadastroReserva extends javax.swing.JDialog {
 
         // --- LÓGICA DOS BOTÕES ---
 
+        jButtonBuscaHospede.addActionListener(e -> {
+            view.TelaBuscaHospede busca = new view.TelaBuscaHospede(null, true);
+            busca.setVisible(true);
+            if (busca.getHospedeSelecionado() != null) {
+                hospedeSelecionado = busca.getHospedeSelecionado();
+                jTextFieldHospede.setText(hospedeSelecionado.getNome());
+            }
+        });
+
         jButtonNovo.addActionListener(e -> {
             habilitarCampos(true); 
             limparCampos();
@@ -97,46 +118,51 @@ public class TelaCadastroReserva extends javax.swing.JDialog {
         jButtonSair.addActionListener(e -> dispose());
 
         jButtonGravar.addActionListener(e -> {
-            try {
-                // Validação de data básica para evitar erro de Data Truncation
-                String entradaLimpa = jftfDtEntrada.getText().replace("-", "").trim();
-                String saidaLimpa = jftfDtSaida.getText().replace("-", "").trim();
+    try {
+        if (hospedeSelecionado == null) {
+            JOptionPane.showMessageDialog(null, "Selecione um hóspede!");
+            return;
+        }
 
-                if (entradaLimpa.isEmpty() || saidaLimpa.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Preencha as datas de entrada e saída corretamente!");
-                    return;
-                }
+        String entradaTxt = jftfDtEntrada.getText().trim();
+        String saidaTxt = jftfDtSaida.getText().trim();
 
-                model.Reserva reserva = new model.Reserva();
-                
-                reserva.setObs(jTextFieldObs.getText());
-                
-                String statusTxt = jTextFieldStatus.getText();
-                reserva.setStatus(!statusTxt.isEmpty() ? statusTxt : "A");
+        if (entradaTxt.replace("-", "").trim().isEmpty() || saidaTxt.replace("-", "").trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha as datas!");
+            return;
+        }
 
-                // Sincronizado com o Model CamelCase
-                reserva.setDataHoraReserva(jftfDtReserva.getText());
-                reserva.setDataPrevistaEntrada(jftfDtEntrada.getText());
-                reserva.setDataPrevistaSaida(jftfDtSaida.getText());
+        java.time.LocalDate dEntrada = java.time.LocalDate.parse(entradaTxt);
+        java.time.LocalDate dSaida = java.time.LocalDate.parse(saidaTxt);
 
-                // Salvar no Banco
-                new DAO.ReservaDAO().Create(reserva);
+        if (dSaida.isBefore(dEntrada)) {
+            JOptionPane.showMessageDialog(null, "Erro: A data de saída não pode ser anterior à entrada!");
+            return;
+        }
 
-                JOptionPane.showMessageDialog(null, "Reserva gravada com sucesso!");
-                
-                limparCampos();
-                habilitarCampos(false);
-                jButtonNovo.setEnabled(true);
+        model.Reserva reserva = new model.Reserva();
+        reserva.setHospede(hospedeSelecionado);
+        reserva.setObs(jTextFieldObs.getText());
+        reserva.setStatus(jTextFieldStatus.getText().isEmpty() ? "A" : jTextFieldStatus.getText());
+        
+        // Agora passamos o texto direto, pois tela e banco usam AAAA-MM-DD
+        reserva.setDataHoraReserva(jftfDtReserva.getText());
+        reserva.setDataPrevistaEntrada(entradaTxt);
+        reserva.setDataPrevistaSaida(saidaTxt);
 
-            } catch (Exception ex) {
-                // Caso o MySQL ainda reclame de data errada (como mês 22)
-                if (ex.getMessage().contains("Data truncation")) {
-                    JOptionPane.showMessageDialog(null, "Erro: Verifique se os números das datas estão corretos (Mês até 12, Dias até 31)");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Erro ao gravar: " + ex.getMessage());
-                }
-            }
-        });
+        new DAO.ReservaDAO().Create(reserva);
+        JOptionPane.showMessageDialog(null, "Reserva gravada com sucesso!");
+        
+        limparCampos();
+        habilitarCampos(false);
+        jButtonNovo.setEnabled(true);
+
+    } catch (java.time.format.DateTimeParseException ex) {
+        JOptionPane.showMessageDialog(null, "Data inválida! Use o formato AAAA-MM-DD.");
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Erro ao gravar: " + ex.getMessage());
+    }
+});
 
         jPanelBotoes.add(jButtonNovo);
         jPanelBotoes.add(jButtonCancelar);
@@ -155,20 +181,23 @@ public class TelaCadastroReserva extends javax.swing.JDialog {
         jTextFieldObs.setEnabled(estado);
         jButtonGravar.setEnabled(estado);
         jButtonCancelar.setEnabled(estado);
+        jButtonBuscaHospede.setEnabled(estado);
     }
 
     private void limparCampos() {
         jTextFieldId.setText("");
         jTextFieldObs.setText("");
         jTextFieldStatus.setText("A");
+        jTextFieldHospede.setText("");
         jftfDtEntrada.setText("");
         jftfDtSaida.setText("");
+        hospedeSelecionado = null;
     }
 
     private void atualizarDataReserva() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        jftfDtReserva.setText(sdf.format(new Date()));
-    }
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    jftfDtReserva.setText(sdf.format(new Date()));
+}
 
     private void label(JPanel p, String t, int x, int y) {
         JLabel l = new JLabel(t);

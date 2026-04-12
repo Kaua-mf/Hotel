@@ -16,11 +16,13 @@ public class DadosCheck implements Serializable {
     private String quartosUtilizados;
     private String vagasUtilizadas;
     private Double valorTotal;
-    
+    private String IDquartosUtilizados;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataFinalizacao;
     private String observacaoGeral;
-
+public void setIDquartosUtilizados(String IDquartosUtilizados) {
+    this.IDquartosUtilizados = IDquartosUtilizados;
+}
     public DadosCheck() {}
 
     // Getters e Setters (Gerar automaticamente no NetBeans: Alt+Insert)
