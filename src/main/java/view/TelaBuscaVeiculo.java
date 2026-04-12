@@ -2,17 +2,22 @@ package view;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
 
 public class TelaBuscaVeiculo extends javax.swing.JDialog {
-
+private java.util.List<model.Veiculo> listaVeiculos;
+    private model.Veiculo veiculoSelecionado;
     public TelaBuscaVeiculo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        carregarDados();
     }
-
+public model.Veiculo getVeiculoSelecionado() {
+    return veiculoSelecionado;
+}
     public JButton getjButtonCarregar() {
         return jButtonCarregar;
     }
@@ -40,37 +45,37 @@ public class TelaBuscaVeiculo extends javax.swing.JDialog {
     public JComboBox<String> getjCBFiltro() {
         return jCBFiltro;
     }
-
-public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
-    // Pega o modelo da sua JTable (certifique-se que o nome 'jTableDados' está correto)
+public void carregarDados() {
+    try {
+        // Busca os dados através do DAO
+        DAO.VeiculoDAO dao = new DAO.VeiculoDAO();
+        this.listaVeiculos = dao.Retrieve(); 
+        
+        // Chama o preenchimento da tabela passando a lista
+        preencheTabela(this.listaVeiculos);
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao carregar veículos: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+public void preencheTabela(java.util.List<model.Veiculo> lista) {
     javax.swing.table.DefaultTableModel modeloTabela = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
-    modeloTabela.setRowCount(0); // Limpa a tabela antes de preencher
+    modeloTabela.setRowCount(0);
 
-    // Itera sobre a lista de veículos recebida
-    for (model.Veiculo veiculo : listaVeiculos) {
-        
-        // Forma segura de pegar a descrição do Modelo
-        String descModelo = "";
-        if (veiculo.getModelo() != null) {
-            descModelo = veiculo.getModelo().getNome(); 
+    if (lista != null) {
+        for (model.Veiculo v : lista) {
+            modeloTabela.addRow(new Object[]{
+                v.getId(),
+                v.getPlaca(),
+                v.getCor(),
+                // Puxa a descrição do modelo (se houver o objeto vinculado)
+                (v.getModelo() != null ? v.getModelo().getNome() : "N/A"),
+                // Puxa a descrição da marca (se houver o objeto vinculado)
+                (v.getMarca() != null ? v.getMarca().getDescricao() : "N/A"),
+                v.getStatus()
+            });
         }
-        
-        // Forma segura de pegar a descrição da Marca (através do Modelo)
-        String descMarca = ""; 
-        if (veiculo.getModelo() != null && veiculo.getModelo().getMarca() != null) {
-            // CORREÇÃO AQUI: Acessa a Marca através do Modelo
-            descMarca = veiculo.getModelo().getMarca().getDescricao(); 
-        }
-
-        // Adiciona a linha na tabela com os dados corretos e seguros
-        modeloTabela.addRow(new Object[]{
-            veiculo.getId(),
-            veiculo.getPlaca(),
-            veiculo.getCor(),
-            descModelo,   // Usa a variável segura para Modelo
-            descMarca,    // Usa a variável segura para Marca
-            veiculo.getStatus()
-        });
     }
 }
     
@@ -244,7 +249,13 @@ public void preencheTabela(java.util.List<model.Veiculo> listaVeiculos) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCarregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCarregarActionPerformed
-        // TODO add your handling code here:
+       int linha = jTableDados.getSelectedRow();
+    if (linha != -1 && listaVeiculos != null) {
+        this.veiculoSelecionado = listaVeiculos.get(linha);
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecione um veículo na tabela!");
+    }
     }//GEN-LAST:event_jButtonCarregarActionPerformed
 
     private void jCBFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBFiltroActionPerformed

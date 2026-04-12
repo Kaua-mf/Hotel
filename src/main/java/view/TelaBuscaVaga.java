@@ -2,16 +2,50 @@ package view;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
 public class TelaBuscaVaga extends javax.swing.JDialog {
-
+private java.util.List<model.VagaEstacionamento> listaVagas;
+private model.VagaEstacionamento vagaSelecionada;
     public TelaBuscaVaga(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        carregarDados();
     }
+public model.VagaEstacionamento getVagaSelecionada() {
+    return vagaSelecionada;
+}
 
+public void carregarDados() {
+    try {
+        DAO.VagaEstacionamentoDAO dao = new DAO.VagaEstacionamentoDAO();
+        this.listaVagas = dao.Retrieve();
+        
+        if (this.listaVagas != null) {
+            preencheTabela(this.listaVagas);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao carregar vagas: " + e.getMessage());
+    }
+}
+public void preencheTabela(java.util.List<model.VagaEstacionamento> lista) {
+    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
+    modelo.setRowCount(0);
+
+    if (lista != null) {
+        for (model.VagaEstacionamento v : lista) {
+            modelo.addRow(new Object[]{
+                v.getId(),
+                v.getDescricao(), // Nome da vaga (ex: Vaga 01)
+                v.getObs(),          // Coberta/Descoberta
+                v.getStatus(),
+                v.getMetragemVaga()// A ou I
+            });
+        }
+    }
+}
     public JButton getjButtonCarregar() {
         return jButtonCarregar;
     }
@@ -210,7 +244,14 @@ public class TelaBuscaVaga extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCarregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCarregarActionPerformed
-        // TODO add your handling code here:
+        int linha = jTableDados.getSelectedRow();
+    
+    if (linha >= 0 && this.listaVagas != null) {
+        this.vagaSelecionada = this.listaVagas.get(linha);
+        this.dispose(); 
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecione uma vaga na tabela primeiro!");
+    }
     }//GEN-LAST:event_jButtonCarregarActionPerformed
 
     private void jCBFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBFiltroActionPerformed
@@ -271,18 +312,4 @@ public class TelaBuscaVaga extends javax.swing.JDialog {
     private javax.swing.JTable jTableDados;
     // End of variables declaration//GEN-END:variables
  
-public void preencheTabela(java.util.List<model.VagaEstacionamento> listaVagas) {
-    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTableDados.getModel();
-    modelo.setRowCount(0);
-
-     for (model.VagaEstacionamento vaga : listaVagas) {
-        modelo.addRow(new Object[]{
-            vaga.getId(),           
-            vaga.getDescricao(),    
-            vaga.getMetragemVaga(), 
-            vaga.getObs(),          
-            vaga.getStatus()        
-        });
-    }
-}
 }

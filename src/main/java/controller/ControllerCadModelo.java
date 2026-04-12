@@ -102,7 +102,7 @@ public class ControllerCadModelo implements ActionListener {
             
             this.modeloAtual.setNome(nomeModelo); 
             this.modeloAtual.setMarca(marcaSelecionada); 
-            this.modeloAtual.setStatus('A');
+            this.modeloAtual.setStatus("A");
             
             try {
                 boolean isNovoRegistro = this.modeloAtual.getId() == 0;

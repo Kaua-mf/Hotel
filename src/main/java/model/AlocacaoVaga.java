@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "alocacao_vaga")
-public class AlocacaoVaga {
+public class AlocacaoVaga implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,22 +34,21 @@ public class AlocacaoVaga {
     private VagaEstacionamento vagaEstacionamento;
 
     @ManyToOne
+    @JoinColumn(name = "id_check")
+    private Check check;
+
+    @ManyToOne
+    @JoinColumn(name = "id_veiculo")
+    private Veiculo veiculo; // ADICIONADO: Faltava o veículo para a tela compilar
+
+    @ManyToOne
     @JoinColumn(name = "id_reserva")
     private Reserva reserva;
 
     public AlocacaoVaga() {
     }
 
-    public AlocacaoVaga(int id, String dataEntrada, String dataSaida, char status, String obs, VagaEstacionamento vagaEstacionamento, Reserva reserva) {
-        this.id = id;
-        this.dataEntrada = dataEntrada;
-        this.dataSaida = dataSaida;
-        this.status = status;
-        this.obs = obs;
-        this.vagaEstacionamento = vagaEstacionamento;
-        this.reserva = reserva;
-    }
-
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -95,6 +95,22 @@ public class AlocacaoVaga {
 
     public void setVagaEstacionamento(VagaEstacionamento vagaEstacionamento) {
         this.vagaEstacionamento = vagaEstacionamento;
+    }
+
+    public Check getCheck() {
+        return check;
+    }
+
+    public void setCheck(Check check) {
+        this.check = check;
+    }
+
+    public Veiculo getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
     }
 
     public Reserva getReserva() {

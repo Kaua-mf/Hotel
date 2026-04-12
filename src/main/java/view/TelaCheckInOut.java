@@ -1,5 +1,5 @@
 package view;
-
+import model.AlocacaoVaga;
 import DAO.ReservaDAO;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,17 +40,16 @@ public class TelaCheckInOut extends javax.swing.JDialog {
     private JButton jButtonCheckQuartoAdicionar, jButtonCheckQuartoRemover, jButtonCheckQuartoGravar;
     private DefaultListModel<String> listModelQuartos;
     private JList<String> jListQuartos;
-
+    private List<AlocacaoVaga> listaAlocacoes = new ArrayList<>();
+    private DefaultListModel<String> listModelAlocacoes;
     private JPanel jPanelAlocacaoVaga, jPanelAlocacaoVagaTitulo, jPanelAlocacaoVagaDados;
     private JPanel jPanelAlocacaoVagaBotoes, jPanelAlocacaoVagaTabela;
     private JComboBox<Veiculo> jComboBoxVeiculo;
     private JComboBox<VagaEstacionamento> jComboBoxVagaEstacionamento;
     private JTextField jTextFieldAlocacaoVagaObs;
     private JButton jButtonAlocacaoVagaAdicionar, jButtonAlocacaoVagaRemover, jButtonAlocacaoVagaGravar;
-    private DefaultListModel<String> listModelAlocacoes;
     private JList<String> jListAlocacoes;
-    private List<AlocacaoVaga> listaAlocacoes;
-
+model.AlocacaoVaga av = new model.AlocacaoVaga();   
     private JPanel jPanelReceber, jPanelReceberTitulo, jPanelReceberDados, jPanelReceberBotoes;
     private JTextField jTextFieldReceberId, jTextFieldReceberValorOriginal, jTextFieldReceberDesconto;
     private JTextField jTextFieldReceberAcrescimo, jTextFieldReceberValorPago, jTextFieldReceberObs;
@@ -58,6 +57,13 @@ public class TelaCheckInOut extends javax.swing.JDialog {
     private JButton jButtonReceberNovo, jButtonReceberGravar, jButtonReceberCancelar;
 
     private JTabbedPane jTabbedPane;
+private JPanel jPanelAlocacaoTabela;
+private JPanel jPanelAlocacaoBotoes;
+private JComboBox<model.VagaEstacionamento> jComboBoxVaga;
+private JTextField jTextFieldAlocacaoObs;
+private JButton jButtonAlocacaoAdicionar;
+private JButton jButtonAlocacaoRemover;
+private JButton jButtonAlocacaoGravar;
 
     public TelaCheckInOut(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -583,44 +589,132 @@ jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
         }
     }
 
-    private JPanel buildPanelAlocacaoVaga() {
-        jPanelAlocacaoVaga = new JPanel(new BorderLayout(5, 5));
-        jPanelAlocacaoVaga.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jPanelAlocacaoVagaTitulo = titulo("Alocacao de Vagas", new Color(153, 255, 102));
-        jPanelAlocacaoVagaDados = new JPanel(null);
-        jPanelAlocacaoVagaDados.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanelAlocacaoVagaDados.setPreferredSize(new Dimension(840, 130));
-        int y = 20;
-        label(jPanelAlocacaoVagaDados, "Veiculo:", 20, y);
-        jComboBoxVeiculo = new JComboBox<>();
-        jComboBoxVeiculo.setBounds(170, y, 380, 25);
-        jPanelAlocacaoVagaDados.add(jComboBoxVeiculo);
-        y += 35; label(jPanelAlocacaoVagaDados, "Vaga:", 20, y);
-        jComboBoxVagaEstacionamento = new JComboBox<>();
-        jComboBoxVagaEstacionamento.setBounds(170, y, 380, 25);
-        jPanelAlocacaoVagaDados.add(jComboBoxVagaEstacionamento);
-        y += 35; label(jPanelAlocacaoVagaDados, "Obs:", 20, y);
-        jTextFieldAlocacaoVagaObs = tf(jPanelAlocacaoVagaDados, 170, y, 560);
-        jPanelAlocacaoVagaTabela = new JPanel(new BorderLayout());
-        jPanelAlocacaoVagaTabela.setBorder(new TitledBorder("Alocacoes adicionadas ao Check"));
-        listModelAlocacoes = new DefaultListModel<>();
-        jListAlocacoes = new JList<>(listModelAlocacoes);
-        jListAlocacoes.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        jPanelAlocacaoVagaTabela.add(new JScrollPane(jListAlocacoes), BorderLayout.CENTER);
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jPanelAlocacaoVagaDados, jPanelAlocacaoVagaTabela);
-        split.setResizeWeight(0.35); split.setDividerSize(5);
-        jPanelAlocacaoVagaBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        jPanelAlocacaoVagaBotoes.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonAlocacaoVagaAdicionar = btn("Adicionar",    "/imagens/Create.png", "0");
-        jButtonAlocacaoVagaRemover   = btn("Remover",      "/imagens/Cancel.png", "0");
-        jButtonAlocacaoVagaGravar    = btn("Gravar Todos", "/imagens/OK.png",     "0");
-        for (JButton b : new JButton[]{jButtonAlocacaoVagaAdicionar,jButtonAlocacaoVagaRemover,jButtonAlocacaoVagaGravar})
-            jPanelAlocacaoVagaBotoes.add(b);
-        jPanelAlocacaoVaga.add(jPanelAlocacaoVagaTitulo, BorderLayout.NORTH);
-        jPanelAlocacaoVaga.add(split,                    BorderLayout.CENTER);
-        jPanelAlocacaoVaga.add(jPanelAlocacaoVagaBotoes, BorderLayout.SOUTH);
-        return jPanelAlocacaoVaga;
-    }
+   private JPanel buildPanelAlocacaoVaga() {
+    jPanelAlocacaoVaga = new JPanel(new BorderLayout(5, 5));
+    jPanelAlocacaoVaga.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    jPanelAlocacaoVagaTitulo = titulo("Alocacao de Vagas", new Color(153, 255, 102));
+
+    jPanelAlocacaoVagaDados = new JPanel(null);
+    jPanelAlocacaoVagaDados.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+    jPanelAlocacaoVagaDados.setPreferredSize(new Dimension(840, 160));
+
+    int y = 20;
+    // VEICULO
+    label(jPanelAlocacaoVagaDados, "Veiculo:", 20, y);
+    jComboBoxVeiculo = new JComboBox<>();
+    jComboBoxVeiculo.setBounds(170, y, 380, 25);
+    jPanelAlocacaoVagaDados.add(jComboBoxVeiculo);
+
+    JButton jButtonVeiculoBuscar = btn("Buscar", "/imagens/Load.png", "0");
+    jButtonVeiculoBuscar.setBounds(560, y, 100, 25);
+    jPanelAlocacaoVagaDados.add(jButtonVeiculoBuscar);
+
+    jButtonVeiculoBuscar.addActionListener(e -> {
+        TelaBuscaVeiculo busca = new TelaBuscaVeiculo(null, true);
+        busca.setVisible(true);
+        if (busca.getVeiculoSelecionado() != null) {
+            Veiculo v = busca.getVeiculoSelecionado();
+            jComboBoxVeiculo.addItem(v);
+            jComboBoxVeiculo.setSelectedItem(v);
+        }
+    });
+
+    y += 35;
+    // VAGA
+    label(jPanelAlocacaoVagaDados, "Vaga:", 20, y);
+    jComboBoxVaga = new JComboBox<>();
+    jComboBoxVaga.setBounds(170, y, 380, 25);
+    jPanelAlocacaoVagaDados.add(jComboBoxVaga);
+
+    JButton jButtonVagaBuscar = btn("Buscar", "/imagens/Load.png", "0");
+    jButtonVagaBuscar.setBounds(560, y, 100, 25);
+    jPanelAlocacaoVagaDados.add(jButtonVagaBuscar);
+
+    jButtonVagaBuscar.addActionListener(e -> {
+        TelaBuscaVaga busca = new TelaBuscaVaga(null, true);
+        busca.setVisible(true);
+        if (busca.getVagaSelecionada() != null) {
+            VagaEstacionamento v = busca.getVagaSelecionada();
+            jComboBoxVaga.addItem(v);
+            jComboBoxVaga.setSelectedItem(v);
+        }
+    });
+
+    y += 35;
+    label(jPanelAlocacaoVagaDados, "Obs:", 20, y);
+    jTextFieldAlocacaoObs = tf(jPanelAlocacaoVagaDados, 170, y, 560);
+
+    // LISTA VISUAL
+    jPanelAlocacaoTabela = new JPanel(new BorderLayout());
+    jPanelAlocacaoTabela.setBorder(new TitledBorder("Alocacoes adicionadas ao Check"));
+    listModelAlocacoes = new DefaultListModel<>();
+    jListAlocacoes = new JList<>(listModelAlocacoes);
+    jPanelAlocacaoTabela.add(new JScrollPane(jListAlocacoes), BorderLayout.CENTER);
+
+    JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jPanelAlocacaoVagaDados, jPanelAlocacaoTabela);
+    split.setResizeWeight(0.45);
+
+    // BOTOES DE AÇÃO
+    jPanelAlocacaoBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    jButtonAlocacaoAdicionar = btn("Adicionar", "/imagens/Create.png", "0");
+    jButtonAlocacaoRemover = btn("Remover", "/imagens/Cancel.png", "0");
+    jButtonAlocacaoGravar = btn("Gravar Todos", "/imagens/OK.png", "0");
+
+    // LÓGICA ADICIONAR
+    jButtonAlocacaoAdicionar.addActionListener(e -> {
+        Veiculo veic = (Veiculo) jComboBoxVeiculo.getSelectedItem();
+        VagaEstacionamento vaga = (VagaEstacionamento) jComboBoxVaga.getSelectedItem();
+
+        if (veic != null && vaga != null && checkAtual != null) {
+            AlocacaoVaga av = new AlocacaoVaga();
+            av.setCheck(checkAtual);
+            av.setVeiculo(veic);
+            av.setVagaEstacionamento(vaga);
+            av.setObs(jTextFieldAlocacaoObs.getText());
+            av.setStatus('A');
+
+            listaAlocacoes.add(av);
+            listModelAlocacoes.addElement("Veículo: " + veic.getPlaca() + " | Vaga: " + vaga.getDescricao());
+        }
+    });
+
+    // LÓGICA REMOVER
+    jButtonAlocacaoRemover.addActionListener(e -> {
+        int index = jListAlocacoes.getSelectedIndex();
+        if (index != -1) {
+            listModelAlocacoes.remove(index);
+            listaAlocacoes.remove(index);
+        }
+    });
+
+    // LÓGICA GRAVAR TODOS
+    jButtonAlocacaoGravar.addActionListener(e -> {
+        try {
+            if (listaAlocacoes.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Adicione alocações à lista!");
+                return;
+            }
+            DAO.AlocacaoVagaDAO daoA = new DAO.AlocacaoVagaDAO();
+            for (AlocacaoVaga av : listaAlocacoes) {
+                daoA.Create(av);
+            }
+            JOptionPane.showMessageDialog(null, "Alocações gravadas!");
+            jTabbedPane.setEnabledAt(4, true); // Libera Receber
+            jTabbedPane.setSelectedIndex(4);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
+        }
+    });
+
+    jPanelAlocacaoBotoes.add(jButtonAlocacaoAdicionar);
+    jPanelAlocacaoBotoes.add(jButtonAlocacaoRemover);
+    jPanelAlocacaoBotoes.add(jButtonAlocacaoGravar);
+
+    jPanelAlocacaoVaga.add(jPanelAlocacaoVagaTitulo, BorderLayout.NORTH);
+    jPanelAlocacaoVaga.add(split, BorderLayout.CENTER);
+    jPanelAlocacaoVaga.add(jPanelAlocacaoBotoes, BorderLayout.SOUTH);
+    return jPanelAlocacaoVaga;
+}
 
     private JPanel buildPanelReceber() {
         jPanelReceber = new JPanel(new BorderLayout(5, 5));
