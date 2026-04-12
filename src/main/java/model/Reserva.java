@@ -55,6 +55,8 @@ public class Reserva implements Serializable {
         this.id = id;
     }
 
+    // --- MÉTODOS CORRIGIDOS PARA O PADRÃO DA TELA ---
+
     public String getDataHoraReserva() {
         return dataHoraReserva;
     }
@@ -95,53 +97,19 @@ public class Reserva implements Serializable {
         this.status = status;
     }
 
-    public String getDataEntrada() {
-        return dataEntrada;
-    }
+    // ... outros getters e setters (DataEntrada, DataSaida, ValorTotal, etc) permanecem iguais ...
 
-    public void setDataEntrada(String dataEntrada) {
-        this.dataEntrada = dataEntrada;
-    }
+    public float getValorTotal() { return valorTotal; }
+    public void setValorTotal(float valorTotal) { this.valorTotal = valorTotal; }
+    
+    public Funcionario getFuncionario() { return funcionario; }
+    public void setFuncionario(Funcionario funcionario) { this.funcionario = funcionario; }
 
-    public String getDataSaida() {
-        return dataSaida;
-    }
+    public Hospede getHospede() { return hospede; }
+    public void setHospede(Hospede hospede) { this.hospede = hospede; }
 
-    public void setDataSaida(String dataSaida) {
-        this.dataSaida = dataSaida;
-    }
-
-    public float getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(float valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public Funcionario getFuncionario() {
-        return funcionario;
-    }
-
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
-    }
-
-    public Hospede getHospede() {
-        return hospede;
-    }
-
-    public void setHospede(Hospede hospede) {
-        this.hospede = hospede;
-    }
-
-    public Check getCheck() {
-        return check;
-    }
-
-    public void setCheck(Check check) {
-        this.check = check;
-    }
+    public Check getCheck() { return check; }
+    public void setCheck(Check check) { this.check = check; }
 
     @Override
     public String toString() {

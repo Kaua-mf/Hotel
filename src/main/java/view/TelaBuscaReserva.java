@@ -145,7 +145,7 @@ public void carregarDados() {
 
             },
             new String [] {
-                "Id", "Nome", "Data Prevista Entrada", "Status"
+                "Id", "Status", "Nome", "Data Prevista Entrada"
             }
         ) {
             boolean[] canEdit = new boolean [] {

@@ -243,17 +243,30 @@ public void calcularTotalRecebimento() {
 jButtonCheckGravar.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            String entrada = jTextFieldCheckDataHoraEntrada.getText().replace("-", "").trim();
-            String saida = jTextFieldCheckDataHoraSaida.getText().replace("-", "").trim();
+            String entradaTxt = jTextFieldCheckDataHoraEntrada.getText().trim();
+            String saidaTxt = jTextFieldCheckDataHoraSaida.getText().trim();
 
-            if (entrada.isEmpty() || saida.isEmpty()) {
+            if (entradaTxt.replace("-", "").trim().isEmpty() || saidaTxt.replace("-", "").trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha as datas de entrada e saída!");
                 return;
             }
 
+            try {
+                java.time.LocalDate dEntrada = java.time.LocalDate.parse(entradaTxt);
+                java.time.LocalDate dSaida = java.time.LocalDate.parse(saidaTxt);
+
+                if (dSaida.isBefore(dEntrada)) {
+                    JOptionPane.showMessageDialog(null, "Erro: A data de saída não pode ser anterior à data de entrada!");
+                    return;
+                }
+            } catch (java.time.format.DateTimeParseException e) {
+                JOptionPane.showMessageDialog(null, "Formato de data inválido! Certifique-se de usar AAAA-MM-DD.");
+                return;
+            }
+
             Check check = new Check();
-            check.setDataHoraEntrada(jTextFieldCheckDataHoraEntrada.getText());
-            check.setDataHoraSaida(jTextFieldCheckDataHoraSaida.getText());
+            check.setDataHoraEntrada(entradaTxt);
+            check.setDataHoraSaida(saidaTxt);
             check.setObs(jTextFieldCheckObs.getText());
             check.setStatus("A");
             

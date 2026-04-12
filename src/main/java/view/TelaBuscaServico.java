@@ -93,13 +93,17 @@ public class TelaBuscaServico extends javax.swing.JDialog {
             new String [] {
                 "Id", "Descrição", "OBS", "Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTableDados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jTableDados);
-        if (jTableDados.getColumnModel().getColumnCount() > 0) {
-            jTableDados.getColumnModel().getColumn(0).setMaxWidth(40);
-            jTableDados.getColumnModel().getColumn(3).setMaxWidth(60);
-        }
 
         javax.swing.GroupLayout jPanelDadosLayout = new javax.swing.GroupLayout(jPanelDados);
         jPanelDados.setLayout(jPanelDadosLayout);

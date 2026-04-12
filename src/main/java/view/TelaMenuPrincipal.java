@@ -32,6 +32,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         jMenuItemFornecedor = new javax.swing.JMenuItem();
         jMenuItemFuncionario = new javax.swing.JMenuItem();
         jMenuItemHospede = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItemQuarto = new javax.swing.JMenuItem();
         jMenuItemVeiculo = new javax.swing.JMenuItem();
         jMenuItemCadModeloActionPerformed = new javax.swing.JMenuItem();
@@ -82,6 +83,15 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItemHospede);
+
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Mail.png"))); // NOI18N
+        jMenuItem4.setText("Reserva");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem4);
 
         jMenuItemQuarto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Home.png"))); // NOI18N
         jMenuItemQuarto.setText("Quarto");
@@ -278,6 +288,11 @@ TelaCadastroModelo telaModelo = new TelaCadastroModelo(null, true);
         tela.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    view.TelaCadastroReserva telaReserva = new view.TelaCadastroReserva(null, true);
+    telaReserva.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -319,6 +334,7 @@ TelaCadastroModelo telaModelo = new TelaCadastroModelo(null, true);
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItemCadMarcaActionPerformed;
     private javax.swing.JMenuItem jMenuItemCadModeloActionPerformed;
     private javax.swing.JMenuItem jMenuItemFornecedor;
