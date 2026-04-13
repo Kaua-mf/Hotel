@@ -25,10 +25,10 @@ public class VagaEstacionamento {
 
     @Column(nullable = false, length = 1)
     private char status;
-
+    
     public VagaEstacionamento() {
     }
-
+    
     public VagaEstacionamento(int id, String descricao, String obs, float metragemVaga, char status) {
         this.id = id;
         this.descricao = descricao;

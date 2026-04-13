@@ -19,15 +19,12 @@ private java.util.List<model.Hospede> listaHospedes;
 public model.Hospede getHospedeSelecionado() {
     return hospedeSelecionado;
 }private void preencherTabela() {
-    // 1. Chama o DAO para buscar a lista do banco
     DAO.HospedeDAO dao = new DAO.HospedeDAO();
-    this.listaHospedes = dao.Retrieve(); // Alimenta a variável global que criamos antes
+    this.listaHospedes = dao.Retrieve(); 
 
-    // 2. Pega o modelo da tabela
     DefaultTableModel modelo = (DefaultTableModel) jTableDados.getModel();
-    modelo.setNumRows(0); // Limpa a tabela antes de carregar
+    modelo.setNumRows(0); 
 
-    // 3. Percorre a lista e adiciona as linhas
     for (Hospede h : listaHospedes) {
         modelo.addRow(new Object[]{
             h.getId(),

@@ -15,6 +15,7 @@ public class ControllerCadVaga implements ActionListener {
     ServicoVagaEstacionamento servicoVaga = new ServicoVagaEstacionamento();
     private VagaEstacionamento vagaAtual; 
 
+    
     public ControllerCadVaga(TelaCadastroVaga telaCadastro) {
         this.telaCadastro = telaCadastro;
         this.vagaAtual = new VagaEstacionamento();

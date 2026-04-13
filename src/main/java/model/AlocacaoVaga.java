@@ -39,7 +39,7 @@ public class AlocacaoVaga implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_veiculo")
-    private Veiculo veiculo; // ADICIONADO: Faltava o veículo para a tela compilar
+    private Veiculo veiculo; 
 
     @ManyToOne
     @JoinColumn(name = "id_reserva")
